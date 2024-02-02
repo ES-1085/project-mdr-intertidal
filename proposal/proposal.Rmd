@@ -27,9 +27,7 @@ We will be using intertidal data from the Northeastern Coastal Station Alliance,
 
 Place your data in the /data folder, and add dimensions and codebook to the README in that folder. Then print out the output of glimpse() or skim() of your data frame.
 
-## 3. Ethics review
-
-## 4. Data analysis plan
+## 3. Data analysis plan
 
 What variables will you visualize to explore your research questions?
 Will there be any other data that you need to find to help with your research question?
