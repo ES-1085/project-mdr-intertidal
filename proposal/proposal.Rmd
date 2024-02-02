@@ -1,24 +1,39 @@
 ---
 title: "Project proposal"
-author: "Team name"
+author: "MDR Intertidal"
 output: github_document
 ---
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
+library(readxl)
+
 ```
 
 ## 1. Introduction
+ 
+The introduction should introduce your general research question and your data (where it came from, how it was collected, what are the cases, what are the variables, etc.).
 
+Our general research question is "How has the Mount Desert Island intertidal zone changed over time?". We will be using indicator species such as periwinkles to meausure changes in their populaion. We will also look at changes in seaweed cover throughout the years.
 
+We will be using intertidal data from the Northeastern Coastal Station Alliance, a collection of field stations in the Gulf of Maine. We will specifically be analysing data collected on Mount Desert Rock. It consists of vertical and horizontal transects collected through quadrats in the intertidal zone. For this project we will be using the horizontal transects. This data was collected annually from 2017 to 2023. In the early years, the data was collected by high school students who were trained on the rock. The projected was continued by Marina in 2022 and 2023. 
 
 ## 2. Data
 
+```{r}
+<- read_excel(path = "data/", )
+```
+
+Place your data in the /data folder, and add dimensions and codebook to the README in that folder. Then print out the output of glimpse() or skim() of your data frame.
 
 ## 3. Ethics review
 
 ## 4. Data analysis plan
 
+What variables will you visualize to explore your research questions?
+Will there be any other data that you need to find to help with your research question?
+Very preliminary exploratory data analysis, including some summary statistics and visualizations, along with some explanation on how they help you learn more about your data. (You can add to these later as you work on your project.)
+The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 
