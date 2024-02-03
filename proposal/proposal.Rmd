@@ -31,7 +31,10 @@ Very preliminary exploratory data analysis, including some summary statistics an
 The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 
-The variables that we will be using to explore our data are tide hight, year, species, sea water temperature, and ascophyllum length. We do not anticipate needing to find any more data to help with this research question.
+The variables that we will be using to explore our data are tide height, year, species, sea water temperature, and ascophyllum length. We do not anticipate needing to find any more data to help with this research question.
 
+For the preliminary data analysis we will look at the mean tide height for certain indicator species. We also plan on mutating the data to be able to compare the ratio of crabs to snails over time.
+
+We will create a bar graph of indicator species abundance faceted by year.
 
 
