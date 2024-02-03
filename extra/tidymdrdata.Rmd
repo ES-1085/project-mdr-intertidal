@@ -8,27 +8,69 @@ output: github_document
 library(tidyverse)
 library(broom)
 library(readxl)
-
 ```
 
-```{r load-data}
+```{r load-data-2017}
 
 horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx")
 
-horizontal_L_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low")
+```
+
+```{r load-data-2018}
+
+HL00_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL03_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = D4:F49)
+
+HL03_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL04_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL05_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL06_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL07_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL08_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL09_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+HL10_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low", range = A4:C49)
+
+
 
 horizontal_M_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Mid")
 
 horizontal_H_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT High")
 
+```
+
+```{r load-data-2019}
+
 # horizontal_MDR_NeCSA_2019
+
+```
+
+```{r load-data-2020}
 
 # horizontal_MDR_NeCSA_2020
 
+```
+
+```{r load-data-2021}
 
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
 
+```
+
+```{r load-data-2022}
+
 horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MDR_NeCSA.xlsx")
+
+```
+
+```{r load-data-2023}
 
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
 
