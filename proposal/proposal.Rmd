@@ -21,8 +21,26 @@ We will be using intertidal data from the Northeastern Coastal Station Alliance,
 
 ## 2. Data
 
-```{r}
-<- read_excel(path = "data/", )
+```{r load-data}
+
+horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx")
+
+horizontal_L_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Low")
+
+horizontal_M_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT Mid")
+
+horizontal_H_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sheet = "West HT High")
+
+# horizontal_MDR_NeCSA_2019
+
+# horizontal_MDR_NeCSA_2020
+
+horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
+
+horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MDR_NeCSA.xlsx")
+
+horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
+
 ```
 
 Place your data in the /data folder, and add dimensions and codebook to the README in that folder. Then print out the output of glimpse() or skim() of your data frame.
