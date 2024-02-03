@@ -43,6 +43,13 @@ horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MD
 ```
 
 ```{r - load temperature data}
+MDR_temp_20170812_20180811 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20170812-20180811")
+
+MDR_temp_20180830_20180929 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20180830-20180929")
+
+MDR_temp_20180812_20190905 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20180812-20190905")
+
+WC_MDR_temp_20210602_20211008 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20210602-20211008WC")
 
 ```
 
