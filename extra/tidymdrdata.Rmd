@@ -14,6 +14,11 @@ library(readxl)
 
 horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx")
 
+seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
+  subset(select = -c(Site, Name, Llitt:SembalA2 )) #%>%
+ 
+  # mutate(seaweed_species = AscoCC + FucVCC+ FucSCC + FucDCC + FucSpp.CC + AscoSC + FucVSC + FucSSC + FucDSC + MstellSC + ChonCrSC + UlvaIntesSC + UlvaLacSC + CorOSC + VertLanSC + CerSC) 
+
 ```
 
 ```{r load-data-2018}
