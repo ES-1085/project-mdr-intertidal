@@ -20,9 +20,15 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
     cols = AscoCC:FucSppA,
     names_to = "seaweed_species",
     values_to = "proportion"
-  )
+    )
   
- # mutate(seaweed_species = AscoCC, FucVCC, FucSCC, FucDCC, FucSpp.CC, AscoSC, FucVSC, FucSSC, FucDSC, MstellSC, ChonCrSC, UlvaIntesSC, UlvaLacSC, CorOSC, VertLanSC, CerSC) 
+ inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
+   subset(select = -c(Site, Name, AscoCC:AscoBladders)) %>%
+   pivot_longer(
+     cols = Llitt:SembalA2,
+     names_to = "invert_species",
+     values_to = "count"
+   )
 
 ```
 
