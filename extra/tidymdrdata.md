@@ -347,6 +347,23 @@ HH27_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sh
 
 ``` r
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
+
+seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
+  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
+  add_column(year = "2021") %>%
+  pivot_longer(
+    cols = Asco_nCC:Cera_rSC,
+    names_to = "seaweed_species",
+    values_to = "proportion")
+
+inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
+   subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+   add_column(year = "2017") %>%
+   pivot_longer(
+     cols = Semi_bCC:Semi_bA2,
+     names_to = "invert_species",
+     values_to = "count"
+   )
 ```
 
 ``` r
