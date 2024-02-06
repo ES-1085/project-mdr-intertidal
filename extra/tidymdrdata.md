@@ -14,8 +14,9 @@ horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MD
 seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
   subset(select = -c(Site, Name, Llitt:SembalA2 )) %>%
   add_column(year = "2017") %>%
+  rename(Asco_nCC = AscoCC, Fucu_vCC = FucVCC, Fucu_sCC = FucSCC, Fucu_dCC = FucDCC, Fuc_spp = FucSpp.CC, Asco_nSC = AscoSC, Fucu_vSC = FucVSC, Fucu_sSC = FucSSC, Fucu_dSC = FucDSC, Mast_sSC = MstellSC, Chon_cSC = ChonCrSC, Ulva_iSC = UlvaIntesSC, Ulva_lSC = UlvaLacSC, Coro_oSC = CorOSC, Vert_lSC = VertLanSC, Cera_rSC = CerSC, Lam_spp = `Laminaria spp.`, Por_sp = `Porphyra sp.`, Asco_recuit = AscoR, Asco_holdfasts = AscoA, Fucu_Recruits = FucR, Fucu_vHoldfasts = FucVA, Fucu_sHoldfasts = FucSA, Fucu_dHoldfasts = FucDA, Asco_nHt = `AscoHeight (cm)`, Asco_nBladders = AscoBladders, Fucu_sppHoldfasts = FucSppA) %>%
   pivot_longer(
-    cols = AscoCC:FucSppA,
+    cols = Asco_nCC:Fucu_sppHoldfasts,
     names_to = "seaweed_species",
     values_to = "proportion")
   
