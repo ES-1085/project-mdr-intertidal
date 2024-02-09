@@ -225,7 +225,7 @@ seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
 
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
    subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2017") %>%
+   add_column(year = "2021") %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",

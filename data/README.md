@@ -5,7 +5,7 @@ Place data file(s) in this folder.
 Then, include codebooks (variables, and their descriptions) for your data file(s)
 using the following format.
 
-## 20??_horizontal_MDR_NeCSA.xlsx
+## inverts_mdr_20??.xlsx
 
 - `Date`: date survey was conducted
 - `TideHt`: tide height at which quadrat was placed; options are as follows:
@@ -34,3 +34,31 @@ using the following format.
       Canc_i: Cancer irroratus (rock crab)
       Canc_b: Cancer borealis (Jonah crab)
 -`count`: number of individuals of each species counted in the quadrat
+
+## inverts_mdr_20??.xlsx
+
+- `Date`: date survey was conducted
+- `TideHt`: tide height at which quadrat was placed; options are as follows:
+      H: high
+      M: medium
+      L: low
+- `Quadrat_m`: quadrat's starting point in transect (measured in meters from start of transect)
+- `Asco_nHt`: length of longest blade of Ascophyllum nodosum in the quadrat, measured in centimeters
+- `Asco_nBladders`: number of air bladders on longest blade of Ascophyllum nodosum in the quadrat (one bladder represents one year of growth)
+- `year`: year in which survey was conducted
+- `seaweed_species`: species of seaweed (Latin name); suffix indicates canopy cover (CC) or subcanopy (SC); species codes are as follows:
+      Asco_n: Ascophyllum nodosum
+      Fucu_v: Fucus vesiculosus
+      Fucu_s: Fucus spiralis
+      Fucu_d: Fucus distichus
+      Fuc_spp: Fucus spp.
+      Mast_s: Mastocarpus stellatus
+      Chon_c: Chondrus crispus
+      Ulva_i: Ulva intestinalis
+      Ulva_l: Ulva lactuca
+      Cora_o: Corallina officinalis
+      Vert_l: Vertebrata lanosa
+      Cera_r: Ceramium rubrum
+      Lam_spp: Laminaria spp. (unknown kelp)
+      Por_sp: Porphyra sp. (unknown laver)
+- `proportion`: number of squares within quadrat where species was present, divided by 25
