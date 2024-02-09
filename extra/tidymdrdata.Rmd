@@ -21,13 +21,15 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
   pivot_longer(
     cols = Asco_nCC:Fucu_sppHoldfasts,
     names_to = "seaweed_species",
-    values_to = "proportion")
+    values_to = "squares out of 25") %>%
+  mutate(proportion = `squares out of 25`/25)
   
  inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-   subset(select = -c(Site, Name, AscoCC:AscoBladders)) %>%
+   subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
    add_column(year = "2017") %>%
+   rename(Litt_l = Llitt, Litt_o = Liobtu, Litt_s = Lsax, Litt_spp = `Litt. Spp.`, Nuci_l = Nlap, Lacu_v = Lacvinc, Hiat_a = Hiatarct, Ostr_e = Ostredu, Myti_e = Myted, Modi_m = Modmod, Tect_t = Testtest, Crep_f = Crepfor, Urti_f = Urtfel, Metr_s = Metrsen, Aste_f = Astfor, Aste_v = Astvul, Stro_d = Strongdro, Lepi_s = Lepsqua, Dide_v = Didvex, Botr_s = Botrysch, Cion_i = Ciointes, Gama_spp = Gamarus, Carc_m = CarmaeTot, Hemi_s = HemiTot, Canc_i = CanirrTot, Canc_b = CanborTot) %>%
    pivot_longer(
-     cols = Llitt:SembalA2,
+     cols = Litt_l:Canc_b,
      names_to = "invert_species",
      values_to = "count"
    )
@@ -213,15 +215,16 @@ HH27_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sh
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
 
 seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
+  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2021") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "proportion")
+    values_to = "squares out of 25") %>%
+  mutate(proportion = `squares out of 25`/25)
 
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-   subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+   subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
    add_column(year = "2017") %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
