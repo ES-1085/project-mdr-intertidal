@@ -735,10 +735,16 @@ we have requested access to the 2020 portion of the data.
 
 ## 3. Data analysis plan
 
+Before we begin the data analysis process, we are going to spend a lot
+of time tidying the data. Our plan is to create two dataframes for each
+year, one for seaweeds and one for invertebrates. We will then join the
+dataframes from each year so that we are able to analyse change in
+seaweed cover and change in invertebrate distribution over time.
+
 The variables that we will be using to explore our data are tide height,
-year, species, sea water temperature, and ascophyllum length. We do not
-anticipate needing to find any more data to help with this research
-question.
+year, species, sea water temperature, proportion of quadrat cover, count
+and ascophyllum length. We do not anticipate needing to find any more
+data to help with this research question.
 
 For the preliminary data analysis, we will look at the mean tide height
 for certain indicator species. We also plan on mutating the data to be
