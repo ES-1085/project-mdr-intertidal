@@ -299,10 +299,21 @@ seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
   mutate(proportion = squares_out_of_25/25) %>%
   rename(date = Date,
          tide_ht = TideHt,
-         quadrat_m = Quadrat,
+         quadrat_number = Quadrat,
          Asco_n_ht = Asco_nHt,
          Asco_n_bladders = Asco_nBladders) %>%
-  relocate(year, .after = date)
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 
 ```
 
@@ -313,14 +324,25 @@ inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
   add_column(year = "2020") %>%
   rename(date = Date,
       tide_ht = TideHt,
-      quadrat_m = Quadrat,
+      quadrat_number = Quadrat,
       Nuce_l = Nuci_l) %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",
      values_to = "count"
    ) %>%
-  relocate(year, .after = date)
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 
 ```
 
@@ -342,10 +364,21 @@ seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
   mutate(proportion = squares_out_of_25/25) %>%
   rename(date = Date,
          tide_ht = TideHt,
-         quadrat_m = Quadrat,
+         quadrat_number = Quadrat,
          Asco_n_ht = Asco_nHt,
          Asco_n_bladders = Asco_nBladders) %>%
-  relocate(year, .after = date)
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 
 ```
 
@@ -356,13 +389,26 @@ inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
   add_column(year = "2021") %>%
   rename(date = Date,
          tide_ht = TideHt,
-         quadrat_m = Quadrat,
+         quadrat_number = Quadrat,
          Nuce_l = Nuci_l) %>%
    pivot_longer(cols = Semi_bCC:Semi_bA2,
                 names_to = "invert_species",
                 values_to = "count"
                 ) %>%
-  relocate(year, .after = date)
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+
+# need to specify value/NA for quadrat_m if value in quadrat_number doesn't match list?
 
 ```
 
