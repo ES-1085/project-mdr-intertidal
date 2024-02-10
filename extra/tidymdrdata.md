@@ -90,7 +90,7 @@ inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
          Dide_v = Didvex,
          Botr_s = Botrysch,
          Cion_i = Ciointes,
-         Gama_spp = Gamarus,
+         Gamm_spp = Gamarus,
          Carc_m = CarmaeTot,
          Hemi_s = HemiTot,
          Canc_i = CanirrTot,
@@ -504,14 +504,14 @@ seaweeds_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
 
 ``` r
 inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-  subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
   add_column(year = "2020") %>%
   rename(date = Date,
       tide_ht = TideHt,
       quadrat_number = Quadrat,
       Nuce_l = Nuci_l) %>%
    pivot_longer(
-     cols = Semi_bCC:Semi_bA2,
+     cols = Urti_f:Semi_bA2,
      names_to = "invert_species",
      values_to = "count"
    ) %>%
@@ -563,13 +563,13 @@ seaweeds_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
 
 ``` r
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
   add_column(year = "2021") %>%
   rename(date = Date,
          tide_ht = TideHt,
          quadrat_number = Quadrat,
          Nuce_l = Nuci_l) %>%
-   pivot_longer(cols = Semi_bCC:Semi_bA2,
+   pivot_longer(cols = Urti_f:Semi_bA2,
                 names_to = "invert_species",
                 values_to = "count"
                 ) %>%
@@ -621,14 +621,14 @@ seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
 
 ``` r
 inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2022") %>%
   rename(date = Date,
          tide_ht = TideHt,
          quadrat_number = Quadrat,
          Nuce_l = Nuci_l) %>%
   pivot_longer(
-    cols = Semi_bCC:Semi_bA2,
+    cols = Urti_f:Semi_bA2,
     names_to = "invert_species",
     values_to = "count") %>%
   relocate(year, .after = date) %>%
@@ -677,14 +677,14 @@ seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
 
 ``` r
 inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2023") %>%
   rename(date = Date,
          tide_ht = TideHt,
          quadrat_number = Quadrat,
          Nuce_l = Nuci_l) %>%
   pivot_longer(
-    cols = Semi_bCC:Semi_bA2,
+    cols = Urti_f:Semi_bA2,
     names_to = "invert_species",
     values_to = "count") %>% 
   relocate(year, .after = date) %>%
