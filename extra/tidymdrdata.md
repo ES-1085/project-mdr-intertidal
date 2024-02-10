@@ -14,12 +14,50 @@ horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MD
 seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
   subset(select = -c(Site, Name, Llitt:SembalA2 )) %>%
   add_column(year = "2017") %>%
-  rename(Asco_nCC = AscoCC, Fucu_vCC = FucVCC, Fucu_sCC = FucSCC, Fucu_dCC = FucDCC, Fuc_spp = FucSpp.CC, Asco_nSC = AscoSC, Fucu_vSC = FucVSC, Fucu_sSC = FucSSC, Fucu_dSC = FucDSC, Mast_sSC = MstellSC, Chon_cSC = ChonCrSC, Ulva_iSC = UlvaIntesSC, Ulva_lSC = UlvaLacSC, Coro_oSC = CorOSC, Vert_lSC = VertLanSC, Cera_rSC = CerSC, Lam_spp = `Laminaria spp.`, Por_sp = `Porphyra sp.`, Asco_recuit = AscoR, Asco_holdfasts = AscoA, Fucu_Recruits = FucR, Fucu_vHoldfasts = FucVA, Fucu_sHoldfasts = FucSA, Fucu_dHoldfasts = FucDA, Asco_nHt = `AscoHeight (cm)`, Asco_nBladders = AscoBladders, Fucu_sppHoldfasts = FucSppA) %>%
+  rename(date = Date,
+         tide_ht = Tide,
+         quadrat_m = `Quadrat (m)`,
+         Asco_nCC = AscoCC,
+         Fucu_vCC = FucVCC,
+         Fucu_sCC = FucSCC,
+         Fucu_dCC = FucDCC,
+         Fuc_spp = FucSpp.CC,
+         Asco_nSC = AscoSC,
+         Fucu_vSC = FucVSC,
+         Fucu_sSC = FucSSC,
+         Fucu_dSC = FucDSC,
+         Mast_sSC = MstellSC,
+         Chon_cSC = ChonCrSC,
+         Ulva_iSC = UlvaIntesSC,
+         Ulva_lSC = UlvaLacSC,
+         Cora_oSC = CorOSC,
+         Vert_lSC = VertLanSC,
+         Cera_rSC = CerSC,
+         Lami_spp = `Laminaria spp.`,
+         Porp_sp = `Porphyra sp.`,
+         Asco_recruits = AscoR,
+         Asco_holdfasts = AscoA,
+         Fucu_recruits = FucR,
+         Fucu_v_holdfasts = FucVA,
+         Fucu_s_holdfasts = FucSA,
+         Fucu_d_holdfasts = FucDA,
+         Asco_n_ht = `AscoHeight (cm)`,
+         Asco_n_bladders = AscoBladders,
+         Fucu_spp_holdfasts = FucSppA) %>%
+  relocate(year, .after = date) %>%
   pivot_longer(
-    cols = Asco_nCC:Fucu_sppHoldfasts,
+    cols = Asco_nCC:Fucu_spp_holdfasts,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = `squares_out_of_25`/25) %>%
+  filter(!(seaweed_species %in% c("Asco_recruits",
+                                  "Asco_holdfasts",
+                                  "Fucu_recruits",
+                                  "Fucu_v_holdfasts",
+                                  "Fucu_s_holdfasts",
+                                  "Fucu_d_holdfasts",
+                                  "Fucu_spp_holdfasts")))
+         
   
  inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
    subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
@@ -380,7 +418,7 @@ seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
 
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
    subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2017") %>%
+   add_column(year = "2021") %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",
