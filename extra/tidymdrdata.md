@@ -428,52 +428,66 @@ seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25) %>%
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
   rename(date = Date,
          tide_ht = TideHt,
          quadrat_m = Quadrat,
          Asco_n_ht = Asco_nHt,
-         Asco_n_bladders = Asco_nBladders,
-         squares_out_of_25 = `squares out of 25`) %>%
+         Asco_n_bladders = Asco_nBladders) %>%
   relocate(year, .after = date)
 ```
 
 ``` r
 inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-   subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2020") %>%
+  subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2020") %>%
+  rename(date = Date,
+      tide_ht = TideHt,
+      quadrat_m = Quadrat,
+      Nuce_l = Nuci_l) %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",
      values_to = "count"
    ) %>%
-  rename(date = Date,
-         tide_ht = TideHt,
-         quadrat_m = Quadrat) %>%
   relocate(year, .after = date)
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
+```
 
+``` r
 seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
   subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2021") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_m = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders) %>%
+  relocate(year, .after = date)
+```
 
+``` r
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-   subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2021") %>%
-   pivot_longer(
-     cols = Semi_bCC:Semi_bA2,
-     names_to = "invert_species",
-     values_to = "count"
-   )
+  subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2021") %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_m = Quadrat,
+         Nuce_l = Nuci_l) %>%
+   pivot_longer(cols = Semi_bCC:Semi_bA2,
+                names_to = "invert_species",
+                values_to = "count"
+                ) %>%
+  relocate(year, .after = date)
 ```
 
 ``` r
