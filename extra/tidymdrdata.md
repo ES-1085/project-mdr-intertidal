@@ -700,3 +700,47 @@ inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
                                quadrat_number == 10 ~ 27),
          .after = quadrat_number)
 ```
+
+``` r
+# missing 2018
+
+all_seaweed_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
+  full_join(seaweeds_mdr_2020) %>%
+  full_join(seaweeds_mdr_2021) %>%
+  full_join(seaweeds_mdr_2022) %>%
+  full_join(seaweeds_mdr_2023)
+```
+
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion,
+    ## quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion,
+    ## quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, seaweed_species,
+    ## squares_out_of_25, proportion, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, seaweed_species,
+    ## squares_out_of_25, proportion, quadrat_number, Asco_nHt, Asco_nBladders)`
+
+``` r
+# missing 2018
+
+all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
+  full_join(inverts_mdr_2020) %>%
+  full_join(inverts_mdr_2021) %>%
+  full_join(inverts_mdr_2022) %>%
+  full_join(inverts_mdr_2023)
+```
+
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`

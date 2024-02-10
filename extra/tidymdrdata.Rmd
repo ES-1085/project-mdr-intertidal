@@ -592,3 +592,27 @@ inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
          .after = quadrat_number)
   
 ```
+
+```{r join-everything-seaweed}
+
+# missing 2018
+
+all_seaweed_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
+  full_join(seaweeds_mdr_2020) %>%
+  full_join(seaweeds_mdr_2021) %>%
+  full_join(seaweeds_mdr_2022) %>%
+  full_join(seaweeds_mdr_2023)
+  
+```
+
+```{r join-everything-inverts}
+
+# missing 2018
+
+all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
+  full_join(inverts_mdr_2020) %>%
+  full_join(inverts_mdr_2021) %>%
+  full_join(inverts_mdr_2022) %>%
+  full_join(inverts_mdr_2023)
+
+```
