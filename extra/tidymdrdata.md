@@ -64,7 +64,7 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
 
 ``` r
 inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-  subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
+  subset(select = -c(Site,Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
   add_column(year = "2017") %>%
   rename(date = Date,
          tide_ht = Tide,
@@ -412,12 +412,16 @@ HH27_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sh
     ## • `` -> `...3`
 
 ``` r
+# MS will do this!
+
 horizontal_MDR_NeCSA_2019  <- read_excel("/cloud/project/data/2019_horizontal_MDR_NeCSA.xlsx")
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2020  <- read_excel("/cloud/project/data/2020_horizontal_MDR_NeCSA.xlsx")
+```
 
+``` r
 seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
   subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2020") %>%
@@ -425,8 +429,17 @@ seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
     values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
+  mutate(proportion = `squares out of 25`/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_m = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders,
+         squares_out_of_25 = `squares out of 25`) %>%
+  relocate(year, .after = date)
+```
 
+``` r
 inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
    subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
    add_column(year = "2020") %>%
@@ -434,7 +447,11 @@ inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",
      values_to = "count"
-   )
+   ) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_m = Quadrat) %>%
+  relocate(year, .after = date)
 ```
 
 ``` r
