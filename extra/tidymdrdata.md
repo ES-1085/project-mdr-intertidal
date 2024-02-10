@@ -412,9 +412,62 @@ HH27_MDR_NeCSA_2018 <- read_excel("/cloud/project/data/2018_full_NeCSA.xlsx", sh
     ## • `` -> `...3`
 
 ``` r
-# MS will do this!
-
 horizontal_MDR_NeCSA_2019  <- read_excel("/cloud/project/data/2019_horizontal_MDR_NeCSA.xlsx")
+```
+
+``` r
+seaweeds_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
+  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Semi_bA2)) %>%
+  add_column(year = "2019") %>%
+  pivot_longer(
+    cols = Asco_nCC:Cera_rSC,
+    names_to = "seaweed_species",
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
+
+``` r
+inverts_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
+  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2019") %>%
+  rename(date = Date,
+      tide_ht = TideHt,
+      quadrat_number = Quadrat,
+      Nuce_l = Nuci_l) %>%
+   pivot_longer(
+     cols = Urti_f:Semi_bA2,
+     names_to = "invert_species",
+     values_to = "count"
+   ) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 ```
 
 ``` r
