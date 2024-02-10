@@ -10,7 +10,9 @@ library(readxl)
 
 ``` r
 horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx", na = c("*all rock", "*skipped because of tide pool"))
+```
 
+``` r
 seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
   subset(select = -c(Site, Name, Llitt:SembalA2 )) %>%
   add_column(year = "2017") %>%
@@ -21,7 +23,7 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
          Fucu_vCC = FucVCC,
          Fucu_sCC = FucSCC,
          Fucu_dCC = FucDCC,
-         Fuc_spp = FucSpp.CC,
+         Fucu_spp = FucSpp.CC,
          Asco_nSC = AscoSC,
          Fucu_vSC = FucVSC,
          Fucu_sSC = FucSSC,
@@ -56,18 +58,49 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
                                   "Fucu_v_holdfasts",
                                   "Fucu_s_holdfasts",
                                   "Fucu_d_holdfasts",
-                                  "Fucu_spp_holdfasts")))
-         
-  
- inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-   subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
-   add_column(year = "2017") %>%
-   rename(Litt_l = Llitt, Litt_o = Liobtu, Litt_s = Lsax, Litt_spp = `Litt. Spp.`, Nuci_l = Nlap, Lacu_v = Lacvinc, Hiat_a = Hiatarct, Ostr_e = Ostredu, Myti_e = Myted, Modi_m = Modmod, Tect_t = Testtest, Crep_f = Crepfor, Urti_f = Urtfel, Metr_s = Metrsen, Aste_f = Astfor, Aste_v = Astvul, Stro_d = Strongdro, Lepi_s = Lepsqua, Dide_v = Didvex, Botr_s = Botrysch, Cion_i = Ciointes, Gama_spp = Gamarus, Carc_m = CarmaeTot, Hemi_s = HemiTot, Canc_i = CanirrTot, Canc_b = CanborTot) %>%
-   pivot_longer(
+                                  "Fucu_spp_holdfasts"
+                                  )))
+```
+
+``` r
+inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
+  subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
+  add_column(year = "2017") %>%
+  rename(date = Date,
+         tide_ht = Tide,
+         quadrat_m = `Quadrat (m)`,
+         Litt_l = Llitt,
+         Litt_o = Liobtu,
+         Litt_s = Lsax,
+         Litt_spp = `Litt. Spp.`,
+         Nuce_l = Nlap,
+         Lacu_v = Lacvinc,
+         Hiat_a = Hiatarct,
+         Ostr_e = Ostredu,
+         Myti_e = Myted,
+         Modi_m = Modmod,
+         Tect_t = Testtest,
+         Crep_f = Crepfor,
+         Urti_f = Urtfel,
+         Metr_s = Metrsen,
+         Aste_f = Astfor,
+         Aste_v = Astvul,
+         Stro_d = Strongdro,
+         Lepi_s = Lepsqua,
+         Dide_v = Didvex,
+         Botr_s = Botrysch,
+         Cion_i = Ciointes,
+         Gama_spp = Gamarus,
+         Carc_m = CarmaeTot,
+         Hemi_s = HemiTot,
+         Canc_i = CanirrTot,
+         Canc_b = CanborTot) %>%
+  pivot_longer(
      cols = Litt_l:Canc_b,
      names_to = "invert_species",
      values_to = "count"
-   )
+     ) %>%
+  relocate(year, .after = date)
 ```
 
 ``` r
