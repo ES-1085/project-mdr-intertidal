@@ -704,7 +704,7 @@ inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
 ``` r
 # missing 2018
 
-all_seaweed_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
+all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   full_join(seaweeds_mdr_2020) %>%
   full_join(seaweeds_mdr_2021) %>%
   full_join(seaweeds_mdr_2022) %>%
@@ -725,13 +725,33 @@ all_seaweed_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
     ## squares_out_of_25, proportion, quadrat_number, Asco_nHt, Asco_nBladders)`
 
 ``` r
+all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+
+# ^ how to get it to keep everything else the same?
+
+distinct(all_seaweeds_mdr, seaweed_species) %>%
+  arrange(seaweed_species)
+```
+
+    ## # A tibble: 2 × 1
+    ##   seaweed_species
+    ##   <chr>          
+    ## 1 Cora_oSC       
+    ## 2 <NA>
+
+``` r
 # missing 2018
 
 all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
   full_join(inverts_mdr_2020) %>%
   full_join(inverts_mdr_2021) %>%
   full_join(inverts_mdr_2022) %>%
-  full_join(inverts_mdr_2023)
+  full_join(inverts_mdr_2023) %>%
+  filter(!(invert_species %in% c("Semi_bA1",
+                                 "Semi_bA2",
+                                 "Semi_bR1",
+                                 "Semi_bR2")))
 ```
 
     ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
@@ -744,3 +764,23 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
     ## count, quadrat_number)`
     ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
     ## count, quadrat_number)`
+
+``` r
+distinct(all_inverts_mdr, invert_species) %>%
+  arrange(invert_species)
+```
+
+    ## # A tibble: 28 × 1
+    ##    invert_species
+    ##    <chr>         
+    ##  1 Aste_f        
+    ##  2 Aste_r        
+    ##  3 Aste_v        
+    ##  4 Botr_s        
+    ##  5 Canc_b        
+    ##  6 Canc_i        
+    ##  7 Carc_m        
+    ##  8 Cion_i        
+    ##  9 Crep_f        
+    ## 10 Dide_sp       
+    ## # ℹ 18 more rows

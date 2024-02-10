@@ -597,11 +597,19 @@ inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
 
 # missing 2018
 
-all_seaweed_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
+all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   full_join(seaweeds_mdr_2020) %>%
   full_join(seaweeds_mdr_2021) %>%
   full_join(seaweeds_mdr_2022) %>%
   full_join(seaweeds_mdr_2023)
+
+all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+
+# ^ how to get it to keep everything else the same?
+
+distinct(all_seaweeds_mdr, seaweed_species) %>%
+  arrange(seaweed_species)
   
 ```
 
@@ -613,6 +621,13 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
   full_join(inverts_mdr_2020) %>%
   full_join(inverts_mdr_2021) %>%
   full_join(inverts_mdr_2022) %>%
-  full_join(inverts_mdr_2023)
+  full_join(inverts_mdr_2023) %>%
+  filter(!(invert_species %in% c("Semi_bA1",
+                                 "Semi_bA2",
+                                 "Semi_bR1",
+                                 "Semi_bR2")))
+
+distinct(all_inverts_mdr, invert_species) %>%
+  arrange(invert_species)
 
 ```
