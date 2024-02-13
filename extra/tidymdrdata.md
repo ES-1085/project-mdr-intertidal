@@ -12,8 +12,9 @@ library(readxl)
 horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx", na = c("*all rock", "*skipped because of tide pool"))
 
 seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-  subset(select = -c(Site, Name, Llitt:SembalA2 )) %>%
+  select(-c(Site, Name, Llitt:SembalA2)) %>%
   add_column(year = "2017") %>%
+  fill(c(Date, Tide), .direction = "down") %>%
   rename(Asco_nCC = AscoCC, Fucu_vCC = FucVCC, Fucu_sCC = FucSCC, Fucu_dCC = FucDCC, Fuc_spp = FucSpp.CC, Asco_nSC = AscoSC, Fucu_vSC = FucVSC, Fucu_sSC = FucSSC, Fucu_dSC = FucDSC, Mast_sSC = MstellSC, Chon_cSC = ChonCrSC, Ulva_iSC = UlvaIntesSC, Ulva_lSC = UlvaLacSC, Coro_oSC = CorOSC, Vert_lSC = VertLanSC, Cera_rSC = CerSC, Lam_spp = `Laminaria spp.`, Por_sp = `Porphyra sp.`, Asco_recuit = AscoR, Asco_holdfasts = AscoA, Fucu_Recruits = FucR, Fucu_vHoldfasts = FucVA, Fucu_sHoldfasts = FucSA, Fucu_dHoldfasts = FucDA, Asco_nHt = `AscoHeight (cm)`, Asco_nBladders = AscoBladders, Fucu_sppHoldfasts = FucSppA) %>%
   pivot_longer(
     cols = Asco_nCC:Fucu_sppHoldfasts,
@@ -22,8 +23,9 @@ seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
   mutate(proportion = `squares out of 25`/25)
   
  inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-   subset(select = -c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
+   select(-c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
    add_column(year = "2017") %>%
+   fill(c(Date, Tide), .direction = "down") %>%
    rename(Litt_l = Llitt, Litt_o = Liobtu, Litt_s = Lsax, Litt_spp = `Litt. Spp.`, Nuci_l = Nlap, Lacu_v = Lacvinc, Hiat_a = Hiatarct, Ostr_e = Ostredu, Myti_e = Myted, Modi_m = Modmod, Tect_t = Testtest, Crep_f = Crepfor, Urti_f = Urtfel, Metr_s = Metrsen, Aste_f = Astfor, Aste_v = Astvul, Stro_d = Strongdro, Lepi_s = Lepsqua, Dide_v = Didvex, Botr_s = Botrysch, Cion_i = Ciointes, Gama_spp = Gamarus, Carc_m = CarmaeTot, Hemi_s = HemiTot, Canc_i = CanirrTot, Canc_b = CanborTot) %>%
    pivot_longer(
      cols = Litt_l:Canc_b,
@@ -346,13 +348,31 @@ horizontal_MDR_NeCSA_2019  <- read_excel("/cloud/project/data/2019_horizontal_MD
 
 ``` r
 horizontal_MDR_NeCSA_2020  <- read_excel("/cloud/project/data/2020_horizontal_MDR_NeCSA.xlsx")
+
+seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes))  %>%
+  add_column(year = "2020") %>%
+  pivot_longer(
+    cols = Asco_nCC:Cera_rSC,
+    names_to = "seaweed_species",
+    values_to = "squares out of 25") %>%
+  mutate(proportion = `squares out of 25`/25)
+
+inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
+   select(-c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+   add_column(year = "2020") %>%
+   pivot_longer(
+     cols = Semi_bCC:Semi_bA2,
+     names_to = "invert_species",
+     values_to = "count"
+   )
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
 
 seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes))  %>%
   add_column(year = "2021") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -361,8 +381,8 @@ seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
   mutate(proportion = `squares out of 25`/25)
 
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-   subset(select = -c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2017") %>%
+   select(-c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+   add_column(year = "2021") %>%
    pivot_longer(
      cols = Semi_bCC:Semi_bA2,
      names_to = "invert_species",
@@ -374,7 +394,7 @@ inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
 horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MDR_NeCSA.xlsx")
 
 seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2022") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -382,7 +402,7 @@ seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
     values_to = "proportion")
   
 inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  select(-c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2022") %>%
   pivot_longer(
     cols = Semi_bCC:Semi_bA2,
@@ -394,7 +414,7 @@ inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
 
 seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2023") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -402,7 +422,7 @@ seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
     values_to = "proportion")
   
 inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  select(-c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2023") %>%
   pivot_longer(
     cols = Semi_bCC:Semi_bA2,

@@ -39,6 +39,8 @@ horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MD
 
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
 
+MDR_temp_2018 <- read_excel("/cloud/project/data/NeCSA-Mount_Desert_Rock_20180811copy.xlsx")
+
 ```
 
 
@@ -79,7 +81,9 @@ There are two sites for temperature sensor attachment on the island - one in the
 
 ## 3. Data analysis plan
 
-The variables that we will be using to explore our data are tide height, year, species, sea water temperature, and ascophyllum length. We do not anticipate needing to find any more data to help with this research question.
+Before we begin the data analysis process, we are going to spend a lot of time tidying the data. Our plan is to create two dataframes for each year, one for seaweeds and one for invertebrates. We will then join the dataframes from each year so that we are able to analyse change in seaweed cover and change in invertebrate distribution over time.
+
+The variables that we will be using to explore our data are tide height, year, species, sea water temperature, proportion of quadrat cover, count and ascophyllum length. We do not anticipate needing to find any more data to help with this research question.
 
 For the preliminary data analysis, we will look at the mean tide height for certain indicator species. We also plan on mutating the data to be able to compare the ratio of crabs to snails over time. In addition to that, we will look at how the percentage of canopy cover affects the presence of snails and crabs across the quadrats. Finally, we will create a bar graph of indicator species abundance faceted by year.
 
