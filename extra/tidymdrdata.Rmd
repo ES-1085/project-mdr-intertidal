@@ -244,7 +244,8 @@ seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "proportion")
+    values_to = "proportion") %>%
+ mutate(proportion = `squares out of 25`/25)
   
 inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
   subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
@@ -255,6 +256,9 @@ inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
     values_to = "count")
 ```
 
+x <- c("fish", "fish", "fish", "whistle")
+rename.values(x, fish="newfish")
+
 ```{r load-data-2023}
 
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
@@ -262,10 +266,13 @@ horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MD
 seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
   subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2023") %>%
+  rename.values(x, 1="3")
+  
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "proportion")
+    values_to = "proportion") %>%
+  mutate(proportion = `squares out of 25`/25)
   
 inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
   subset(select = -c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
