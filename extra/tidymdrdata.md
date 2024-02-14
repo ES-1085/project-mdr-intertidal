@@ -47,6 +47,7 @@ seaweeds_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
          Asco_n_bladders = AscoBladders,
          Fucu_spp_holdfasts = FucSppA) %>%
   relocate(year, .after = date) %>%
+  fill(c(date, tide_ht), .direction = "down") %>%
   pivot_longer(
     cols = Asco_nCC:Fucu_spp_holdfasts,
     names_to = "seaweed_species",
@@ -725,8 +726,8 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
     ## squares_out_of_25, proportion, quadrat_number, Asco_nHt, Asco_nBladders)`
 
 ``` r
-all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+#all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
 
 # ^ how to get it to keep everything else the same?
 
@@ -734,11 +735,28 @@ distinct(all_seaweeds_mdr, seaweed_species) %>%
   arrange(seaweed_species)
 ```
 
-    ## # A tibble: 2 × 1
-    ##   seaweed_species
-    ##   <chr>          
-    ## 1 Cora_oSC       
-    ## 2 <NA>
+    ## # A tibble: 19 × 1
+    ##    seaweed_species
+    ##    <chr>          
+    ##  1 Asco_nCC       
+    ##  2 Asco_nSC       
+    ##  3 Cera_rSC       
+    ##  4 Chon_cSC       
+    ##  5 Cora_oSC       
+    ##  6 Coro_oSC       
+    ##  7 Fucu_dCC       
+    ##  8 Fucu_dSC       
+    ##  9 Fucu_sCC       
+    ## 10 Fucu_sSC       
+    ## 11 Fucu_spp       
+    ## 12 Fucu_vCC       
+    ## 13 Fucu_vSC       
+    ## 14 Lami_spp       
+    ## 15 Mast_sSC       
+    ## 16 Porp_sp        
+    ## 17 Ulva_iSC       
+    ## 18 Ulva_lSC       
+    ## 19 Vert_lSC
 
 ``` r
 # missing 2018
@@ -784,3 +802,61 @@ distinct(all_inverts_mdr, invert_species) %>%
     ##  9 Crep_f        
     ## 10 Dide_sp       
     ## # ℹ 18 more rows
+
+``` r
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d()
+```
+
+    ## Warning: Removed 62 rows containing missing values (`geom_col()`).
+
+![](tidymdrdata_files/figure-gfm/preliminary-graph-snails-1.png)<!-- -->
+
+``` r
+# how to separate (color?) by tide height
+# want a grouped bar plot: x-axis is year, each cluster separated by species, fill = tide height
+# ALSO: make this mean # of snails per quadrat
+
+snails_mdr <- all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s"),
+         !(year == 2017)) %>%
+  mutate(count = replace_na(count, 0))
+
+snails_mdr %>%
+  group_by(year, tide_ht, invert_species) %>%
+  mean(count)
+```
+
+    ## Warning in mean.default(., count): argument is not numeric or logical:
+    ## returning NA
+
+    ## [1] NA
+
+``` r
+# not working: "Warning: argument is not numeric or logical: returning NA[1] NA"; tried including na.rm = TRUE in mean argument and that didn't work
+
+glimpse(snails_mdr)
+```
+
+    ## Rows: 579
+    ## Columns: 7
+    ## $ date           <dttm> 2019-08-14, 2019-08-14, 2019-08-14, 2019-08-14, 2019-0…
+    ## $ year           <chr> "2019", "2019", "2019", "2019", "2019", "2019", "2019",…
+    ## $ tide_ht        <chr> "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", …
+    ## $ quadrat_m      <dbl> 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 12, 12, 12, 15, 15,…
+    ## $ invert_species <chr> "Litt_l", "Litt_o", "Litt_s", "Litt_l", "Litt_o", "Litt…
+    ## $ count          <dbl> 0, 0, 0, 0, 0, 0, 0, 3, 4, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0…
+    ## $ quadrat_number <dbl> 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7…
+
+``` r
+# count IS numeric, and there's no NAs... why isn't this working?
+```

@@ -52,6 +52,7 @@ seaweeds_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
          Asco_n_bladders = AscoBladders,
          Fucu_spp_holdfasts = FucSppA) %>%
   relocate(year, .after = date) %>%
+  fill(c(date, tide_ht), .direction = "down") %>%
   pivot_longer(
     cols = Asco_nCC:Fucu_spp_holdfasts,
     names_to = "seaweed_species",
@@ -603,8 +604,8 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   full_join(seaweeds_mdr_2022) %>%
   full_join(seaweeds_mdr_2023)
 
-all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+#all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
 
 # ^ how to get it to keep everything else the same?
 
@@ -629,5 +630,40 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
 
 distinct(all_inverts_mdr, invert_species) %>%
   arrange(invert_species)
+
+```
+
+```{r preliminary-graph-snails}
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d()
+
+# how to separate (color?) by tide height
+# want a grouped bar plot: x-axis is year, each cluster separated by species, fill = tide height
+# ALSO: make this mean # of snails per quadrat
+
+snails_mdr <- all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s"),
+         !(year == 2017)) %>%
+  mutate(count = replace_na(count, 0))
+
+snails_mdr %>%
+  group_by(year, tide_ht, invert_species) %>%
+  mean(count)
+
+# not working: "Warning: argument is not numeric or logical: returning NA[1] NA"; tried including na.rm = TRUE in mean argument and that didn't work
+
+glimpse(snails_mdr)
+
+# count IS numeric, and there's no NAs... why isn't this working?
 
 ```
