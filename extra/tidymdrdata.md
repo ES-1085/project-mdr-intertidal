@@ -872,8 +872,11 @@ all_inverts_mdr %>%
   mutate(count = replace_na(count, 0)) %>%
   group_by(year, invert_species) %>%
   summarise(mean_count = mean(count)) %>%
+  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.1, position = "dodge") +
   scale_fill_viridis_d()
 ```
 
@@ -884,6 +887,7 @@ all_inverts_mdr %>%
 
 ``` r
 # MEAN count per quadrat, faceted by tide height
+# error bars are NOT working (need to get them to line up with their bars)
 
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
