@@ -14,7 +14,7 @@ horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MD
 
 ``` r
 seaweeds_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-  subset(select = -c(Site, Name, Llitt:SembalA2 )) %>%
+  select(-c(Site, Name, Llitt:SembalA2 )) %>%
   add_column(year = "2017") %>%
   rename(date = Date,
          tide_ht = Tide,
@@ -65,7 +65,7 @@ seaweeds_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
 
 ``` r
 inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-  subset(select = -c(Site,Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
+  select(-c(Site,Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
   add_column(year = "2017") %>%
   rename(date = Date,
          tide_ht = Tide,
@@ -418,7 +418,7 @@ horizontal_MDR_NeCSA_2019  <- read_excel("/cloud/project/data/2019_horizontal_MD
 
 ``` r
 seaweeds_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Semi_bA2)) %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Semi_bA2)) %>%
   add_column(year = "2019") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -446,7 +446,7 @@ seaweeds_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
 
 ``` r
 inverts_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
   add_column(year = "2019") %>%
   rename(date = Date,
       tide_ht = TideHt,
@@ -477,7 +477,7 @@ horizontal_MDR_NeCSA_2020  <- read_excel("/cloud/project/data/2020_horizontal_MD
 
 ``` r
 seaweeds_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2020") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -505,7 +505,7 @@ seaweeds_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
 
 ``` r
 inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
   add_column(year = "2020") %>%
   rename(date = Date,
       tide_ht = TideHt,
@@ -536,7 +536,7 @@ horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MD
 
 ``` r
 seaweeds_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2021") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -564,7 +564,7 @@ seaweeds_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
 
 ``` r
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  subset(select = -c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
   add_column(year = "2021") %>%
   rename(date = Date,
          tide_ht = TideHt,
@@ -596,7 +596,7 @@ horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MD
 
 ``` r
 seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2022") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
@@ -622,7 +622,7 @@ seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
 
 ``` r
 inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2022") %>%
   rename(date = Date,
          tide_ht = TideHt,
@@ -652,7 +652,7 @@ horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MD
 
 ``` r
 seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2023") %>%
   rename(date = Date,
          tide_ht = TideHt,
@@ -678,7 +678,7 @@ seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
 
 ``` r
 inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  subset(select = -c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2023") %>%
   rename(date = Date,
          tide_ht = TideHt,
