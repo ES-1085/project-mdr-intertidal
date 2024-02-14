@@ -735,6 +735,7 @@ all_inverts_mdr %>%
          !(year == 2017),
          !is.na(tide_ht)) %>%
   mutate(count = replace_na(count, 0)) %>%
+  mutate(invert_species = fct_relevel(invert_species, "Litt_l", "Litt_o", "Litt_s", "Lacu_v")) %>%
   group_by(year, tide_ht, invert_species) %>%
   summarise(mean_count = mean(count)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
