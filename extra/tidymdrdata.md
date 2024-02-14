@@ -837,11 +837,9 @@ all_inverts_mdr %>%
 
     ## Warning: Removed 62 rows containing missing values (`geom_col()`).
 
-![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-1.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
 ``` r
-# total number per quadrat, facet by tide height:
-
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -857,10 +855,10 @@ all_inverts_mdr %>%
 
     ## Warning: Removed 59 rows containing missing values (`geom_col()`).
 
-![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-2.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-faceted-1.png)<!-- -->
 
 ``` r
-# MEAN count per quadrat, unfaceted
+# error bars are NOT working (need to get them to line up with their bars)
 
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -883,12 +881,9 @@ all_inverts_mdr %>%
     ## `summarise()` has grouped output by 'year'. You can override using the
     ## `.groups` argument.
 
-![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-3.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
 ``` r
-# MEAN count per quadrat, faceted by tide height
-# error bars are NOT working (need to get them to line up with their bars)
-
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -908,10 +903,9 @@ all_inverts_mdr %>%
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
     ## the `.groups` argument.
 
-![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-4.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-faceted-1.png)<!-- -->
 
 ``` r
-# MEAN count per quadrat, faceted by tide height, PLUS L. VINCTA
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
@@ -935,4 +929,4 @@ all_inverts_mdr %>%
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
     ## the `.groups` argument.
 
-![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-5.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-L_vincta-1.png)<!-- -->

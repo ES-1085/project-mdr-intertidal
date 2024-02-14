@@ -639,7 +639,7 @@ distinct(all_inverts_mdr, invert_species) %>%
 
 ```
 
-```{r preliminary-graphs-snails}
+```{r total-snails-per-quadrat-unfaceted}
 
 # total number per quadrat, unfaceted
 
@@ -653,7 +653,9 @@ all_inverts_mdr %>%
     geom_col(position = "dodge") +
   scale_fill_viridis_d()
 
-# total number per quadrat, facet by tide height:
+```
+
+```{r total-snails-per-quadrat-faceted}
 
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -667,8 +669,10 @@ all_inverts_mdr %>%
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 
+```
 
-# MEAN count per quadrat, unfaceted
+```{r mean-snails-per-quadrat-unfaceted}
+
 # error bars are NOT working (need to get them to line up with their bars)
 
 all_inverts_mdr %>%
@@ -688,8 +692,9 @@ all_inverts_mdr %>%
                 width=.1, position = "dodge") +
   scale_fill_viridis_d()
 
+```
 
-# MEAN count per quadrat, faceted by tide height
+```{r mean-snails-per-quadrat-faceted}
 
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -706,7 +711,10 @@ all_inverts_mdr %>%
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 
-# MEAN count per quadrat, faceted by tide height, PLUS L. VINCTA
+```
+
+```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
+
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
