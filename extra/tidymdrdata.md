@@ -709,7 +709,9 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   full_join(seaweeds_mdr_2020) %>%
   full_join(seaweeds_mdr_2021) %>%
   full_join(seaweeds_mdr_2022) %>%
-  full_join(seaweeds_mdr_2023)
+  full_join(seaweeds_mdr_2023) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
 ```
 
     ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
@@ -769,7 +771,9 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
   filter(!(invert_species %in% c("Semi_bA1",
                                  "Semi_bA2",
                                  "Semi_bR1",
-                                 "Semi_bR2")))
+                                 "Semi_bR2"))) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
 ```
 
     ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
@@ -782,6 +786,20 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
     ## count, quadrat_number)`
     ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
     ## count, quadrat_number)`
+
+``` r
+glimpse(all_inverts_mdr)
+```
+
+    ## Rows: 4,666
+    ## Columns: 7
+    ## $ date           <dttm> 2017-08-12, 2017-08-12, 2017-08-12, 2017-08-12, 2017-0…
+    ## $ year           <chr> "2017", "2017", "2017", "2017", "2017", "2017", "2017",…
+    ## $ tide_ht        <fct> L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L…
+    ## $ quadrat_m      <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+    ## $ invert_species <chr> "Litt_l", "Litt_o", "Litt_s", "Litt_spp", "Nuce_l", "La…
+    ## $ count          <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+    ## $ quadrat_number <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
 
 ``` r
 distinct(all_inverts_mdr, invert_species) %>%
@@ -804,6 +822,8 @@ distinct(all_inverts_mdr, invert_species) %>%
     ## # ℹ 18 more rows
 
 ``` r
+# total number per quadrat, unfaceted
+
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -817,46 +837,98 @@ all_inverts_mdr %>%
 
     ## Warning: Removed 62 rows containing missing values (`geom_col()`).
 
-![](tidymdrdata_files/figure-gfm/preliminary-graph-snails-1.png)<!-- -->
+![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-1.png)<!-- -->
 
 ``` r
-# how to separate (color?) by tide height
-# want a grouped bar plot: x-axis is year, each cluster separated by species, fill = tide height
-# ALSO: make this mean # of snails per quadrat
+# total number per quadrat, facet by tide height:
 
-snails_mdr <- all_inverts_mdr %>%
+all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s"),
-         !(year == 2017)) %>%
-  mutate(count = replace_na(count, 0))
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
+```
 
-snails_mdr %>%
+    ## Warning: Removed 59 rows containing missing values (`geom_col()`).
+
+![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-2.png)<!-- -->
+
+``` r
+# MEAN count per quadrat, unfaceted
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d()
+```
+
+    ## `summarise()` has grouped output by 'year'. You can override using the
+    ## `.groups` argument.
+
+![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-3.png)<!-- -->
+
+``` r
+# MEAN count per quadrat, faceted by tide height
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
   group_by(year, tide_ht, invert_species) %>%
-  mean(count)
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
 ```
 
-    ## Warning in mean.default(., count): argument is not numeric or logical:
-    ## returning NA
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
 
-    ## [1] NA
+![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-4.png)<!-- -->
 
 ``` r
-# not working: "Warning: argument is not numeric or logical: returning NA[1] NA"; tried including na.rm = TRUE in mean argument and that didn't work
+# MEAN count per quadrat, faceted by tide height, PLUS L. VINCTA
+# reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
+# how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
-glimpse(snails_mdr)
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp",
+                               "Lacu_v"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, tide_ht, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
 ```
 
-    ## Rows: 579
-    ## Columns: 7
-    ## $ date           <dttm> 2019-08-14, 2019-08-14, 2019-08-14, 2019-08-14, 2019-0…
-    ## $ year           <chr> "2019", "2019", "2019", "2019", "2019", "2019", "2019",…
-    ## $ tide_ht        <chr> "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", …
-    ## $ quadrat_m      <dbl> 0, 0, 0, 3, 3, 3, 6, 6, 6, 9, 9, 9, 12, 12, 12, 15, 15,…
-    ## $ invert_species <chr> "Litt_l", "Litt_o", "Litt_s", "Litt_l", "Litt_o", "Litt…
-    ## $ count          <dbl> 0, 0, 0, 0, 0, 0, 0, 3, 4, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0…
-    ## $ quadrat_number <dbl> 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7…
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
 
-``` r
-# count IS numeric, and there's no NAs... why isn't this working?
-```
+![](tidymdrdata_files/figure-gfm/preliminary-graphs-snails-5.png)<!-- -->
