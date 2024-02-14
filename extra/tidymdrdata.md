@@ -10,28 +10,98 @@ library(readxl)
 
 ``` r
 horizontal_MDR_NeCSA_2017  <- read_excel("/cloud/project/data/2017_horizontal_MDR_NeCSA.xlsx", na = c("*all rock", "*skipped because of tide pool"))
+```
 
-seaweed_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-  select(-c(Site, Name, Llitt:SembalA2)) %>%
+``` r
+seaweeds_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
+  select(-c(Site, Name, Llitt:SembalA2 )) %>%
   add_column(year = "2017") %>%
-  fill(c(Date, Tide), .direction = "down") %>%
-  rename(Asco_nCC = AscoCC, Fucu_vCC = FucVCC, Fucu_sCC = FucSCC, Fucu_dCC = FucDCC, Fuc_spp = FucSpp.CC, Asco_nSC = AscoSC, Fucu_vSC = FucVSC, Fucu_sSC = FucSSC, Fucu_dSC = FucDSC, Mast_sSC = MstellSC, Chon_cSC = ChonCrSC, Ulva_iSC = UlvaIntesSC, Ulva_lSC = UlvaLacSC, Coro_oSC = CorOSC, Vert_lSC = VertLanSC, Cera_rSC = CerSC, Lam_spp = `Laminaria spp.`, Por_sp = `Porphyra sp.`, Asco_recuit = AscoR, Asco_holdfasts = AscoA, Fucu_Recruits = FucR, Fucu_vHoldfasts = FucVA, Fucu_sHoldfasts = FucSA, Fucu_dHoldfasts = FucDA, Asco_nHt = `AscoHeight (cm)`, Asco_nBladders = AscoBladders, Fucu_sppHoldfasts = FucSppA) %>%
+  rename(date = Date,
+         tide_ht = Tide,
+         quadrat_m = `Quadrat (m)`,
+         Asco_nCC = AscoCC,
+         Fucu_vCC = FucVCC,
+         Fucu_sCC = FucSCC,
+         Fucu_dCC = FucDCC,
+         Fucu_spp = FucSpp.CC,
+         Asco_nSC = AscoSC,
+         Fucu_vSC = FucVSC,
+         Fucu_sSC = FucSSC,
+         Fucu_dSC = FucDSC,
+         Mast_sSC = MstellSC,
+         Chon_cSC = ChonCrSC,
+         Ulva_iSC = UlvaIntesSC,
+         Ulva_lSC = UlvaLacSC,
+         Cora_oSC = CorOSC,
+         Vert_lSC = VertLanSC,
+         Cera_rSC = CerSC,
+         Lami_spp = `Laminaria spp.`,
+         Porp_sp = `Porphyra sp.`,
+         Asco_recruits = AscoR,
+         Asco_holdfasts = AscoA,
+         Fucu_recruits = FucR,
+         Fucu_v_holdfasts = FucVA,
+         Fucu_s_holdfasts = FucSA,
+         Fucu_d_holdfasts = FucDA,
+         Asco_n_ht = `AscoHeight (cm)`,
+         Asco_n_bladders = AscoBladders,
+         Fucu_spp_holdfasts = FucSppA) %>%
+  relocate(year, .after = date) %>%
+  fill(c(date, tide_ht), .direction = "down") %>%
   pivot_longer(
-    cols = Asco_nCC:Fucu_sppHoldfasts,
+    cols = Asco_nCC:Fucu_spp_holdfasts,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
-  
- inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
-   select(-c(Site, Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
-   add_column(year = "2017") %>%
-   fill(c(Date, Tide), .direction = "down") %>%
-   rename(Litt_l = Llitt, Litt_o = Liobtu, Litt_s = Lsax, Litt_spp = `Litt. Spp.`, Nuci_l = Nlap, Lacu_v = Lacvinc, Hiat_a = Hiatarct, Ostr_e = Ostredu, Myti_e = Myted, Modi_m = Modmod, Tect_t = Testtest, Crep_f = Crepfor, Urti_f = Urtfel, Metr_s = Metrsen, Aste_f = Astfor, Aste_v = Astvul, Stro_d = Strongdro, Lepi_s = Lepsqua, Dide_v = Didvex, Botr_s = Botrysch, Cion_i = Ciointes, Gama_spp = Gamarus, Carc_m = CarmaeTot, Hemi_s = HemiTot, Canc_i = CanirrTot, Canc_b = CanborTot) %>%
-   pivot_longer(
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = `squares_out_of_25`/25) %>%
+  filter(!(seaweed_species %in% c("Asco_recruits",
+                                  "Asco_holdfasts",
+                                  "Fucu_recruits",
+                                  "Fucu_v_holdfasts",
+                                  "Fucu_s_holdfasts",
+                                  "Fucu_d_holdfasts",
+                                  "Fucu_spp_holdfasts"
+                                  )))
+```
+
+``` r
+inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
+  select(-c(Site,Name, AscoCC:AscoBladders, CarmaeMale, CarmaeFem, CarmaeEgg, HemiMale, HemiFem, HemiEgg, CanirrMale:CanirrEgg, CanborMale:SembalA2)) %>%
+  add_column(year = "2017") %>%
+  rename(date = Date,
+         tide_ht = Tide,
+         quadrat_m = `Quadrat (m)`,
+         Litt_l = Llitt,
+         Litt_o = Liobtu,
+         Litt_s = Lsax,
+         Litt_spp = `Litt. Spp.`,
+         Nuce_l = Nlap,
+         Lacu_v = Lacvinc,
+         Hiat_a = Hiatarct,
+         Ostr_e = Ostredu,
+         Myti_e = Myted,
+         Modi_m = Modmod,
+         Tect_t = Testtest,
+         Crep_f = Crepfor,
+         Urti_f = Urtfel,
+         Metr_s = Metrsen,
+         Aste_f = Astfor,
+         Aste_v = Astvul,
+         Stro_d = Strongdro,
+         Lepi_s = Lepsqua,
+         Dide_v = Didvex,
+         Botr_s = Botrysch,
+         Cion_i = Ciointes,
+         Gamm_spp = Gamarus,
+         Carc_m = CarmaeTot,
+         Hemi_s = HemiTot,
+         Canc_i = CanirrTot,
+         Canc_b = CanborTot) %>%
+  pivot_longer(
      cols = Litt_l:Canc_b,
      names_to = "invert_species",
      values_to = "count"
-   )
+     ) %>%
+  relocate(year, .after = date)
 ```
 
 ``` r
@@ -347,85 +417,529 @@ horizontal_MDR_NeCSA_2019  <- read_excel("/cloud/project/data/2019_horizontal_MD
 ```
 
 ``` r
-horizontal_MDR_NeCSA_2020  <- read_excel("/cloud/project/data/2020_horizontal_MDR_NeCSA.xlsx")
+seaweeds_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Semi_bA2)) %>%
+  add_column(year = "2019") %>%
+  pivot_longer(
+    cols = Asco_nCC:Cera_rSC,
+    names_to = "seaweed_species",
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
 
-seaweed_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes))  %>%
+``` r
+inverts_mdr_2019 <- horizontal_MDR_NeCSA_2019 %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2019") %>%
+  rename(date = Date,
+      tide_ht = TideHt,
+      quadrat_number = Quadrat,
+      Nuce_l = Nuci_l) %>%
+   pivot_longer(
+     cols = Urti_f:Semi_bA2,
+     names_to = "invert_species",
+     values_to = "count"
+   ) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
+
+``` r
+horizontal_MDR_NeCSA_2020  <- read_excel("/cloud/project/data/2020_horizontal_MDR_NeCSA.xlsx")
+```
+
+``` r
+seaweeds_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2020") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
 
+``` r
 inverts_mdr_2020 <- horizontal_MDR_NeCSA_2020 %>%
-   select(-c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2020") %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2020") %>%
+  rename(date = Date,
+      tide_ht = TideHt,
+      quadrat_number = Quadrat,
+      Nuce_l = Nuci_l) %>%
    pivot_longer(
-     cols = Semi_bCC:Semi_bA2,
+     cols = Urti_f:Semi_bA2,
      names_to = "invert_species",
      values_to = "count"
-   )
+   ) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MDR_NeCSA.xlsx")
+```
 
-seaweed_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes))  %>%
+``` r
+seaweeds_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes ))  %>%
   add_column(year = "2021") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "squares out of 25") %>%
-  mutate(proportion = `squares out of 25`/25)
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Asco_n_ht = Asco_nHt,
+         Asco_n_bladders = Asco_nBladders) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
 
+``` r
 inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
-   select(-c(Site, Name, Notes, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
-   add_column(year = "2021") %>%
-   pivot_longer(
-     cols = Semi_bCC:Semi_bA2,
-     names_to = "invert_species",
-     values_to = "count"
-   )
+  select(-c(Site, Name, Notes, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod)) %>%
+  add_column(year = "2021") %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Nuce_l = Nuci_l) %>%
+   pivot_longer(cols = Urti_f:Semi_bA2,
+                names_to = "invert_species",
+                values_to = "count"
+                ) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+
+# need to specify value/NA for quadrat_m if value in quadrat_number doesn't match list?
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MDR_NeCSA.xlsx")
+```
 
+``` r
 seaweeds_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
   select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2022") %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "proportion")
-  
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
+
+``` r
 inverts_mdr_2022 <- horizontal_MDR_NeCSA_2022 %>%
-  select(-c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
   add_column(year = "2022") %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Nuce_l = Nuci_l) %>%
   pivot_longer(
-    cols = Semi_bCC:Semi_bA2,
+    cols = Urti_f:Semi_bA2,
     names_to = "invert_species",
-    values_to = "count")
+    values_to = "count") %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 ```
 
 ``` r
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
+```
 
+``` r
 seaweeds_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
   select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Urti_f:Notes)) %>%
   add_column(year = "2023") %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat) %>%
   pivot_longer(
     cols = Asco_nCC:Cera_rSC,
     names_to = "seaweed_species",
-    values_to = "proportion")
-  
-inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
-  select(-c(Site, Name, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
-  add_column(year = "2023") %>%
-  pivot_longer(
-    cols = Semi_bCC:Semi_bA2,
-    names_to = "invert_species",
-    values_to = "count")
+    values_to = "squares_out_of_25") %>%
+  mutate(proportion = squares_out_of_25/25) %>%
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
 ```
+
+``` r
+inverts_mdr_2023 <- horizontal_MDR_NeCSA_2023 %>%
+  select(-c(Site, Name, Semi_bCC, Myti_eCC, Semi_bSC, Myti_eSC, Asco_nCC:Fucu_dCC, Asco_nSC:Cera_rSC, Asco_nHt, Asco_nBladders, Myti_eMethod, Notes)) %>%
+  add_column(year = "2023") %>%
+  rename(date = Date,
+         tide_ht = TideHt,
+         quadrat_number = Quadrat,
+         Nuce_l = Nuci_l) %>%
+  pivot_longer(
+    cols = Urti_f:Semi_bA2,
+    names_to = "invert_species",
+    values_to = "count") %>% 
+  relocate(year, .after = date) %>%
+  mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
+                               quadrat_number == 2 ~ 3,
+                               quadrat_number == 3 ~ 6,
+                               quadrat_number == 4 ~ 9,
+                               quadrat_number == 5 ~ 12,
+                               quadrat_number == 6 ~ 15,
+                               quadrat_number == 7 ~ 18,
+                               quadrat_number == 8 ~ 21,
+                               quadrat_number == 9 ~ 24,
+                               quadrat_number == 10 ~ 27),
+         .after = quadrat_number)
+```
+
+``` r
+# missing 2018
+
+all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
+  full_join(seaweeds_mdr_2020) %>%
+  full_join(seaweeds_mdr_2021) %>%
+  full_join(seaweeds_mdr_2022) %>%
+  full_join(seaweeds_mdr_2023) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
+```
+
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion,
+    ## quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, Asco_n_ht,
+    ## Asco_n_bladders, seaweed_species, squares_out_of_25, proportion,
+    ## quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, seaweed_species,
+    ## squares_out_of_25, proportion, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, seaweed_species,
+    ## squares_out_of_25, proportion, quadrat_number, Asco_nHt, Asco_nBladders)`
+
+``` r
+#all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+
+# ^ how to get it to keep everything else the same?
+
+distinct(all_seaweeds_mdr, seaweed_species) %>%
+  arrange(seaweed_species)
+```
+
+    ## # A tibble: 19 × 1
+    ##    seaweed_species
+    ##    <chr>          
+    ##  1 Asco_nCC       
+    ##  2 Asco_nSC       
+    ##  3 Cera_rSC       
+    ##  4 Chon_cSC       
+    ##  5 Cora_oSC       
+    ##  6 Coro_oSC       
+    ##  7 Fucu_dCC       
+    ##  8 Fucu_dSC       
+    ##  9 Fucu_sCC       
+    ## 10 Fucu_sSC       
+    ## 11 Fucu_spp       
+    ## 12 Fucu_vCC       
+    ## 13 Fucu_vSC       
+    ## 14 Lami_spp       
+    ## 15 Mast_sSC       
+    ## 16 Porp_sp        
+    ## 17 Ulva_iSC       
+    ## 18 Ulva_lSC       
+    ## 19 Vert_lSC
+
+``` r
+# missing 2018
+
+all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
+  full_join(inverts_mdr_2020) %>%
+  full_join(inverts_mdr_2021) %>%
+  full_join(inverts_mdr_2022) %>%
+  full_join(inverts_mdr_2023) %>%
+  filter(!(invert_species %in% c("Semi_bA1",
+                                 "Semi_bA2",
+                                 "Semi_bR1",
+                                 "Semi_bR2"))) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
+```
+
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+    ## Joining with `by = join_by(date, year, tide_ht, quadrat_m, invert_species,
+    ## count, quadrat_number)`
+
+``` r
+glimpse(all_inverts_mdr)
+```
+
+    ## Rows: 4,666
+    ## Columns: 7
+    ## $ date           <dttm> 2017-08-12, 2017-08-12, 2017-08-12, 2017-08-12, 2017-0…
+    ## $ year           <chr> "2017", "2017", "2017", "2017", "2017", "2017", "2017",…
+    ## $ tide_ht        <fct> L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L, L…
+    ## $ quadrat_m      <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+    ## $ invert_species <chr> "Litt_l", "Litt_o", "Litt_s", "Litt_spp", "Nuce_l", "La…
+    ## $ count          <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+    ## $ quadrat_number <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+
+``` r
+distinct(all_inverts_mdr, invert_species) %>%
+  arrange(invert_species)
+```
+
+    ## # A tibble: 28 × 1
+    ##    invert_species
+    ##    <chr>         
+    ##  1 Aste_f        
+    ##  2 Aste_r        
+    ##  3 Aste_v        
+    ##  4 Botr_s        
+    ##  5 Canc_b        
+    ##  6 Canc_i        
+    ##  7 Carc_m        
+    ##  8 Cion_i        
+    ##  9 Crep_f        
+    ## 10 Dide_sp       
+    ## # ℹ 18 more rows
+
+``` r
+# total number per quadrat, unfaceted
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d()
+```
+
+    ## Warning: Removed 62 rows containing missing values (`geom_col()`).
+
+![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-unfaceted-1.png)<!-- -->
+
+``` r
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
+```
+
+    ## Warning: Removed 59 rows containing missing values (`geom_col()`).
+
+![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-faceted-1.png)<!-- -->
+
+``` r
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.1, position = position_dodge(.9)) +
+  scale_fill_viridis_d()
+```
+
+    ## `summarise()` has grouped output by 'year'. You can override using the
+    ## `.groups` argument.
+
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
+
+``` r
+  # ylim(0, NA)
+
+# if I set the ylim to 0 the vertical parts of the error bars get confused
+
+# PROBLEM: may not have 0s for every quadrat for every year (there might just not be a line for that species if it wasn't there, which will mess up the mean and standard error calculations)
+```
+
+``` r
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, tide_ht, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.1, position = position_dodge(.9)) +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
+```
+
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
+
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-faceted-1.png)<!-- -->
+
+``` r
+# better to have all in same column or all in same row? if in same row, how to make them shorter?
+```
+
+``` r
+# reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
+# how many years has L. vincta been on the survey? would they have counted it? ask Tanya
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp",
+                               "Lacu_v"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, tide_ht, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
+```
+
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
+
+![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-L_vincta-1.png)<!-- -->
