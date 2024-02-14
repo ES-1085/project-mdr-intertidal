@@ -858,8 +858,6 @@ all_inverts_mdr %>%
 ![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-faceted-1.png)<!-- -->
 
 ``` r
-# error bars are NOT working (need to get them to line up with their bars)
-
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -874,7 +872,7 @@ all_inverts_mdr %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
-                width=.1, position = "dodge") +
+                width=.1, position = position_dodge(.9)) +
   scale_fill_viridis_d()
 ```
 
@@ -882,6 +880,14 @@ all_inverts_mdr %>%
     ## `.groups` argument.
 
 ![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
+
+``` r
+  # ylim(0, NA)
+
+# if I set the ylim to 0 the vertical parts of the error bars get confused
+
+# PROBLEM: may not have 0s for every quadrat for every year (there might just not be a line for that species if it wasn't there, which will mess up the mean and standard error calculations)
+```
 
 ``` r
 all_inverts_mdr %>%
@@ -894,8 +900,11 @@ all_inverts_mdr %>%
   mutate(count = replace_na(count, 0)) %>%
   group_by(year, tide_ht, invert_species) %>%
   summarise(mean_count = mean(count)) %>%
+  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.1, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 ```
@@ -904,6 +913,10 @@ all_inverts_mdr %>%
     ## the `.groups` argument.
 
 ![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-faceted-1.png)<!-- -->
+
+``` r
+# better to have all in same column or all in same row? if in same row, how to make them shorter?
+```
 
 ``` r
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
