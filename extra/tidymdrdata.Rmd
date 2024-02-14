@@ -602,7 +602,9 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   full_join(seaweeds_mdr_2020) %>%
   full_join(seaweeds_mdr_2021) %>%
   full_join(seaweeds_mdr_2022) %>%
-  full_join(seaweeds_mdr_2023)
+  full_join(seaweeds_mdr_2023) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
 
 #all_seaweeds_mdr <- all_seaweeds_mdr %>%
   #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
@@ -626,14 +628,20 @@ all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%
   filter(!(invert_species %in% c("Semi_bA1",
                                  "Semi_bA2",
                                  "Semi_bR1",
-                                 "Semi_bR2")))
+                                 "Semi_bR2"))) %>%
+  mutate(tide_ht = as.factor(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
+
+glimpse(all_inverts_mdr)
 
 distinct(all_inverts_mdr, invert_species) %>%
   arrange(invert_species)
 
 ```
 
-```{r preliminary-graph-snails}
+```{r preliminary-graphs-snails}
+
+# total number per quadrat, unfaceted
 
 all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -645,25 +653,77 @@ all_inverts_mdr %>%
     geom_col(position = "dodge") +
   scale_fill_viridis_d()
 
-# how to separate (color?) by tide height
-# want a grouped bar plot: x-axis is year, each cluster separated by species, fill = tide height
-# ALSO: make this mean # of snails per quadrat
+# total number per quadrat, facet by tide height:
 
-snails_mdr <- all_inverts_mdr %>%
+all_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s"),
-         !(year == 2017)) %>%
-  mutate(count = replace_na(count, 0))
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  ggplot(mapping = aes(year, count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
 
-snails_mdr %>%
+
+# MEAN count per quadrat, unfaceted
+# error bars are NOT working (need to get them to line up with their bars)
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.1, position = "dodge") +
+  scale_fill_viridis_d()
+
+
+# MEAN count per quadrat, faceted by tide height
+
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
   group_by(year, tide_ht, invert_species) %>%
-  mean(count)
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
 
-# not working: "Warning: argument is not numeric or logical: returning NA[1] NA"; tried including na.rm = TRUE in mean argument and that didn't work
+# MEAN count per quadrat, faceted by tide height, PLUS L. VINCTA
+# reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
+# how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
-glimpse(snails_mdr)
-
-# count IS numeric, and there's no NAs... why isn't this working?
+all_inverts_mdr %>%
+  filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Litt_spp",
+                               "Lacu_v"),
+         !(year == 2017),
+         !is.na(tide_ht)) %>%
+  mutate(count = replace_na(count, 0)) %>%
+  group_by(year, tide_ht, invert_species) %>%
+  summarise(mean_count = mean(count)) %>%
+  ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
+    geom_col(position = "dodge") +
+  scale_fill_viridis_d() +
+  facet_wrap("tide_ht", nrow = 1)
 
 ```
