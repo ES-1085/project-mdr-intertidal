@@ -822,29 +822,31 @@ distinct(all_inverts_mdr, invert_species) %>%
     ## # ℹ 18 more rows
 
 ``` r
+expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert_species) %>%
+  left_join(all_inverts_mdr, by = join_by(year, tide_ht, quadrat_m, invert_species)) %>%
+  mutate(count = replace_na(count, 0))
+```
+
+``` r
 # total number per quadrat, unfaceted
 
-all_inverts_mdr %>%
+expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s",
-                               "Litt_spp"),
+                               "Litt_s"),
          !(year == 2017)) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
   scale_fill_viridis_d()
 ```
 
-    ## Warning: Removed 62 rows containing missing values (`geom_col()`).
-
 ![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
 ``` r
-all_inverts_mdr %>%
+expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s",
-                               "Litt_spp"),
+                               "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
@@ -853,19 +855,19 @@ all_inverts_mdr %>%
   facet_wrap("tide_ht", nrow = 1)
 ```
 
-    ## Warning: Removed 59 rows containing missing values (`geom_col()`).
-
 ![](tidymdrdata_files/figure-gfm/total-snails-per-quadrat-faceted-1.png)<!-- -->
 
 ``` r
-all_inverts_mdr %>%
+# omitted 2017 and 2018 for all snail graphs (2017 includes L_spp, so not useful for these graphs, and 2018 is too messy)
+```
+
+``` r
+expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s",
-                               "Litt_spp"),
+                               "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
-  mutate(count = replace_na(count, 0)) %>%
   group_by(year, invert_species) %>%
   summarise(mean_count = mean(count)) %>%
   mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
@@ -873,7 +875,8 @@ all_inverts_mdr %>%
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.1, position = position_dodge(.9)) +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d() +
+  coord_cartesian(ylim = c(0, NA))
 ```
 
     ## `summarise()` has grouped output by 'year'. You can override using the
@@ -882,22 +885,13 @@ all_inverts_mdr %>%
 ![](tidymdrdata_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
 ``` r
-  # ylim(0, NA)
-
-# if I set the ylim to 0 the vertical parts of the error bars get confused
-
-# PROBLEM: may not have 0s for every quadrat for every year (there might just not be a line for that species if it wasn't there, which will mess up the mean and standard error calculations)
-```
-
-``` r
-all_inverts_mdr %>%
+expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
                                "Litt_s",
                                "Litt_spp"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
-  mutate(count = replace_na(count, 0)) %>%
   group_by(year, tide_ht, invert_species) %>%
   summarise(mean_count = mean(count)) %>%
   mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
@@ -906,7 +900,8 @@ all_inverts_mdr %>%
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.1, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
-  facet_wrap("tide_ht", nrow = 1)
+  facet_wrap("tide_ht", nrow = 1) +
+  coord_cartesian(ylim = c(0, NA))
 ```
 
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
@@ -922,11 +917,10 @@ all_inverts_mdr %>%
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
-all_inverts_mdr %>%
+expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
                                "Litt_s",
-                               "Litt_spp",
                                "Lacu_v"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
