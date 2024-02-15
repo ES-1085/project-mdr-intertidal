@@ -700,8 +700,7 @@ expanded_inverts_mdr %>%
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
-                               "Litt_s",
-                               "Litt_spp"),
+                               "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
   group_by(year, tide_ht, invert_species) %>%
