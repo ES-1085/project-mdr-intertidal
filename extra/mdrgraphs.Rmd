@@ -118,8 +118,14 @@ expanded_seaweeds_mdr %>%
   mutate(seaweed_species_c = 
   ifelse(grepl("Asco", seaweed_species), "Asco_n",
   ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
-  ifelse(grepl("))
-  )))
+  ifelse(grepl("Cora", seaweed_species), "Cora_o",
+  ifelse(grepl("Cera", seaweed_species), "Cera_r",
+  ifelse(grepl("Chon", seaweed_species), "Chon_c",
+  ifelse(grepl("Lami", seaweed_species), "Lami_spp",
+  ifelse(grepl("Mast", seaweed_species), "Mast_s",
+  ifelse(grepl("Porp", seaweed_species), "Porp_sp",       
+         ""
+  )))))))))
 
  
  
