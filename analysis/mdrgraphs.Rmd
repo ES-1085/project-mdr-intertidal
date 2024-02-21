@@ -115,12 +115,20 @@ expanded_inverts_mdr %>%
 
 ```
 
-{r seaweed-graph}
+```{r seaweed-graph}
 expanded_seaweeds_mdr %>%
+  mutate(seaweed_species_c = 
+  ifelse(grepl("Asco", seaweed_species), "Asco_n",
+  ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
+  ifelse(grepl("))
+  )))
+
+ 
+ 
   filter(seaweed_species %in% c("asco_nSC",
                                 ))
   
   #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
    # geom_point()
-
+```
 
