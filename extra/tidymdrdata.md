@@ -761,6 +761,13 @@ distinct(all_seaweeds_mdr, seaweed_species) %>%
     ## 19 Vert_lSC
 
 ``` r
+expanded_seaweeds_mdr <- expand(all_seaweeds_mdr, year, tide_ht, quadrat_m, seaweed_species) %>%
+  left_join(all_seaweeds_mdr, by = join_by(year, tide_ht, quadrat_m, seaweed_species)) %>%
+  mutate(squares_out_of_25 = replace_na(squares_out_of_25, 0)) %>%
+  mutate(proportion = replace_na(proportion, 0))
+```
+
+``` r
 # missing 2018
 
 all_inverts_mdr <- full_join(inverts_mdr_2017, inverts_mdr_2019) %>%

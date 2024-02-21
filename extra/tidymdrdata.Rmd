@@ -613,6 +613,11 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
 
 distinct(all_seaweeds_mdr, seaweed_species) %>%
   arrange(seaweed_species)
+
+expanded_seaweeds_mdr <- expand(all_seaweeds_mdr, year, tide_ht, quadrat_m, seaweed_species) %>%
+  left_join(all_seaweeds_mdr, by = join_by(year, tide_ht, quadrat_m, seaweed_species)) %>%
+  mutate(squares_out_of_25 = replace_na(squares_out_of_25, 0)) %>%
+  mutate(proportion = replace_na(proportion, 0))
   
 ```
 
@@ -642,3 +647,7 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
   mutate(count = replace_na(count, 0))
 
 ```
+```{r seaweed-graph}
+
+```
+
