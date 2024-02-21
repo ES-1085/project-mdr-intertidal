@@ -12,7 +12,9 @@ library(readxl)
 
 ```{r load-data}
 
-expanded_inverts_mdr <- read_csv("/cloud/project/extra/expanded_inverts_mdr.csv")
+expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
+
+expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
 
 ```
 

@@ -9,7 +9,7 @@ library(readxl)
 ```
 
 ``` r
-expanded_inverts_mdr <- read_csv("/cloud/project/extra/expanded_inverts_mdr.csv")
+expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
 ```
 
     ## Rows: 9652 Columns: 7
@@ -17,6 +17,20 @@ expanded_inverts_mdr <- read_csv("/cloud/project/extra/expanded_inverts_mdr.csv"
     ## Delimiter: ","
     ## chr  (2): tide_ht, invert_species
     ## dbl  (4): year, quadrat_m, count, quadrat_number
+    ## dttm (1): date
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
+```
+
+    ## Rows: 5968 Columns: 12
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (2): tide_ht, seaweed_species
+    ## dbl  (9): year, quadrat_m, Asco_n_ht, Asco_n_bladders, squares_out_of_25, pr...
     ## dttm (1): date
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
