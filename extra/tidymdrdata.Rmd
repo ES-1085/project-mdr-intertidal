@@ -647,9 +647,5 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
   mutate(count = replace_na(count, 0))
 
 ```
-```{r seaweed-graph}
-expanded_seaweeds_mdr %>%
-  ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
-    geom_point()
-```
+
 

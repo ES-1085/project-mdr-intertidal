@@ -81,3 +81,8 @@ geom_col(position = “dodge”) + scale_fill_viridis_d() +
 facet_wrap(“tide_ht”, nrow = 1)
 
 \`\`\`
+
+{r seaweed-graph} expanded_seaweeds_mdr %\>% filter(seaweed_species %in%
+c(“asco_nSC”, ))
+
+\#ggplot(mapping = aes(x = proportion, y = quadrat_m)) + \# geom_point()
