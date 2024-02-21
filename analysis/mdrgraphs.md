@@ -1,23 +1,42 @@
----
-title: "MDR graphs"
-author: "MDR Intertidal"
-output: github_document
----
+MDR graphs
+================
+MDR Intertidal
 
-```{r load-packages, message = FALSE}
+``` r
 library(tidyverse)
 library(broom)
 library(readxl)
 ```
 
-```{r load-data}
-
-expanded_inverts_mdr <- read_csv("/cloud/project/extra/expanded_inverts_mdr.csv")
-
+``` r
+expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
 ```
 
-```{r total-snails-per-quadrat-unfaceted}
+    ## Rows: 9652 Columns: 7
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (2): tide_ht, invert_species
+    ## dbl  (4): year, quadrat_m, count, quadrat_number
+    ## dttm (1): date
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
+``` r
+expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
+```
+
+    ## Rows: 5968 Columns: 12
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (2): tide_ht, seaweed_species
+    ## dbl  (9): year, quadrat_m, Asco_n_ht, Asco_n_bladders, squares_out_of_25, pr...
+    ## dttm (1): date
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
 # total number per quadrat, unfaceted
 
 expanded_inverts_mdr %>%
@@ -28,11 +47,11 @@ expanded_inverts_mdr %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
   scale_fill_viridis_d()
-
 ```
 
-```{r total-snails-per-quadrat-faceted}
+![](mdrgraphs_files/figure-gfm/total-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
+``` r
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -43,13 +62,15 @@ expanded_inverts_mdr %>%
     geom_col(position = "dodge") +
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
-
-# omitted 2017 and 2018 for all snail graphs (2017 includes L_spp, so not useful for these graphs, and 2018 is too messy)
-
 ```
 
-```{r mean-snails-per-quadrat-unfaceted}
+![](mdrgraphs_files/figure-gfm/total-snails-per-quadrat-faceted-1.png)<!-- -->
 
+``` r
+# omitted 2017 and 2018 for all snail graphs (2017 includes L_spp, so not useful for these graphs, and 2018 is too messy)
+```
+
+``` r
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -65,11 +86,14 @@ expanded_inverts_mdr %>%
                 width=.1, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
   coord_cartesian(ylim = c(0, NA))
-
 ```
 
-```{r mean-snails-per-quadrat-faceted}
+    ## `summarise()` has grouped output by 'year'. You can override using the
+    ## `.groups` argument.
 
+![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
+
+``` r
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -86,13 +110,18 @@ expanded_inverts_mdr %>%
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1) +
   coord_cartesian(ylim = c(0, NA))
-
-# better to have all in same column or all in same row? if in same row, how to make them shorter?
-
 ```
 
-```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
 
+![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-1.png)<!-- -->
+
+``` r
+# better to have all in same column or all in same row? if in same row, how to make them shorter?
+```
+
+``` r
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
@@ -110,15 +139,14 @@ expanded_inverts_mdr %>%
     geom_col(position = "dodge") +
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
-
 ```
 
-{r seaweed-graph}
-expanded_seaweeds_mdr %>%
-  filter(seaweed_species %in% c("asco_nSC",
-                                ))
-  
-  #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
-   # geom_point()
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
 
+![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-L_vincta-1.png)<!-- -->
 
+{r seaweed-graph} expanded_seaweeds_mdr %\>% filter(seaweed_species %in%
+c(“asco_nSC”, ))
+
+\#ggplot(mapping = aes(x = proportion, y = quadrat_m)) + \# geom_point()
