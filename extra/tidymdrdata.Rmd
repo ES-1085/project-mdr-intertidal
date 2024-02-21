@@ -607,7 +607,7 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
 
 #all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",TRUE ~ seaweed_species))
 
 # ^ how to get it to keep everything else the same?
 
@@ -648,6 +648,8 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
 
 ```
 ```{r seaweed-graph}
-
+expanded_seaweeds_mdr %>%
+  ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
+    geom_point()
 ```
 

@@ -729,7 +729,7 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
 
 ``` r
 #all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
+  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",TRUE ~ seaweed_species))
 
 # ^ how to get it to keep everything else the same?
 
@@ -833,3 +833,13 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
   left_join(all_inverts_mdr, by = join_by(year, tide_ht, quadrat_m, invert_species)) %>%
   mutate(count = replace_na(count, 0))
 ```
+
+``` r
+expanded_seaweeds_mdr %>%
+  ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
+    geom_point()
+```
+
+    ## Warning: Removed 456 rows containing missing values (`geom_point()`).
+
+![](tidymdrdata_files/figure-gfm/seaweed-graph-1.png)<!-- -->
