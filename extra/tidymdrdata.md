@@ -728,16 +728,15 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
     ## squares_out_of_25, proportion, quadrat_number, Asco_nHt, Asco_nBladders)`
 
 ``` r
-#all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",TRUE ~ seaweed_species))
-
-# ^ how to get it to keep everything else the same?
+all_seaweeds_mdr <- all_seaweeds_mdr %>%
+  mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",
+                                     TRUE ~ seaweed_species))
 
 distinct(all_seaweeds_mdr, seaweed_species) %>%
   arrange(seaweed_species)
 ```
 
-    ## # A tibble: 19 × 1
+    ## # A tibble: 18 × 1
     ##    seaweed_species
     ##    <chr>          
     ##  1 Asco_nCC       
@@ -745,26 +744,28 @@ distinct(all_seaweeds_mdr, seaweed_species) %>%
     ##  3 Cera_rSC       
     ##  4 Chon_cSC       
     ##  5 Cora_oSC       
-    ##  6 Coro_oSC       
-    ##  7 Fucu_dCC       
-    ##  8 Fucu_dSC       
-    ##  9 Fucu_sCC       
-    ## 10 Fucu_sSC       
-    ## 11 Fucu_spp       
-    ## 12 Fucu_vCC       
-    ## 13 Fucu_vSC       
-    ## 14 Lami_spp       
-    ## 15 Mast_sSC       
-    ## 16 Porp_sp        
-    ## 17 Ulva_iSC       
-    ## 18 Ulva_lSC       
-    ## 19 Vert_lSC
+    ##  6 Fucu_dCC       
+    ##  7 Fucu_dSC       
+    ##  8 Fucu_sCC       
+    ##  9 Fucu_sSC       
+    ## 10 Fucu_spp       
+    ## 11 Fucu_vCC       
+    ## 12 Fucu_vSC       
+    ## 13 Lami_spp       
+    ## 14 Mast_sSC       
+    ## 15 Porp_sp        
+    ## 16 Ulva_iSC       
+    ## 17 Ulva_lSC       
+    ## 18 Vert_lSC
 
 ``` r
 expanded_seaweeds_mdr <- expand(all_seaweeds_mdr, year, tide_ht, quadrat_m, seaweed_species) %>%
-  left_join(all_seaweeds_mdr, by = join_by(year, tide_ht, quadrat_m, seaweed_species)) %>%
+  left_join(all_seaweeds_mdr,
+            by = join_by(year, tide_ht, quadrat_m, seaweed_species)) %>%
   mutate(squares_out_of_25 = replace_na(squares_out_of_25, 0)) %>%
   mutate(proportion = replace_na(proportion, 0))
+
+write_csv(expanded_seaweeds_mdr, "/cloud/project/extra/expanded_seaweeds_mdr.csv")
 ```
 
 ``` r
@@ -832,14 +833,6 @@ distinct(all_inverts_mdr, invert_species) %>%
 expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert_species) %>%
   left_join(all_inverts_mdr, by = join_by(year, tide_ht, quadrat_m, invert_species)) %>%
   mutate(count = replace_na(count, 0))
+
+write_csv(expanded_inverts_mdr, "/cloud/project/extra/expanded_inverts_mdr.csv")
 ```
-
-``` r
-expanded_seaweeds_mdr %>%
-  ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
-    geom_point()
-```
-
-    ## Warning: Removed 456 rows containing missing values (`geom_point()`).
-
-![](tidymdrdata_files/figure-gfm/seaweed-graph-1.png)<!-- -->

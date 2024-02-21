@@ -10,7 +10,13 @@ library(broom)
 library(readxl)
 ```
 
-#```{r total-snails-per-quadrat-unfaceted}
+```{r load-data}
+
+expanded_inverts_mdr <- read_csv("/cloud/project/extra/expanded_inverts_mdr.csv")
+
+```
+
+```{r total-snails-per-quadrat-unfaceted}
 
 # total number per quadrat, unfaceted
 
@@ -25,7 +31,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r total-snails-per-quadrat-faceted}
+```{r total-snails-per-quadrat-faceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -42,7 +48,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-unfaceted}
+```{r mean-snails-per-quadrat-unfaceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -62,7 +68,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-faceted}
+```{r mean-snails-per-quadrat-faceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -85,7 +91,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
+```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
 
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
