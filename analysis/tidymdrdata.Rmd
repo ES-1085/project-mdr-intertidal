@@ -689,6 +689,7 @@ MDR_temperature_2017_2018 <- MDR_temperature_20170812_20180811 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
@@ -719,6 +720,7 @@ MDR_temperature_2017_2018 <- MDR_temperature_20170812_20180811 %>%
                               time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
   select(-time, -test) %>%
   rename(time = time_mil)
+
   
 
 #tidy MDR_temperature_2018_2019
@@ -731,6 +733,7 @@ MDR_temperature_2018_2019 <- MDR_temperature_20180812_20190905 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
@@ -772,6 +775,7 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
