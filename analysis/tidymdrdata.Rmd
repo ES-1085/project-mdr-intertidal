@@ -608,16 +608,6 @@ all_seaweeds_mdr <- full_join(seaweeds_mdr_2017, seaweeds_mdr_2019) %>%
   mutate(tide_ht = as.factor(tide_ht)) %>%
   mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L")))
 
-<<<<<<< HEAD:extra/tidymdrdata.Rmd
-#all_seaweeds_mdr <- all_seaweeds_mdr %>%
-  #mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",))
-
-# ^ how to get it to keep everything else the same?
-
-distinct(all_seaweeds_mdr, seaweed_species) %>%
-  arrange(seaweed_species)
-  
-=======
 all_seaweeds_mdr <- all_seaweeds_mdr %>%
   mutate(seaweed_species = case_when(seaweed_species == "Coro_oSC" ~ "Cora_oSC",
                                      TRUE ~ seaweed_species))
@@ -633,7 +623,6 @@ expanded_seaweeds_mdr <- expand(all_seaweeds_mdr, year, tide_ht, quadrat_m, seaw
 
 write_csv(expanded_seaweeds_mdr, "/cloud/project/analysis/expanded_seaweeds_mdr.csv")
 
->>>>>>> 982e3e19c8aa996713a9892363de556559f4db24:analysis/tidymdrdata.Rmd
 ```
 
 ```{r join-everything-inverts}
@@ -661,7 +650,8 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
   left_join(all_inverts_mdr, by = join_by(year, tide_ht, quadrat_m, invert_species)) %>%
   mutate(count = replace_na(count, 0))
 
-<<<<<<< HEAD:extra/tidymdrdata.Rmd
+write_csv(expanded_inverts_mdr, "/cloud/project/analysis/expanded_inverts_mdr.csv")
+
 ```
 
 ```{r load-temperature-data-2016-2021}
@@ -817,12 +807,3 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
 MDR_temp_allyears <- rbind(MDR_temperature_2016_2017, MDR_temperature_2017_2018, MDR_temperature_2018_2019, MDR_temperature_2021)
 
 ```
-
-
-
-
-=======
-write_csv(expanded_inverts_mdr, "/cloud/project/analysis/expanded_inverts_mdr.csv")
-
-```
->>>>>>> 982e3e19c8aa996713a9892363de556559f4db24:analysis/tidymdrdata.Rmd

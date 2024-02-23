@@ -6,6 +6,8 @@ MDR Intertidal
 library(tidyverse)
 library(broom)
 library(readxl)
+library(lubridate)
+library(tidyr)
 ```
 
 ``` r
@@ -835,4 +837,193 @@ expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert
   mutate(count = replace_na(count, 0))
 
 write_csv(expanded_inverts_mdr, "/cloud/project/analysis/expanded_inverts_mdr.csv")
+```
+
+``` r
+MDR_temperature_20160615_20170812  <- read_excel("/cloud/project/data/MDR_temperature_20160615_20170812.xlsx")
+
+MDR_temperature_20170812_20180811  <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20170812-20180811")
+
+MDR_temperature_20180812_20190905  <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20180812-20190905")
+```
+
+    ## Warning: Expecting logical in G9328 / R9328C7: got 'Logged'
+
+    ## Warning: Expecting logical in G9330 / R9330C7: got 'Logged'
+
+    ## Warning: Expecting logical in G9333 / R9333C7: got 'Logged'
+
+    ## Warning: Expecting logical in G9335 / R9335C7: got 'Logged'
+
+    ## Warning: Expecting logical in G9338 / R9338C7: got 'Logged'
+
+``` r
+MDR_temperature_20210602_20211008  <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20210602-20211008WC")
+```
+
+    ## Warning: Expecting logical in G3086 / R3086C7: got 'Logged'
+
+    ## Warning: Expecting logical in H3087 / R3087C8: got 'Logged'
+
+    ## Warning: Expecting logical in I3088 / R3088C9: got 'Logged'
+
+    ## Warning: Expecting logical in J3088 / R3088C10: got 'Logged'
+
+``` r
+#tidy MDR_temperature_2016_2017
+MDR_temperature_2016_2017 <- MDR_temperature_20160615_20170812 %>%
+  rename(Date_Time_GMT400 = "Date Time, GMT-04:00",
+         "temp" = "Temp, 蚌 (LGR S/N: 10930407, SEN S/N: 10930407)") %>%
+  mutate("Date_Time_GMT400" = as.character(Date_Time_GMT400)) %>%
+  separate_wider_delim("Date_Time_GMT400", delim = " ", names = c("date", "time"),
+    too_few = "debug",
+    too_many = "debug") %>%
+   mutate(year = year(date)) %>%
+  mutate(time = replace_na(time, "00:00:00")) %>%
+  select(c(date, time, temp, year))
+```
+
+    ## Warning: Debug mode activated: adding variables `Date_Time_GMT400_ok`,
+    ## `Date_Time_GMT400_pieces`, and `Date_Time_GMT400_remainder`.
+
+``` r
+#tidy MDR_temperature_2017_2018
+MDR_temperature_2017_2018 <- MDR_temperature_20170812_20180811 %>%
+  rename(time = "Time, GMT-04:00",
+         temp = '"Temp °F (LGR S/N: 10930407 SEN S/N: 10930407)"',
+         date = Date) %>%
+  select(c(date, 
+            time,
+            "AM/PM",
+            temp)) %>%
+  mutate(year = year(date)) %>%
+    separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
+    too_few = "debug",
+    too_many = "debug") %>%
+  select(-delete, -time, -time_ok, -time_pieces, -time_remainder, time = time1, test = 'AM/PM') %>%
+  mutate(time_mil = case_when(time == "12:00:00" & test == "AM" ~ "00:00:00",
+                              time == "01:00:00" & test == "AM" ~ "01:00:00",
+                              time == "02:00:00" & test == "AM" ~ "02:00:00",
+                              time == "03:00:00" & test == "AM" ~ "03:00:00",
+                              time == "04:00:00" & test == "AM" ~ "04:00:00",
+                              time == "05:00:00" & test == "AM" ~ "05:00:00",
+                              time == "06:00:00" & test == "AM" ~ "06:00:00",
+                              time == "07:00:00" & test == "AM" ~ "07:00:00",
+                              time == "08:00:00" & test == "AM" ~ "08:00:00",
+                              time == "09:00:00" & test == "AM" ~ "09:00:00",
+                              time == "10:00:00" & test == "AM" ~ "10:00:00",
+                              time == "11:00:00" & test == "AM" ~ "11:00:00",
+                              time == "12:00:00" & test == "PM" ~ "12:00:00",
+                              time == "01:00:00" & test == "PM" ~ "13:00:00",
+                              time == "02:00:00" & test == "PM" ~ "14:00:00",
+                              time == "03:00:00" & test == "PM" ~ "15:00:00",
+                              time == "04:00:00" & test == "PM" ~ "16:00:00",
+                              time == "05:00:00" & test == "PM" ~ "17:00:00",
+                              time == "06:00:00" & test == "PM" ~ "18:00:00",
+                              time == "07:00:00" & test == "PM" ~ "19:00:00",
+                              time == "08:00:00" & test == "PM" ~ "20:00:00",
+                              time == "09:00:00" & test == "PM" ~ "21:00:00",
+                              time == "10:00:00" & test == "PM" ~ "22:00:00",
+                              time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
+  select(-time, -test) %>%
+  rename(time = time_mil)
+```
+
+    ## Warning: Debug mode activated: adding variables `time_ok`, `time_pieces`, and
+    ## `time_remainder`.
+
+``` r
+#tidy MDR_temperature_2018_2019
+MDR_temperature_2018_2019 <- MDR_temperature_20180812_20190905 %>%
+  rename(time = "Time, GMT-04:00",
+         temp = "Temp, °F (LGR S/N: 10930407, SEN S/N: 10930407)",
+         date = Date) %>%
+  select(c(date, 
+            time,
+            "AM/PM",
+            temp)) %>%
+  mutate(year = year(date)) %>%
+    separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
+    too_few = "debug",
+    too_many = "debug") %>%
+  select(-delete, -time, -time_ok, -time_pieces, -time_remainder, time = time1, test = 'AM/PM') %>%
+  mutate(time_mil = case_when(time == "12:00:00" & test == "AM" ~ "00:00:00",
+                              time == "01:00:00" & test == "AM" ~ "01:00:00",
+                              time == "02:00:00" & test == "AM" ~ "02:00:00",
+                              time == "03:00:00" & test == "AM" ~ "03:00:00",
+                              time == "04:00:00" & test == "AM" ~ "04:00:00",
+                              time == "05:00:00" & test == "AM" ~ "05:00:00",
+                              time == "06:00:00" & test == "AM" ~ "06:00:00",
+                              time == "07:00:00" & test == "AM" ~ "07:00:00",
+                              time == "08:00:00" & test == "AM" ~ "08:00:00",
+                              time == "09:00:00" & test == "AM" ~ "09:00:00",
+                              time == "10:00:00" & test == "AM" ~ "10:00:00",
+                              time == "11:00:00" & test == "AM" ~ "11:00:00",
+                              time == "12:00:00" & test == "PM" ~ "12:00:00",
+                              time == "01:00:00" & test == "PM" ~ "13:00:00",
+                              time == "02:00:00" & test == "PM" ~ "14:00:00",
+                              time == "03:00:00" & test == "PM" ~ "15:00:00",
+                              time == "04:00:00" & test == "PM" ~ "16:00:00",
+                              time == "05:00:00" & test == "PM" ~ "17:00:00",
+                              time == "06:00:00" & test == "PM" ~ "18:00:00",
+                              time == "07:00:00" & test == "PM" ~ "19:00:00",
+                              time == "08:00:00" & test == "PM" ~ "20:00:00",
+                              time == "09:00:00" & test == "PM" ~ "21:00:00",
+                              time == "10:00:00" & test == "PM" ~ "22:00:00",
+                              time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
+  select(-time, -test) %>%
+  rename(time = time_mil)
+```
+
+    ## Warning: Debug mode activated: adding variables `time_ok`, `time_pieces`, and
+    ## `time_remainder`.
+
+``` r
+#tidy MDR_temperature_2021
+MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
+  rename(time = "Time, GMT-04:00",
+         temp = "Temp, °F (LGR S/N: 20911608, SEN S/N: 20911608)",
+         date = Date) %>%
+  select(c(date, 
+            time,
+            "AM/PM",
+            temp)) %>%
+  mutate(year = year(date)) %>%
+    separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
+    too_few = "debug",
+    too_many = "debug") %>%
+  select(-delete, -time, -time_ok, -time_pieces, -time_remainder, time = time1, test = 'AM/PM') %>%
+  mutate(time_mil = case_when(time == "12:00:00" & test == "AM" ~ "00:00:00",
+                              time == "01:00:00" & test == "AM" ~ "01:00:00",
+                              time == "02:00:00" & test == "AM" ~ "02:00:00",
+                              time == "03:00:00" & test == "AM" ~ "03:00:00",
+                              time == "04:00:00" & test == "AM" ~ "04:00:00",
+                              time == "05:00:00" & test == "AM" ~ "05:00:00",
+                              time == "06:00:00" & test == "AM" ~ "06:00:00",
+                              time == "07:00:00" & test == "AM" ~ "07:00:00",
+                              time == "08:00:00" & test == "AM" ~ "08:00:00",
+                              time == "09:00:00" & test == "AM" ~ "09:00:00",
+                              time == "10:00:00" & test == "AM" ~ "10:00:00",
+                              time == "11:00:00" & test == "AM" ~ "11:00:00",
+                              time == "12:00:00" & test == "PM" ~ "12:00:00",
+                              time == "01:00:00" & test == "PM" ~ "13:00:00",
+                              time == "02:00:00" & test == "PM" ~ "14:00:00",
+                              time == "03:00:00" & test == "PM" ~ "15:00:00",
+                              time == "04:00:00" & test == "PM" ~ "16:00:00",
+                              time == "05:00:00" & test == "PM" ~ "17:00:00",
+                              time == "06:00:00" & test == "PM" ~ "18:00:00",
+                              time == "07:00:00" & test == "PM" ~ "19:00:00",
+                              time == "08:00:00" & test == "PM" ~ "20:00:00",
+                              time == "09:00:00" & test == "PM" ~ "21:00:00",
+                              time == "10:00:00" & test == "PM" ~ "22:00:00",
+                              time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
+  select(-time, -test) %>%
+  rename(time = time_mil)
+```
+
+    ## Warning: Debug mode activated: adding variables `time_ok`, `time_pieces`, and
+    ## `time_remainder`.
+
+``` r
+MDR_temp_allyears <- rbind(MDR_temperature_2016_2017, MDR_temperature_2017_2018, MDR_temperature_2018_2019, MDR_temperature_2021)
 ```
