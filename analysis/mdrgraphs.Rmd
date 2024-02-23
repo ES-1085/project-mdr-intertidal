@@ -8,6 +8,7 @@ output: github_document
 library(tidyverse)
 library(broom)
 library(readxl)
+library(scales)
 ```
 
 ```{r load-data}
@@ -112,7 +113,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-```{r seaweed-graph}
+```{r seaweed-graph, eval = FALSE}
 expanded_seaweeds_mdr %>%
   mutate(seaweed_species_c = 
   ifelse(grepl("Asco", seaweed_species), "Asco_n",
@@ -135,9 +136,33 @@ expanded_seaweeds_mdr %>%
    # geom_point()
 ```
 
-```{r seaweed-cover-graph}
+```{r L-seaweed-cover-graph}
+expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
+  mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+
 expanded_seaweeds_mdr %>%
-  select(starts_with(c("Fucu_", "Ulva_l", "Ulva_i", "Chon_c", "Mast_s")))
-         #tide_ht == "L",
-         #!is.na(tide_ht))
+  filter(seaweed_simple %in% c("Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
+                               "Fucu_spp",
+                               "Ulva_l",
+                               "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  summarise(mean_proportion = mean(proportion)) %>%
+  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  mutate(ymin_seaweeds = mean_proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = mean_proportion + se) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
 ```

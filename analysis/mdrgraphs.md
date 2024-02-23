@@ -6,6 +6,7 @@ MDR Intertidal
 library(tidyverse)
 library(broom)
 library(readxl)
+library(scales)
 ```
 
 ``` r
@@ -146,7 +147,61 @@ expanded_inverts_mdr %>%
 
 ![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-L_vincta-1.png)<!-- -->
 
-{r seaweed-graph} expanded_seaweeds_mdr %\>% filter(seaweed_species %in%
-c(“asco_nSC”, ))
+``` r
+expanded_seaweeds_mdr %>%
+  mutate(seaweed_species_c = 
+  ifelse(grepl("Asco", seaweed_species), "Asco_n",
+  ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
+  ifelse(grepl("Cora", seaweed_species), "Cora_o",
+  ifelse(grepl("Cera", seaweed_species), "Cera_r",
+  ifelse(grepl("Chon", seaweed_species), "Chon_c",
+  ifelse(grepl("Lami", seaweed_species), "Lami_spp",
+  ifelse(grepl("Mast", seaweed_species), "Mast_s",
+  ifelse(grepl("Porp", seaweed_species), "Porp_sp",       
+         ""
+  )))))))))
 
-\#ggplot(mapping = aes(x = proportion, y = quadrat_m)) + \# geom_point()
+ 
+ 
+  filter(seaweed_species %in% c("asco_nSC",
+                                ))
+  
+  #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
+   # geom_point()
+```
+
+``` r
+expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
+  mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple %in% c("Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
+                               "Fucu_spp",
+                               "Ulva_l",
+                               "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  summarise(mean_proportion = mean(proportion)) %>%
+  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  mutate(ymin_seaweeds = mean_proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = mean_proportion + se) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
+```
+
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
+
+![](mdrgraphs_files/figure-gfm/L-seaweed-cover-graph-1.png)<!-- -->
