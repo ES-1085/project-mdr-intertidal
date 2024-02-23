@@ -870,6 +870,20 @@ MDR_temperature_20210602_20211008  <- read_excel("/cloud/project/data/MDR_temper
     ## Warning: Expecting logical in J3088 / R3088C10: got 'Logged'
 
 ``` r
+MDR_temperature_20211008_20220806 <-
+  read_excel("/cloud/project/data/MDR_temperature_WC_2022.xlsx")
+```
+
+    ## New names:
+    ## • `` -> `...2`
+    ## • `` -> `...3`
+    ## • `` -> `...4`
+    ## • `` -> `...5`
+    ## • `` -> `...6`
+    ## • `` -> `...7`
+    ## • `` -> `...8`
+
+``` r
 #tidy MDR_temperature_2016_2017
 MDR_temperature_2016_2017 <- MDR_temperature_20160615_20170812 %>%
   rename(Date_Time_GMT400 = "Date Time, GMT-04:00",
@@ -1028,26 +1042,146 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
     ## `time_remainder`.
 
 ``` r
+#tidy MDR_temperature_20211008_20220806
+MDR_temperature_2022 <- MDR_temperature_20210602_20211008 %>%
+  rename(time = "Time, GMT-04:00",
+         temp = "Temp, °F (LGR S/N: 20911608, SEN S/N: 20911608)",
+         date = Date) %>%
+  select(c(date, 
+            time,
+            "AM/PM",
+            temp)) %>%
+  mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
+    separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
+    too_few = "debug",
+    too_many = "debug") %>%
+  select(-delete, -time, -time_ok, -time_pieces, -time_remainder, time = time1, test = 'AM/PM') %>%
+  mutate(time_mil = case_when(time == "12:00:00" & test == "AM" ~ "00:00:00",
+                              time == "01:00:00" & test == "AM" ~ "01:00:00",
+                              time == "02:00:00" & test == "AM" ~ "02:00:00",
+                              time == "03:00:00" & test == "AM" ~ "03:00:00",
+                              time == "04:00:00" & test == "AM" ~ "04:00:00",
+                              time == "05:00:00" & test == "AM" ~ "05:00:00",
+                              time == "06:00:00" & test == "AM" ~ "06:00:00",
+                              time == "07:00:00" & test == "AM" ~ "07:00:00",
+                              time == "08:00:00" & test == "AM" ~ "08:00:00",
+                              time == "09:00:00" & test == "AM" ~ "09:00:00",
+                              time == "10:00:00" & test == "AM" ~ "10:00:00",
+                              time == "11:00:00" & test == "AM" ~ "11:00:00",
+                              time == "12:00:00" & test == "PM" ~ "12:00:00",
+                              time == "01:00:00" & test == "PM" ~ "13:00:00",
+                              time == "02:00:00" & test == "PM" ~ "14:00:00",
+                              time == "03:00:00" & test == "PM" ~ "15:00:00",
+                              time == "04:00:00" & test == "PM" ~ "16:00:00",
+                              time == "05:00:00" & test == "PM" ~ "17:00:00",
+                              time == "06:00:00" & test == "PM" ~ "18:00:00",
+                              time == "07:00:00" & test == "PM" ~ "19:00:00",
+                              time == "08:00:00" & test == "PM" ~ "20:00:00",
+                              time == "09:00:00" & test == "PM" ~ "21:00:00",
+                              time == "10:00:00" & test == "PM" ~ "22:00:00",
+                              time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
+  select(-time, -test) %>%
+  rename(time = time_mil) %>%
+  drop_na(temp)
+```
+
+    ## Warning: Debug mode activated: adding variables `time_ok`, `time_pieces`, and
+    ## `time_remainder`.
+
+``` r
 mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
                            MDR_temperature_2017_2018,
                            MDR_temperature_2018_2019,
-                           MDR_temperature_2021)
+                           MDR_temperature_2021,
+                           MDR_temperature_2022)
 
 write_csv(mdr_temp_allyears, "/cloud/project/analysis/mdr_temp_allyears.csv")
 ```
 
 ``` r
-tide_time_2017 <-read.csv("/cloud/project/data/2017_tide_times.csv")
+tide_verified_2017 <-read.csv("/cloud/project/data/2017_tide_times.csv")
 
-tide_time_2018 <-read.csv("/cloud/project/data/2018_tide_times.csv")
+tide_verified_2018 <-read.csv("/cloud/project/data/2018_tide_times.csv")
 
-tide_time_2019 <-read.csv("/cloud/project/data/2019_tide_times.csv")
+tide_verified_2019 <-read.csv("/cloud/project/data/2019_tide_times.csv")
 
-tide_time_2020 <-read.csv("/cloud/project/data/2020_tide_times.csv")
+tide_verified_2020 <-read.csv("/cloud/project/data/2020_tide_times.csv")
 
-tide_time_2021 <-read.csv("/cloud/project/data/2021_tide_times.csv")
+tide_verified_2021 <-read.csv("/cloud/project/data/2021_tide_times.csv")
 
-tide_time_2022 <-read.csv("/cloud/project/data/2022_tide_times.csv")
+tide_verified_2022 <-read.csv("/cloud/project/data/2022_tide_times.csv")
 
-tide_time_2023 <-read.csv("/cloud/project/data/2023_tide_times.csv")
+tide_verified_2023 <-read.csv("/cloud/project/data/2023_tide_times.csv")
 ```
+
+``` r
+tide_time_2017 <- tide_verified_2017 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+
+tide_time_2018 <- tide_verified_2018 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+tide_time_2019 <- tide_verified_2019 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+tide_time_2020 <- tide_verified_2020 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+tide_time_2021 <- tide_verified_2021 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+tide_time_2022 <- tide_verified_2022 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+
+tide_time_2023 <- tide_verified_2023 %>%
+  select(Date, Time..GMT., Verified..m.) %>%
+  filter(Verified..m. != "-") %>%
+  rename(date = "Date",
+         time = "Time..GMT.",
+         tide_height = "Verified..m.")
+```
+
+``` r
+all_tide_time <- full_join(tide_time_2017, tide_time_2018) %>%
+  full_join(tide_time_2019) %>%
+  full_join(tide_time_2020) %>%
+  full_join(tide_time_2021) %>%
+  full_join(tide_time_2022) %>%
+  full_join(tide_time_2023) %>%
+  mutate(tide_ht = case_when(tide_height < 1 ~ "L",
+                             tide_height > 1 ~ "H"),
+         .after = tide_height)
+```
+
+    ## Joining with `by = join_by(date, time, tide_height)`
+    ## Joining with `by = join_by(date, time, tide_height)`
+    ## Joining with `by = join_by(date, time, tide_height)`
+    ## Joining with `by = join_by(date, time, tide_height)`
+    ## Joining with `by = join_by(date, time, tide_height)`
+    ## Joining with `by = join_by(date, time, tide_height)`
