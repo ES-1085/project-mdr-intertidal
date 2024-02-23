@@ -897,6 +897,7 @@ MDR_temperature_2017_2018 <- MDR_temperature_20170812_20180811 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
@@ -943,6 +944,7 @@ MDR_temperature_2018_2019 <- MDR_temperature_20180812_20190905 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
@@ -989,6 +991,7 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
             "AM/PM",
             temp)) %>%
   mutate(year = year(date)) %>%
+  mutate(date = as.character(date)) %>%
     separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
     too_few = "debug",
     too_many = "debug") %>%
@@ -1025,5 +1028,26 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
     ## `time_remainder`.
 
 ``` r
-MDR_temp_allyears <- rbind(MDR_temperature_2016_2017, MDR_temperature_2017_2018, MDR_temperature_2018_2019, MDR_temperature_2021)
+mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
+                           MDR_temperature_2017_2018,
+                           MDR_temperature_2018_2019,
+                           MDR_temperature_2021)
+
+write_csv(mdr_temp_allyears, "/cloud/project/analysis/mdr_temp_allyears.csv")
+```
+
+``` r
+tide_time_2017 <-read.csv("/cloud/project/data/2017_tide_times.csv")
+
+tide_time_2018 <-read.csv("/cloud/project/data/2018_tide_times.csv")
+
+tide_time_2019 <-read.csv("/cloud/project/data/2019_tide_times.csv")
+
+tide_time_2020 <-read.csv("/cloud/project/data/2020_tide_times.csv")
+
+tide_time_2021 <-read.csv("/cloud/project/data/2021_tide_times.csv")
+
+tide_time_2022 <-read.csv("/cloud/project/data/2022_tide_times.csv")
+
+tide_time_2023 <-read.csv("/cloud/project/data/2023_tide_times.csv")
 ```
