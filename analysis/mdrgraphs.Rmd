@@ -174,18 +174,35 @@ mdr_temp_allyears <- mdr_temp_allyears %>%
   unite(date_time, c(date, time), sep = "", remove = FALSE) %>%
   mutate(date_time = as_datetime(ymd_hms(date_time)), tz = "EST") %>%
   relocate(date_time, .after = time) %>%
-  relocate(year, .before = date)
+  relocate(year, .before = date) %>%
+  mutate(temp_C = (5/9) * (temp - 32))
   
 glimpse(mdr_temp_allyears)
 distinct(mdr_temp_allyears, year)
 
 mdr_temp_allyears %>%
   group_by(date) %>%
-  summarise(mean_temp_date = mean(temp, na.rm = TRUE)) %>%
-  ggplot(mapping = aes(date, mean_temp_date)) +
-  geom_point()
+  summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
+  ggplot(mapping = aes(date, mean_temp_C_date)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  scale_x_date(breaks = breaks_width("1 year"))
 
-# for 2018-2019 and 2021, dates are missing...??
+
 # error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
+
+mdr_temp_allyears %>%
+  filter(date > "2016-06-15" & date < "2016-10-08" |
+         date > "2017-06-15" & date < "2017-10-08" |
+         date > "2018-06-15" & date < "2018-10-08" |
+         date > "2019-06-15" & date < "2019-10-08" |
+         date > "2020-06-15" & date < "2020-10-08" |
+         date > "2021-06-15" & date < "2021-10-08") %>%
+  group_by(date) %>%
+  summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
+  ggplot(mapping = aes(date, mean_temp_C_date)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  scale_x_date(breaks = breaks_width("1 year"))
 
 ```
