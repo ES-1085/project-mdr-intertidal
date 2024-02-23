@@ -52,8 +52,8 @@ snails_mdr %>%
   filter(invert_species == "Litt_s") %>%
   kruskal.test(count ~ year, data = .)
 
-snails_mdr %>%
-  filter(invert_species == "Lacu_v") %>%
-  kruskal.test(count ~ year, data = .)
+#snails_mdr %>%
+  #filter(invert_species == "Lacu_v") %>%
+  #kruskal.test(count ~ year, data = .)
 
 ```

@@ -135,3 +135,9 @@ expanded_seaweeds_mdr %>%
    # geom_point()
 ```
 
+```{r seaweed-cover-graph}
+expanded_seaweeds_mdr %>%
+  select(starts_with(c("Fucu_", "Ulva_l", "Ulva_i", "Chon_c", "Mast_s")))
+         #tide_ht == "L",
+         #!is.na(tide_ht))
+```
