@@ -191,4 +191,18 @@ mdr_temp_allyears %>%
 
 # error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
 
+mdr_temp_allyears %>%
+  filter(date > "2016-06-15" & date < "2016-10-08" |
+         date > "2017-06-15" & date < "2017-10-08" |
+         date > "2018-06-15" & date < "2018-10-08" |
+         date > "2019-06-15" & date < "2019-10-08" |
+         date > "2020-06-15" & date < "2020-10-08" |
+         date > "2021-06-15" & date < "2021-10-08") %>%
+  group_by(date) %>%
+  summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
+  ggplot(mapping = aes(date, mean_temp_C_date)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  scale_x_date(breaks = breaks_width("1 year"))
+
 ```
