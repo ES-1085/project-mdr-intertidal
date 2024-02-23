@@ -9,6 +9,7 @@ library(tidyverse)
 library(broom)
 library(readxl)
 library(scales)
+library(lubridate)
 ```
 
 ```{r load-data}
@@ -165,4 +166,26 @@ expanded_seaweeds_mdr %>%
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
+```
+
+```{r temperature-graph}
+mdr_temp_allyears <- mdr_temp_allyears %>%
+  mutate(date = as_date(ymd(date))) %>%
+  unite(date_time, c(date, time), sep = "", remove = FALSE) %>%
+  mutate(date_time = as_datetime(ymd_hms(date_time)), tz = "EST") %>%
+  relocate(date_time, .after = time) %>%
+  relocate(year, .before = date)
+  
+glimpse(mdr_temp_allyears)
+distinct(mdr_temp_allyears, year)
+
+mdr_temp_allyears %>%
+  group_by(date) %>%
+  summarise(mean_temp_date = mean(temp, na.rm = TRUE)) %>%
+  ggplot(mapping = aes(date, mean_temp_date)) +
+  geom_point()
+
+# for 2018-2019 and 2021, dates are missing...??
+# error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
+
 ```

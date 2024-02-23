@@ -803,7 +803,11 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
   select(-time, -test) %>%
   rename(time = time_mil)
   
+mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
+                           MDR_temperature_2017_2018,
+                           MDR_temperature_2018_2019,
+                           MDR_temperature_2021)
 
-MDR_temp_allyears <- rbind(MDR_temperature_2016_2017, MDR_temperature_2017_2018, MDR_temperature_2018_2019, MDR_temperature_2021)
+write_csv(mdr_temp_allyears, "/cloud/project/analysis/mdr_temp_allyears.csv")
 
 ```
