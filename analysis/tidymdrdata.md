@@ -1119,7 +1119,7 @@ tide_verified_2023 <-read.csv("/cloud/project/data/2023_tide_times.csv")
 tide_time_2017 <- tide_verified_2017 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
@@ -1127,42 +1127,58 @@ tide_time_2017 <- tide_verified_2017 %>%
 tide_time_2018 <- tide_verified_2018 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
 tide_time_2019 <- tide_verified_2019 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
 tide_time_2020 <- tide_verified_2020 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
 tide_time_2021 <- tide_verified_2021 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
 tide_time_2022 <- tide_verified_2022 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 
 tide_time_2023 <- tide_verified_2023 %>%
   select(Date, Time..GMT., Verified..m.) %>%
   filter(Verified..m. != "-") %>%
-  rename(data = "Date",
+  rename(date = "Date",
          time = "Time..GMT.",
          tide_ht = "Verified..m.")
 ```
+
+``` r
+all_tide_time <- full_join(tide_time_2017, tide_time_2018) %>%
+  full_join(tide_time_2019) %>%
+  full_join(tide_time_2020) %>%
+  full_join(tide_time_2021) %>%
+  full_join(tide_time_2022) %>%
+  full_join(tide_time_2023)
+```
+
+    ## Joining with `by = join_by(date, time, tide_ht)`
+    ## Joining with `by = join_by(date, time, tide_ht)`
+    ## Joining with `by = join_by(date, time, tide_ht)`
+    ## Joining with `by = join_by(date, time, tide_ht)`
+    ## Joining with `by = join_by(date, time, tide_ht)`
+    ## Joining with `by = join_by(date, time, tide_ht)`
