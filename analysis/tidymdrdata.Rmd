@@ -10,6 +10,7 @@ library(broom)
 library(readxl)
 library(lubridate)
 library(tidyr)
+library(janitor)
 ```
 
 ```{r load-data-2017}
@@ -812,8 +813,12 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
   rename(time = time_mil)
 
 #tidy MDR_temperature_20211008_20220806
-MDR_temperature_2022 <- MDR_temperature_20210602_20211008 %>%
-  rename(time = "Time, GMT-04:00",
+
+#no date column... ?? (date and time are combined into 1 column)
+
+MDR_temperature_2022 <- MDR_temperature_20211008_20220806 %>%
+  row_to_names(row_number = 1) %>%
+  rename(time = "Date Time, GMT-04:00",
          temp = "Temp, °F (LGR S/N: 20911608, SEN S/N: 20911608)",
          date = Date) %>%
   select(c(date, 
