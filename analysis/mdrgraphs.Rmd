@@ -10,7 +10,12 @@ library(broom)
 library(readxl)
 ```
 
-#```{r total-snails-per-quadrat-unfaceted}
+```{r load-data}
+expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
+expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
+```
+
+```{r total-snails-per-quadrat-unfaceted}
 
 # total number per quadrat, unfaceted
 
@@ -25,7 +30,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r total-snails-per-quadrat-faceted}
+```{r total-snails-per-quadrat-faceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -42,7 +47,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-unfaceted}
+```{r mean-snails-per-quadrat-unfaceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -62,7 +67,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-faceted}
+```{r mean-snails-per-quadrat-faceted}
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
@@ -85,7 +90,7 @@ expanded_inverts_mdr %>%
 
 ```
 
-#```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
+```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
 
 # reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
@@ -105,4 +110,34 @@ expanded_inverts_mdr %>%
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 
+```
+
+```{r seaweed-graph}
+expanded_seaweeds_mdr %>%
+  mutate(seaweed_species_c = 
+  ifelse(grepl("Asco", seaweed_species), "Asco_n",
+  ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
+  ifelse(grepl("Cora", seaweed_species), "Cora_o",
+  ifelse(grepl("Cera", seaweed_species), "Cera_r",
+  ifelse(grepl("Chon", seaweed_species), "Chon_c",
+  ifelse(grepl("Lami", seaweed_species), "Lami_spp",
+  ifelse(grepl("Mast", seaweed_species), "Mast_s",
+  ifelse(grepl("Porp", seaweed_species), "Porp_sp",       
+         ""
+  )))))))))
+
+ 
+ 
+  filter(seaweed_species %in% c("asco_nSC",
+                                ))
+  
+  #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
+   # geom_point()
+```
+
+```{r seaweed-cover-graph}
+expanded_seaweeds_mdr %>%
+  select(starts_with(c("Fucu_", "Ulva_l", "Ulva_i", "Chon_c", "Mast_s")))
+         #tide_ht == "L",
+         #!is.na(tide_ht))
 ```

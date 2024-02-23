@@ -1,0 +1,59 @@
+---
+title: "MDR stats"
+author: "Marina Schnell"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(stringsAsFactors = F)
+```
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+```
+
+```{r load-data}
+expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
+expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
+```
+
+```{r snails-histogram}
+snails_mdr <- expanded_inverts_mdr %>%
+   filter(invert_species %in% c("Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Lacu_v"),
+         !(year == 2017)) %>%
+  ggplot(mapping = aes(count)) +
+    geom_histogram() +
+    facet_wrap("invert_species")
+```
+
+```{r snails-boxplot}
+snails_mdr %>%
+  ggplot(mapping = aes(count)) +
+  geom_boxplot()
+```
+
+```{r snails-kruskal-wallis-test}
+
+# not entirely working
+
+snails_mdr %>%
+  filter(invert_species == "Litt_l") %>%
+  kruskal.test(count ~ year, data = .)
+
+snails_mdr %>%
+  filter(invert_species == "Litt_o") %>%
+  kruskal.test(count ~ year, data = .)
+
+snails_mdr %>%
+  filter(invert_species == "Litt_s") %>%
+  kruskal.test(count ~ year, data = .)
+
+#snails_mdr %>%
+  #filter(invert_species == "Lacu_v") %>%
+  #kruskal.test(count ~ year, data = .)
+
+```
