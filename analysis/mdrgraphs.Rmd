@@ -289,3 +289,16 @@ all_tide_time %>%
 # I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this?
 
 ```
+
+```{r waffle-animation}
+
+all_inverts_mdr %>%
+  filter(year != 2017) %>%
+  group_by(year, tide_ht, quadrat_number) %>%
+  mutate(max_count = max(count)) %>%
+  filter(count == max_count) %>%
+  select(year, tide_ht, quadrat_number, invert_species, max_count)
+
+#where max_count = 0, make invert_species NA; mutate a "max_invert_species" column
+```
+
