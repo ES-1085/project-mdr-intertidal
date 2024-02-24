@@ -1065,6 +1065,22 @@ mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
                            MDR_temperature_2021,
                            MDR_temperature_2022)
 
+mdr_temp_allyears <- mdr_temp_allyears %>%
+  mutate(date = as_date(ymd(date))) %>%
+  unite(date_time, c(date, time), sep = "", remove = FALSE) %>%
+  mutate(date_time = as_datetime(ymd_hms(date_time)), tz = "EST") %>%
+  relocate(date_time, .after = time) %>%
+  relocate(year, .before = date) %>%
+  mutate(temp_C = (5/9) * (temp - 32)) %>%
+  mutate(date = as.character(date))
+```
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `date_time = as_datetime(ymd_hms(date_time))`.
+    ## Caused by warning:
+    ## !  17 failed to parse.
+
+``` r
 write_csv(mdr_temp_allyears, "/cloud/project/analysis/mdr_temp_allyears.csv")
 ```
 
@@ -1145,7 +1161,9 @@ all_tide_time <- full_join(tide_time_2017, tide_time_2018) %>%
   full_join(tide_time_2023) %>%
   mutate(tide_ht = case_when(tide_height < 1 ~ "L",
                              tide_height > 1 ~ "H"),
-         .after = tide_height)
+         .after = tide_height) %>%
+  mutate(date = str_replace_all(date, "/", "-")) %>%
+  mutate(date_time = paste(date, time, sep = " "))
 ```
 
     ## Joining with `by = join_by(date, time, tide_height)`
@@ -1154,3 +1172,13 @@ all_tide_time <- full_join(tide_time_2017, tide_time_2018) %>%
     ## Joining with `by = join_by(date, time, tide_height)`
     ## Joining with `by = join_by(date, time, tide_height)`
     ## Joining with `by = join_by(date, time, tide_height)`
+
+``` r
+write_csv(all_tide_time, "/cloud/project/analysis/all_tide_time.csv")
+```
+
+``` r
+#by <- mdr_temp_allyears
+  #join_by(closest(date_time >= date_time)) %>%
+ # left_join(all_tide_time)
+```
