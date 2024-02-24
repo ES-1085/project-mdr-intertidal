@@ -834,8 +834,15 @@ distinct(all_inverts_mdr, invert_species) %>%
     ## # ℹ 18 more rows
 
 ``` r
-expanded_inverts_mdr <- expand(all_inverts_mdr, year, tide_ht, quadrat_m, invert_species) %>%
-  left_join(all_inverts_mdr, by = join_by(year, tide_ht, quadrat_m, invert_species)) %>%
+expanded_inverts_mdr <- expand(all_inverts_mdr,
+                               year,
+                               tide_ht,
+                               quadrat_m,
+                               invert_species) %>%
+  left_join(all_inverts_mdr, by = join_by(year,
+                                          tide_ht,
+                                          quadrat_m,
+                                          invert_species)) %>%
   mutate(count = replace_na(count, 0))
 
 write_csv(expanded_inverts_mdr, "/cloud/project/analysis/expanded_inverts_mdr.csv")
