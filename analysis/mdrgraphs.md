@@ -8,6 +8,8 @@ library(broom)
 library(readxl)
 library(scales)
 library(lubridate)
+library(ggplot2)
+library(waffle)
 ```
 
 ``` r
@@ -58,11 +60,12 @@ mdr_temp_allyears <- read_csv("/cloud/project/analysis/mdr_temp_allyears.csv")
 all_tide_time <- read_csv("/cloud/project/analysis/all_tide_time.csv")
 ```
 
-    ## Rows: 9491 Columns: 4
+    ## Rows: 9491 Columns: 5
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr  (1): tide_ht
     ## dbl  (1): tide_height
+    ## dttm (1): date_time
     ## date (1): date
     ## time (1): time
     ## 
@@ -91,6 +94,7 @@ expanded_inverts_mdr %>%
                                "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
   scale_fill_viridis_d() +
@@ -111,14 +115,13 @@ expanded_inverts_mdr %>%
          !(year == 2017),
          !is.na(tide_ht)) %>%
   group_by(year, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
-  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
-                width=.1, position = position_dodge(.9)) +
-  scale_fill_viridis_d() +
-  coord_cartesian(ylim = c(0, NA))
+                width=.5, position = position_dodge(.9)) +
+  scale_fill_viridis_d()
 ```
 
     ## `summarise()` has grouped output by 'year'. You can override using the
@@ -127,22 +130,26 @@ expanded_inverts_mdr %>%
 ![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-unfaceted-1.png)<!-- -->
 
 ``` r
+# are the error bars doing what they're supposed to now?
+```
+
+``` r
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
                                "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   group_by(year, tide_ht, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
-  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
-                width=.1, position = position_dodge(.9)) +
+                width=.3, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
-  facet_wrap("tide_ht", nrow = 1) +
-  coord_cartesian(ylim = c(0, NA))
+  facet_wrap("tide_ht", nrow = 1)
 ```
 
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
@@ -152,6 +159,7 @@ expanded_inverts_mdr %>%
 
 ``` r
 # better to have all in same column or all in same row? if in same row, how to make them shorter?
+# are these error bars right? they're better...
 ```
 
 ``` r
@@ -166,10 +174,14 @@ expanded_inverts_mdr %>%
          !(year == 2017),
          !is.na(tide_ht)) %>%
   mutate(count = replace_na(count, 0)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   group_by(year, tide_ht, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.3, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 ```
@@ -180,26 +192,7 @@ expanded_inverts_mdr %>%
 ![](mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-L_vincta-1.png)<!-- -->
 
 ``` r
-expanded_seaweeds_mdr %>%
-  mutate(seaweed_species_c = 
-  ifelse(grepl("Asco", seaweed_species), "Asco_n",
-  ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
-  ifelse(grepl("Cora", seaweed_species), "Cora_o",
-  ifelse(grepl("Cera", seaweed_species), "Cera_r",
-  ifelse(grepl("Chon", seaweed_species), "Chon_c",
-  ifelse(grepl("Lami", seaweed_species), "Lami_spp",
-  ifelse(grepl("Mast", seaweed_species), "Mast_s",
-  ifelse(grepl("Porp", seaweed_species), "Porp_sp",       
-         ""
-  )))))))))
-
- 
- 
-  filter(seaweed_species %in% c("asco_nSC",
-                                ))
-  
-  #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
-   # geom_point()
+# massive error bars... ???
 ```
 
 ``` r
@@ -222,8 +215,8 @@ expanded_seaweeds_mdr %>%
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  summarise(mean_proportion = mean(proportion)) %>%
-  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   mutate(ymin_seaweeds = mean_proportion - se) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
@@ -232,8 +225,7 @@ expanded_seaweeds_mdr %>%
     geom_col(position = "dodge") +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
-    coord_cartesian(ylim = c(0, NA))
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9))
 ```
 
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
@@ -267,8 +259,8 @@ expanded_seaweeds_mdr %>%
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  summarise(mean_proportion = mean(proportion)) %>%
-  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   mutate(ymin_seaweeds = mean_proportion - se) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
@@ -300,22 +292,15 @@ expanded_seaweeds_mdr %>%
                                "Fucu_s",
                                "Fucu_v",
                                "Ulva_l",
-                               # "Cera_r",
                                "Mast_s",
                                "Cora_o",
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
-  mutate(ymin_seaweeds = proportion - se) %>%
-  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
-                          TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = proportion + se) %>%
   ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
 ```
 
@@ -329,25 +314,19 @@ expanded_seaweeds_mdr %>%
 ``` r
 expanded_seaweeds_mdr %>%
   filter(seaweed_simple == "Ulva_l",
-         tide_ht == "L") %>%
+         !is.na(tide_ht)) %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
-  mutate(ymin_seaweeds = proportion - se) %>%
-  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
-                          TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = proportion + se) %>%
-  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
-    geom_col(position = "dodge") +
+  ggplot(mapping = aes(year, proportion, fill = tide_ht)) +
+    geom_col() +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
 ```
 
-![](mdrgraphs_files/figure-gfm/ulva_l-graph-1.png)<!-- -->
+![](mdrgraphs_files/figure-gfm/total-ulva_l-graph-1.png)<!-- -->
 
 ``` r
-#error bars???
+# I don't believe there was that much Ulva in the high quadrats
 ```
 
 ``` r
@@ -371,21 +350,21 @@ all_tide_time %>%
   filter(tide_ht == "H")
 ```
 
-    ## # A tibble: 4,763 × 4
-    ##    date       time   tide_height tide_ht
-    ##    <date>     <time>       <dbl> <chr>  
-    ##  1 2017-01-01 05:24         3.26 H      
-    ##  2 2017-01-01 17:36         3.68 H      
-    ##  3 2017-01-02 06:00         3.08 H      
-    ##  4 2017-01-02 18:12         3.37 H      
-    ##  5 2017-01-03 06:48         3.12 H      
-    ##  6 2017-01-03 19:12         3.54 H      
-    ##  7 2017-01-04 07:30         3.73 H      
-    ##  8 2017-01-04 19:30         3.61 H      
-    ##  9 2017-01-05 08:18         3.31 H      
-    ## 10 2017-01-05 20:54         3.28 H      
+    ## # A tibble: 4,763 × 5
+    ##    date       time   tide_height tide_ht date_time          
+    ##    <date>     <time>       <dbl> <chr>   <dttm>             
+    ##  1 2017-01-01 05:24         3.26 H       2017-01-01 05:24:00
+    ##  2 2017-01-01 17:36         3.68 H       2017-01-01 17:36:00
+    ##  3 2017-01-02 06:00         3.08 H       2017-01-02 06:00:00
+    ##  4 2017-01-02 18:12         3.37 H       2017-01-02 18:12:00
+    ##  5 2017-01-03 06:48         3.12 H       2017-01-03 06:48:00
+    ##  6 2017-01-03 19:12         3.54 H       2017-01-03 19:12:00
+    ##  7 2017-01-04 07:30         3.73 H       2017-01-04 07:30:00
+    ##  8 2017-01-04 19:30         3.61 H       2017-01-04 19:30:00
+    ##  9 2017-01-05 08:18         3.31 H       2017-01-05 08:18:00
+    ## 10 2017-01-05 20:54         3.28 H       2017-01-05 20:54:00
     ## # ℹ 4,753 more rows
 
 ``` r
-# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this?
+# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this? (I just want it to take the closest one)
 ```
