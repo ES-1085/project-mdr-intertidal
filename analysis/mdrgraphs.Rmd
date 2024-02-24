@@ -42,6 +42,7 @@ expanded_inverts_mdr %>%
                                "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
   scale_fill_viridis_d() +
@@ -60,14 +61,15 @@ expanded_inverts_mdr %>%
          !(year == 2017),
          !is.na(tide_ht)) %>%
   group_by(year, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
-  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
-                width=.1, position = position_dodge(.9)) +
-  scale_fill_viridis_d() +
-  coord_cartesian(ylim = c(0, NA))
+                width=.5, position = position_dodge(.9)) +
+  scale_fill_viridis_d()
+
+# are the error bars doing what they're supposed to now?
 
 ```
 
@@ -79,18 +81,19 @@ expanded_inverts_mdr %>%
                                "Litt_s"),
          !(year == 2017),
          !is.na(tide_ht)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   group_by(year, tide_ht, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
-  mutate(se = sd(mean_count, na.rm=TRUE)/sqrt(length(mean_count))) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
-                width=.1, position = position_dodge(.9)) +
+                width=.3, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
-  facet_wrap("tide_ht", nrow = 1) +
-  coord_cartesian(ylim = c(0, NA))
+  facet_wrap("tide_ht", nrow = 1)
 
 # better to have all in same column or all in same row? if in same row, how to make them shorter?
+# are these error bars right? they're better...
 
 ```
 
@@ -107,36 +110,19 @@ expanded_inverts_mdr %>%
          !(year == 2017),
          !is.na(tide_ht)) %>%
   mutate(count = replace_na(count, 0)) %>%
+  mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   group_by(year, tide_ht, invert_species) %>%
-  summarise(mean_count = mean(count)) %>%
+  summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
+                width=.3, position = position_dodge(.9)) +
   scale_fill_viridis_d() +
   facet_wrap("tide_ht", nrow = 1)
 
-```
+# massive error bars... ???
 
-```{r seaweed-graph, eval = FALSE}
-expanded_seaweeds_mdr %>%
-  mutate(seaweed_species_c = 
-  ifelse(grepl("Asco", seaweed_species), "Asco_n",
-  ifelse(grepl("Fucu", seaweed_species), "Fucu_spp",
-  ifelse(grepl("Cora", seaweed_species), "Cora_o",
-  ifelse(grepl("Cera", seaweed_species), "Cera_r",
-  ifelse(grepl("Chon", seaweed_species), "Chon_c",
-  ifelse(grepl("Lami", seaweed_species), "Lami_spp",
-  ifelse(grepl("Mast", seaweed_species), "Mast_s",
-  ifelse(grepl("Porp", seaweed_species), "Porp_sp",       
-         ""
-  )))))))))
-
- 
- 
-  filter(seaweed_species %in% c("asco_nSC",
-                                ))
-  
-  #ggplot(mapping = aes(x = proportion, y = quadrat_m)) +
-   # geom_point()
 ```
 
 ```{r L-mean-seaweed-cover-graph}
@@ -159,8 +145,8 @@ expanded_seaweeds_mdr %>%
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  summarise(mean_proportion = mean(proportion)) %>%
-  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   mutate(ymin_seaweeds = mean_proportion - se) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
@@ -169,8 +155,7 @@ expanded_seaweeds_mdr %>%
     geom_col(position = "dodge") +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
-    coord_cartesian(ylim = c(0, NA))
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9))
 
 # sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
 # why so little Fucus? I know it was there
@@ -197,8 +182,8 @@ expanded_seaweeds_mdr %>%
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  summarise(mean_proportion = mean(proportion)) %>%
-  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
+  mutate(se = sd/sqrt(n)) %>%
   mutate(ymin_seaweeds = mean_proportion - se) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
@@ -222,47 +207,35 @@ expanded_seaweeds_mdr %>%
                                "Fucu_s",
                                "Fucu_v",
                                "Ulva_l",
-                               # "Cera_r",
                                "Mast_s",
                                "Cora_o",
                                "Chon_c"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
-  mutate(ymin_seaweeds = proportion - se) %>%
-  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
-                          TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = proportion + se) %>%
   ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
 
 # sum ALL Fucus in each plot before calculating mean (see previous code chunk)
 # what's up with the error bars??
 ```
 
-```{r ulva_l-graph}
+```{r total-ulva_l-graph}
 
 expanded_seaweeds_mdr %>%
   filter(seaweed_simple == "Ulva_l",
-         tide_ht == "L") %>%
+         !is.na(tide_ht)) %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
-  mutate(ymin_seaweeds = proportion - se) %>%
-  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
-                          TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = proportion + se) %>%
-  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
-    geom_col(position = "dodge") +
+  ggplot(mapping = aes(year, proportion, fill = tide_ht)) +
+    geom_col() +
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
 
-#error bars???
+# I don't believe there was that much Ulva in the high quadrats
+
 ```
 
 ```{r temperature-graph-all-days}
@@ -284,6 +257,6 @@ mdr_temp_allyears %>%
 all_tide_time %>%
   filter(tide_ht == "H")
 
-# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this?
+# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this? (I just want it to take the closest one)
 
 ```
