@@ -10,6 +10,7 @@ library(lubridate)
 library(tidyr)
 library(janitor)
 library(anytime)
+library(glue)
 ```
 
 ``` r
@@ -1185,7 +1186,38 @@ write_csv(all_tide_time, "/cloud/project/analysis/all_tide_time.csv")
 ```
 
 ``` r
-#by <- mdr_temp_allyears
-  #join_by(closest(date_time >= date_time)) %>%
- # left_join(all_tide_time)
+# this is NOT working (makes several columns NAs)
+
+all_tide_time <- all_tide_time %>%
+  mutate(date_time = paste(date, time, sep = " ")) %>%
+  mutate(date_time = as_datetime(date_time))
+```
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `date_time = as_datetime(date_time)`.
+    ## Caused by warning:
+    ## ! All formats failed to parse. No formats found.
+
+``` r
+  # mutate(date_time = ymd_hms(glue("{date} {time}")))
+
+glimpse(all_tide_time)
+```
+
+    ## Rows: 9,491
+    ## Columns: 5
+    ## $ date        <chr> "2017-01-01", "2017-01-01", "2017-01-01", "2017-01-02", "2…
+    ## $ time        <chr> "05:24", "11:18", "17:36", "00:00", "06:00", "12:06", "18:…
+    ## $ tide_height <chr> "3.259", "0.419", "3.683", "-0.004", "3.082", "0.107", "3.…
+    ## $ tide_ht     <chr> "H", "L", "H", "L", "H", "L", "H", "L", "H", "L", "H", "L"…
+    ## $ date_time   <dttm> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+
+``` r
+# date_time is all NAs...??
+
+by <- join_by(closest(date_time >= date_time))
+
+mdr_temp_high_tide <- all_tide_time %>%
+  filter(tide_ht == "H") %>%
+  left_join(mdr_temp_allyears, by)
 ```
