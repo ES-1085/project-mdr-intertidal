@@ -139,16 +139,57 @@ expanded_seaweeds_mdr %>%
    # geom_point()
 ```
 
-```{r L-seaweed-cover-graph}
+```{r L-mean-seaweed-cover-graph}
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
   mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  # mutate(seaweed_simple = gsub("Fucu_d", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
 
 expanded_seaweeds_mdr %>%
-  filter(seaweed_simple %in% c("Fucu_d",
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
                                "Fucu_s",
                                "Fucu_v",
-                               "Fucu_spp",
+                               "Ulva_l",
+                               # "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  summarise(mean_proportion = mean(proportion)) %>%
+  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  mutate(ymin_seaweeds = mean_proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = mean_proportion + se) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
+
+# sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
+# why so little Fucus? I know it was there
+# a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
+```
+
+```{r L-mean-seaweed-cover-graph-faceted}
+expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
+  mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  # mutate(seaweed_simple = gsub("Fucu_d", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
+
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
                                "Ulva_l",
                                "Cera_r",
                                "Mast_s",
@@ -167,7 +208,61 @@ expanded_seaweeds_mdr %>%
     scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA)) +
+  facet_wrap("seaweed_simple")
+
+# sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
+# why so little Fucus? I know it was there
+# a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
+```
+```{r L-total-seaweed-cover-graph}
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
+                               "Ulva_l",
+                               # "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
+  mutate(ymin_seaweeds = proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = proportion + se) %>%
+  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA))
+
+# sum ALL Fucus in each plot before calculating mean (see previous code chunk)
+# what's up with the error bars??
+```
+
+```{r ulva_l-graph}
+
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple == "Ulva_l",
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
+  mutate(ymin_seaweeds = proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = proportion + se) %>%
+  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
+
+#error bars???
 ```
 
 ```{r temperature-graph-all-days}

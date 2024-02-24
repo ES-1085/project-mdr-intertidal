@@ -7,6 +7,7 @@ library(tidyverse)
 library(broom)
 library(readxl)
 library(scales)
+library(lubridate)
 ```
 
 ``` r
@@ -33,6 +34,37 @@ expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr
     ## chr  (2): tide_ht, seaweed_species
     ## dbl  (9): year, quadrat_m, Asco_n_ht, Asco_n_bladders, squares_out_of_25, pr...
     ## dttm (1): date
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+mdr_temp_allyears <- read_csv("/cloud/project/analysis/mdr_temp_allyears.csv")
+```
+
+    ## Rows: 38566 Columns: 7
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (1): tz
+    ## dbl  (3): year, temp, temp_C
+    ## dttm (1): date_time
+    ## date (1): date
+    ## time (1): time
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+all_tide_time <- read_csv("/cloud/project/analysis/all_tide_time.csv")
+```
+
+    ## Rows: 9491 Columns: 4
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (1): tide_ht
+    ## dbl  (1): tide_height
+    ## date (1): date
+    ## time (1): time
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -174,14 +206,17 @@ expanded_seaweeds_mdr %>%
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
   mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  # mutate(seaweed_simple = gsub("Fucu_d", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
 
 expanded_seaweeds_mdr %>%
-  filter(seaweed_simple %in% c("Fucu_d",
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
                                "Fucu_s",
                                "Fucu_v",
-                               "Fucu_spp",
                                "Ulva_l",
-                               "Cera_r",
+                               # "Cera_r",
                                "Mast_s",
                                "Cora_o",
                                "Chon_c"),
@@ -204,4 +239,153 @@ expanded_seaweeds_mdr %>%
     ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
     ## the `.groups` argument.
 
-![](mdrgraphs_files/figure-gfm/L-seaweed-cover-graph-1.png)<!-- -->
+![](mdrgraphs_files/figure-gfm/L-mean-seaweed-cover-graph-1.png)<!-- -->
+
+``` r
+# sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
+# why so little Fucus? I know it was there
+# a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
+```
+
+``` r
+expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
+  mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  # mutate(seaweed_simple = gsub("Fucu_d", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
+  # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
+
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
+                               "Ulva_l",
+                               "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  summarise(mean_proportion = mean(proportion)) %>%
+  mutate(se = sd(mean_proportion, na.rm=TRUE)/sqrt(length(mean_proportion))) %>%
+  mutate(ymin_seaweeds = mean_proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = mean_proportion + se) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA)) +
+  facet_wrap("seaweed_simple")
+```
+
+    ## `summarise()` has grouped output by 'year', 'tide_ht'. You can override using
+    ## the `.groups` argument.
+
+![](mdrgraphs_files/figure-gfm/L-mean-seaweed-cover-graph-faceted-1.png)<!-- -->
+
+``` r
+# sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
+# why so little Fucus? I know it was there
+# a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
+```
+
+``` r
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple %in% c("Fucu_spp",
+                               "Fucu_d",
+                               "Fucu_s",
+                               "Fucu_v",
+                               "Ulva_l",
+                               # "Cera_r",
+                               "Mast_s",
+                               "Cora_o",
+                               "Chon_c"),
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
+  mutate(ymin_seaweeds = proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = proportion + se) %>%
+  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
+```
+
+![](mdrgraphs_files/figure-gfm/L-total-seaweed-cover-graph-1.png)<!-- -->
+
+``` r
+# sum ALL Fucus in each plot before calculating mean (see previous code chunk)
+# what's up with the error bars??
+```
+
+``` r
+expanded_seaweeds_mdr %>%
+  filter(seaweed_simple == "Ulva_l",
+         tide_ht == "L") %>%
+  group_by(year, tide_ht, seaweed_simple) %>%
+  mutate(se = sd(proportion, na.rm=TRUE)/sqrt(length(proportion))) %>%
+  mutate(ymin_seaweeds = proportion - se) %>%
+  mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
+                          TRUE ~ ymin_seaweeds)) %>%
+  mutate(ymax_seaweeds = proportion + se) %>%
+  ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
+    geom_col(position = "dodge") +
+    scale_fill_viridis_d() +
+    scale_x_continuous(breaks = breaks_width(1)) +
+    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
+    coord_cartesian(ylim = c(0, NA))
+```
+
+![](mdrgraphs_files/figure-gfm/ulva_l-graph-1.png)<!-- -->
+
+``` r
+#error bars???
+```
+
+``` r
+mdr_temp_allyears %>%
+  group_by(date) %>%
+  summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
+  ggplot(mapping = aes(date, mean_temp_C_date)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  scale_x_date(breaks = breaks_width("1 year"))
+```
+
+![](mdrgraphs_files/figure-gfm/temperature-graph-all-days-1.png)<!-- -->
+
+``` r
+# error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
+```
+
+``` r
+all_tide_time %>%
+  filter(tide_ht == "H")
+```
+
+    ## # A tibble: 4,763 × 4
+    ##    date       time   tide_height tide_ht
+    ##    <date>     <time>       <dbl> <chr>  
+    ##  1 2017-01-01 05:24         3.26 H      
+    ##  2 2017-01-01 17:36         3.68 H      
+    ##  3 2017-01-02 06:00         3.08 H      
+    ##  4 2017-01-02 18:12         3.37 H      
+    ##  5 2017-01-03 06:48         3.12 H      
+    ##  6 2017-01-03 19:12         3.54 H      
+    ##  7 2017-01-04 07:30         3.73 H      
+    ##  8 2017-01-04 19:30         3.61 H      
+    ##  9 2017-01-05 08:18         3.31 H      
+    ## 10 2017-01-05 20:54         3.28 H      
+    ## # ℹ 4,753 more rows
+
+``` r
+# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this?
+```
