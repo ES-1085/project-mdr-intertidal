@@ -8,6 +8,8 @@ library(broom)
 library(readxl)
 library(lubridate)
 library(tidyr)
+library(janitor)
+library(anytime)
 ```
 
 ``` r
@@ -1043,53 +1045,20 @@ MDR_temperature_2021 <- MDR_temperature_20210602_20211008 %>%
 
 ``` r
 #tidy MDR_temperature_20211008_20220806
-MDR_temperature_2022 <- MDR_temperature_20210602_20211008 %>%
-  rename(time = "Time, GMT-04:00",
-         temp = "Temp, °F (LGR S/N: 20911608, SEN S/N: 20911608)",
-         date = Date) %>%
-  select(c(date, 
-            time,
-            "AM/PM",
+#no date column... ?? (date and time are combined into 1 column)
+
+MDR_temperature_2022 <- MDR_temperature_20211008_20220806 %>%
+  row_to_names(row_number = 1) %>%
+  mutate(datetime = convert_to_datetime(`Date Time, GMT-04:00`)) %>%
+  rename(temp = "Temp, °F (LGR S/N: 20911608, SEN S/N: 20911608)") %>%
+  select(c(datetime,
             temp)) %>%
-  mutate(year = year(date)) %>%
+  mutate(year = year(datetime)) %>%
+  separate(datetime, c("date", "time"), sep = " ") %>%
   mutate(date = as.character(date)) %>%
-    separate_wider_delim(time, delim = " ", names = c("delete", "time1"),
-    too_few = "debug",
-    too_many = "debug") %>%
-  select(-delete, -time, -time_ok, -time_pieces, -time_remainder, time = time1, test = 'AM/PM') %>%
-  mutate(time_mil = case_when(time == "12:00:00" & test == "AM" ~ "00:00:00",
-                              time == "01:00:00" & test == "AM" ~ "01:00:00",
-                              time == "02:00:00" & test == "AM" ~ "02:00:00",
-                              time == "03:00:00" & test == "AM" ~ "03:00:00",
-                              time == "04:00:00" & test == "AM" ~ "04:00:00",
-                              time == "05:00:00" & test == "AM" ~ "05:00:00",
-                              time == "06:00:00" & test == "AM" ~ "06:00:00",
-                              time == "07:00:00" & test == "AM" ~ "07:00:00",
-                              time == "08:00:00" & test == "AM" ~ "08:00:00",
-                              time == "09:00:00" & test == "AM" ~ "09:00:00",
-                              time == "10:00:00" & test == "AM" ~ "10:00:00",
-                              time == "11:00:00" & test == "AM" ~ "11:00:00",
-                              time == "12:00:00" & test == "PM" ~ "12:00:00",
-                              time == "01:00:00" & test == "PM" ~ "13:00:00",
-                              time == "02:00:00" & test == "PM" ~ "14:00:00",
-                              time == "03:00:00" & test == "PM" ~ "15:00:00",
-                              time == "04:00:00" & test == "PM" ~ "16:00:00",
-                              time == "05:00:00" & test == "PM" ~ "17:00:00",
-                              time == "06:00:00" & test == "PM" ~ "18:00:00",
-                              time == "07:00:00" & test == "PM" ~ "19:00:00",
-                              time == "08:00:00" & test == "PM" ~ "20:00:00",
-                              time == "09:00:00" & test == "PM" ~ "21:00:00",
-                              time == "10:00:00" & test == "PM" ~ "22:00:00",
-                              time == "11:00:00" & test == "PM" ~ "23:00:00")) %>%
-  select(-time, -test) %>%
-  rename(time = time_mil) %>%
+  mutate(temp = as.numeric(temp)) %>%
   drop_na(temp)
-```
-
-    ## Warning: Debug mode activated: adding variables `time_ok`, `time_pieces`, and
-    ## `time_remainder`.
-
-``` r
+  
 mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
                            MDR_temperature_2017_2018,
                            MDR_temperature_2018_2019,
