@@ -175,6 +175,14 @@ expanded_inverts_mdr %>%
          !is.na(tide_ht)) %>%
   mutate(count = replace_na(count, 0)) %>%
   mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
+<<<<<<< HEAD
+=======
+  mutate(invert_species = fct_relevel(invert_species, 
+                                      "Litt_l",
+                                      "Litt_o", 
+                                      "Litt_s", 
+                                      "Lacu_v")) %>%
+>>>>>>> 6c6723666b54baf4f18884aa63be7287614e8b52
   group_by(year, tide_ht, invert_species) %>%
   summarise(mean_count = mean(count), sd = sd(count), n = n()) %>%
   mutate(se = sd/sqrt(n)) %>%
@@ -182,7 +190,11 @@ expanded_inverts_mdr %>%
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.3, position = position_dodge(.9)) +
+<<<<<<< HEAD
   scale_fill_viridis_d() +
+=======
+  scale_fill_manual(values = c("#440154FF", "#21908CFF", "#FDE725FF", "#7AD151FF")) +
+>>>>>>> 6c6723666b54baf4f18884aa63be7287614e8b52
   facet_wrap("tide_ht", nrow = 1)
 ```
 
