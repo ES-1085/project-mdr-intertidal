@@ -15,6 +15,8 @@ library(lubridate)
 ```{r load-data}
 expanded_inverts_mdr <- read_csv("/cloud/project/analysis/expanded_inverts_mdr.csv")
 expanded_seaweeds_mdr <- read_csv("/cloud/project/analysis/expanded_seaweeds_mdr.csv")
+mdr_temp_allyears <- read_csv("/cloud/project/analysis/mdr_temp_allyears.csv")
+all_tide_time <- read_csv("/cloud/project/analysis/all_tide_time.csv")
 ```
 
 ```{r total-snails-per-quadrat-unfaceted}
@@ -168,17 +170,7 @@ expanded_seaweeds_mdr %>%
     coord_cartesian(ylim = c(0, NA))
 ```
 
-```{r temperature-graph}
-mdr_temp_allyears <- mdr_temp_allyears %>%
-  mutate(date = as_date(ymd(date))) %>%
-  unite(date_time, c(date, time), sep = "", remove = FALSE) %>%
-  mutate(date_time = as_datetime(ymd_hms(date_time)), tz = "EST") %>%
-  relocate(date_time, .after = time) %>%
-  relocate(year, .before = date) %>%
-  mutate(temp_C = (5/9) * (temp - 32))
-  
-glimpse(mdr_temp_allyears)
-distinct(mdr_temp_allyears, year)
+```{r temperature-graph-all-days}
 
 mdr_temp_allyears %>%
   group_by(date) %>%
@@ -187,22 +179,16 @@ mdr_temp_allyears %>%
   geom_point() +
   geom_abline(slope = 0, intercept = 0, color = "blue") +
   scale_x_date(breaks = breaks_width("1 year"))
-
 
 # error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
 
-mdr_temp_allyears %>%
-  filter(date > "2016-06-15" & date < "2016-10-08" |
-         date > "2017-06-15" & date < "2017-10-08" |
-         date > "2018-06-15" & date < "2018-10-08" |
-         date > "2019-06-15" & date < "2019-10-08" |
-         date > "2020-06-15" & date < "2020-10-08" |
-         date > "2021-06-15" & date < "2021-10-08") %>%
-  group_by(date) %>%
-  summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
-  ggplot(mapping = aes(date, mean_temp_C_date)) +
-  geom_point() +
-  geom_abline(slope = 0, intercept = 0, color = "blue") +
-  scale_x_date(breaks = breaks_width("1 year"))
+```
+
+```{r temperature-graph-high-tide}
+
+all_tide_time %>%
+  filter(tide_ht == "H")
+
+# I want to select any temperature measurements within ___ minutes (6?) of each high tide... how to do this?
 
 ```

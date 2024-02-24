@@ -834,6 +834,14 @@ mdr_temp_allyears <- rbind(MDR_temperature_2016_2017,
                            MDR_temperature_2021,
                            MDR_temperature_2022)
 
+mdr_temp_allyears <- mdr_temp_allyears %>%
+  mutate(date = as_date(ymd(date))) %>%
+  unite(date_time, c(date, time), sep = "", remove = FALSE) %>%
+  mutate(date_time = as_datetime(ymd_hms(date_time)), tz = "EST") %>%
+  relocate(date_time, .after = time) %>%
+  relocate(year, .before = date) %>%
+  mutate(temp_C = (5/9) * (temp - 32))
+
 write_csv(mdr_temp_allyears, "/cloud/project/analysis/mdr_temp_allyears.csv")
 
 ```
@@ -922,6 +930,8 @@ all_tide_time <- full_join(tide_time_2017, tide_time_2018) %>%
   mutate(tide_ht = case_when(tide_height < 1 ~ "L",
                              tide_height > 1 ~ "H"),
          .after = tide_height)
+
+write_csv(all_tide_time, "/cloud/project/analysis/all_tide_time.csv")
 
 ```
 
