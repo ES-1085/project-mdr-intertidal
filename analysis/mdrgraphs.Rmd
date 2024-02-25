@@ -32,7 +32,12 @@ expanded_inverts_mdr %>%
          !(year == 2017)) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
-  scale_fill_viridis_d()
+  labs(fill = "snail species") +
+  scale_fill_viridis_d(
+    labels = c("Litt_l" = "Littorina littorea",
+               "Litt_o" = "Littorina obtusata",
+               "Litt_s" = "Littorina saxatilis")
+  )
 
 ```
 
@@ -47,7 +52,12 @@ expanded_inverts_mdr %>%
   mutate(tide_ht = fct_relevel(tide_ht, c("H", "M", "L"))) %>%
   ggplot(mapping = aes(year, count, fill = invert_species)) +
     geom_col(position = "dodge") +
-  scale_fill_viridis_d() +
+  labs(fill = "snail species") +
+  scale_fill_viridis_d(
+    labels = c("Litt_l" = "Littorina littorea",
+               "Litt_o" = "Littorina obtusata",
+               "Litt_s" = "Littorina saxatilis")
+  ) +
   facet_wrap("tide_ht", nrow = 1)
 
 # omitted 2017 and 2018 for all snail graphs (2017 includes L_spp, so not useful for these graphs, and 2018 is too messy)
@@ -69,7 +79,12 @@ expanded_inverts_mdr %>%
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.5, position = position_dodge(.9)) +
-  scale_fill_viridis_d()
+  labs(fill = "snail species") +
+  scale_fill_viridis_d(
+    labels = c("Litt_l" = "Littorina littorea",
+               "Litt_o" = "Littorina obtusata",
+               "Litt_s" = "Littorina saxatilis")
+  )
 
 # are the error bars doing what they're supposed to now?
 
@@ -91,7 +106,12 @@ expanded_inverts_mdr %>%
     geom_col(position = "dodge") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.3, position = position_dodge(.9)) +
-  scale_fill_viridis_d() +
+  labs(fill = "snail species") +
+  scale_fill_viridis_d(
+    labels = c("Litt_l" = "Littorina littorea",
+               "Litt_o" = "Littorina obtusata",
+               "Litt_s" = "Littorina saxatilis")
+    ) +
   facet_wrap("tide_ht", nrow = 1)
 
 # better to have all in same column or all in same row? if in same row, how to make them shorter?
@@ -123,9 +143,14 @@ expanded_inverts_mdr %>%
   mutate(se = sd/sqrt(n)) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
     geom_col(position = "dodge") +
+  labs(fill = "snail species") +
   geom_errorbar(aes(ymin = mean_count - se, ymax = mean_count + se),
                 width=.3, position = position_dodge(.9)) +
-  scale_fill_manual(values = c("#440154FF", "#21908CFF", "#FDE725FF", "#7AD151FF")) +
+  scale_fill_manual(values = c("#440154FF", "#21908CFF", "#FDE725FF", "#7AD151FF"), 
+                    labels = c("Litt_l" = "Littorina littorea",
+               "Litt_o" = "Littorina obtusata",
+               "Litt_s" = "Littorina saxatilis",
+               "Lacu_v" = "Lacuna vincta")) +
   facet_wrap("tide_ht", nrow = 1)
 
 # massive error bars... ???
@@ -160,7 +185,17 @@ expanded_seaweeds_mdr %>%
   mutate(ymax_seaweeds = mean_proportion + se) %>%
   ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
-    scale_fill_viridis_d() +
+    labs(fill = "seaweed species") +
+    scale_fill_viridis_d(labels = c("Chon_c" = "Chondrus crispus",
+                                    "Cora_o" = "Corallina officinalis",
+                                    "Fucu_d" = "Fucus distichus",
+                                    "Fucu_s" = "Fucus spiralis",
+                                    "Fucu_spp" = "Fucus spp.",
+                                    "Fucu_v" = "Fucus vesiculosis",
+                                    "Mast_s" = "Mastrocarpus stellatus",
+                                    "Ulva_l" = "Ulva lactuca"
+    )
+    ) +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9))
 
@@ -197,7 +232,16 @@ expanded_seaweeds_mdr %>%
   mutate(ymax_seaweeds = mean_proportion + se) %>%
   ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
-    scale_fill_viridis_d() +
+    labs(fill = "seaweed species", y = "mean proportion") +
+    scale_fill_viridis_d(labels = c("Cera_r" = "Ceramium rubrum",
+                                    "Chon_c" = "Chondrus crispus",
+                                    "Cora_o" = "Corallina officinalis",
+                                    "Fucu_d" = "Fucus distichus",
+                                    "Fucu_s" = "Fucus spiralis",
+                                    "Fucu_spp" = "Fucus spp.",
+                                    "Fucu_v" = "Fucus vesiculosis",
+                                    "Mast_s" = "Mastrocarpus stellatus",
+                                    "Ulva_l" = "Ulva lactuca")) +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA)) +
@@ -221,7 +265,16 @@ expanded_seaweeds_mdr %>%
   group_by(year, tide_ht, seaweed_simple) %>%
   ggplot(mapping = aes(year, proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
-    scale_fill_viridis_d() +
+    labs(fill = "seaweed species") +
+    scale_fill_viridis_d(labels = c("Cera_r" = "Ceramium rubrum",
+                                    "Chon_c" = "Chondrus crispus",
+                                    "Cora_o" = "Corallina officinalis",
+                                    "Fucu_d" = "Fucus distichus",
+                                    "Fucu_s" = "Fucus spiralis",
+                                    "Fucu_spp" = "Fucus spp.",
+                                    "Fucu_v" = "Fucus vesiculosis",
+                                    "Mast_s" = "Mastrocarpus stellatus",
+                                    "Ulva_l" = "Ulva lactuca")) +
     scale_x_continuous(breaks = breaks_width(1)) +
     coord_cartesian(ylim = c(0, NA))
 
@@ -237,7 +290,10 @@ expanded_seaweeds_mdr %>%
   group_by(year, tide_ht, seaweed_simple) %>%
   ggplot(mapping = aes(year, proportion, fill = tide_ht)) +
     geom_col() +
-    scale_fill_viridis_d() +
+    labs(fill = "tide height") +
+    scale_fill_viridis_d(labels = c("H" = "High",
+                                    "L" = "Low",
+                                    "M" = "Mid")) +
     scale_x_continuous(breaks = breaks_width(1)) +
     coord_cartesian(ylim = c(0, NA))
 
@@ -252,6 +308,7 @@ mdr_temp_allyears %>%
   summarise(mean_temp_C_date = mean(temp_C, na.rm = TRUE)) %>%
   ggplot(mapping = aes(date, mean_temp_C_date)) +
   geom_point() +
+  labs(y = "mean temperature (C)") +
   geom_abline(slope = 0, intercept = 0, color = "blue") +
   scale_x_date(breaks = breaks_width("1 year"))
 
