@@ -212,16 +212,35 @@ expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
   # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
 
+seaweed_labs <- c("Ceramium rubrum",
+                  "Chondrus crispus",
+                  "Corallina officinalis",
+                  "Fucus distichus",
+                  "Fucus spiralis",
+                  "Fucus spp.",
+                  "Fucus vesiculosis",
+                  "Mastrocarpus stellatus",
+                  "Ulva lactuca")
+names(seaweed_labs) <- c("Cera_r",
+                         "Chon_c",
+                         "Cora_o",
+                         "Fucu_d",
+                         "Fucu_s",
+                         "Fucu_spp",
+                         "Fucu_v",
+                         "Mast_s",
+                         "Ulva_l")
+
 expanded_seaweeds_mdr %>%
-  filter(seaweed_simple %in% c("Fucu_spp",
+  filter(seaweed_simple %in% c("Cera_r",
+                               "Chon_c",
+                               "Cora_o",
                                "Fucu_d",
                                "Fucu_s",
+                               "Fucu_spp",
                                "Fucu_v",
-                               "Ulva_l",
-                               "Cera_r",
                                "Mast_s",
-                               "Cora_o",
-                               "Chon_c"),
+                               "Ulva_l"),
          tide_ht == "L") %>%
   group_by(year, tide_ht, seaweed_simple) %>%
   summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
@@ -245,7 +264,7 @@ expanded_seaweeds_mdr %>%
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA)) +
-  facet_wrap("seaweed_simple")
+  facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs))
 
 # sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
 # why so little Fucus? I know it was there
