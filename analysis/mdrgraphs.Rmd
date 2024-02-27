@@ -332,6 +332,15 @@ mdr_temp_allyears %>%
   geom_abline(slope = 0, intercept = 0, color = "blue") +
   scale_x_date(breaks = breaks_width("1 year"))
 
+mdr_temp_allyears %>%
+  ggplot(mapping = aes(date, temp_C)) +
+  geom_point(alpha = .1) +
+  # geom_smooth() +
+  labs(y = "temperature (C)") +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  scale_x_date(breaks = breaks_width("1 year"))
+
+
 # error message when I try to knit ("object 'mdr_temp_allyears' not found"), but codeblock runs...?
 
 ```
