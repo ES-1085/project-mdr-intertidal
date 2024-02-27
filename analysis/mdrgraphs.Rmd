@@ -12,6 +12,7 @@ library(scales)
 library(lubridate)
 library(ggplot2)
 library(waffle)
+library(dplyr)
 ```
 
 ```{r load-data}
@@ -346,13 +347,26 @@ all_tide_time %>%
 
 ```{r waffle-animation}
 
-all_inverts_mdr %>%
+test <- all_inverts_mdr %>%
   filter(year != 2017) %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count)
+  select(year, tide_ht, quadrat_number, invert_species, max_count) 
 
-#where max_count = 0, make invert_species NA; mutate a "max_invert_species" column
+test_1 <- test %>%
+  filter(max_count == 0) %>%
+  mutate(invert_species_max = invert_species == NA)
+
+test_2 <- test %>%
+  filter(max_count != 0) %>%
+  mutate(invert_species_max = invert_species)
+
+invert_waffle <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number) %>%
+  distinct(invert_species_max, .keep_all = TRUE) %>%
+  filter(tide_ht == "H") %>%
+  ggplot() +
+  
 ```
-
