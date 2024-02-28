@@ -376,6 +376,7 @@ invert_waffle <- rbind(test_1, test_2) %>%
   group_by(year, quadrat_number) %>%
   distinct(invert_species_max, .keep_all = TRUE) %>%
   filter(tide_ht == "H") %>%
-  ggplot() +
+  ggplot(aes(x = quadrat_number, 
+             color = inverts_species_max))
   
 ```
