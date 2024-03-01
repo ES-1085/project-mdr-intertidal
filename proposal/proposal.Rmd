@@ -87,7 +87,17 @@ There are two sites for temperature sensor attachment on the island - one in the
 
 These sensors are placed around the mid-tide line, which means they measure water temperature for half the time and air temperature half the time, mimicking the experience of intertidal organisms.
 
-## 3. Data analysis plan
+
+## 3. Ethics Review
+The surveys had data collected by different undergraduate students from year-to-year which potentially disrupts the standardization of the collection methods across the data-set. Additionally, these students were trained a week prior to collecting the data, and no-one was double-checking their identifications; this implies a baseline level of human error across all years.
+
+This study did not have to undergo IACUC review as it exclusively pertains to invertebrate organisms.
+
+This study will provide a baseline knowledge of the inter-tidal community on Mount Desert Rock for the future pursuits of undergraduate field researchers. 
+
+The results from this project will be presented at the Northeast Natural History Conference in Albany, New York, in spring of 2024. The various undergraduate students who completed the survey, as well as the collaborators on this data analysis project, will be acknowledged in the presentation.
+
+## 4. Data analysis plan
 
 Before we begin the data analysis process, we are going to spend a lot of time tidying the data. Our plan is to create two dataframes for each year, one for seaweeds and one for invertebrates. We will then join the dataframes from each year so that we are able to analyse change in seaweed cover and change in invertebrate distribution over time.
 
