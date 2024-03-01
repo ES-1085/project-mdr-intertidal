@@ -122,9 +122,11 @@ expanded_inverts_mdr %>%
 
 ```
 
-```{r mean-snails-per-quadrat-faceted-plus-Lacu_v-Nuce_l, fig.height=4, fig.width=9}
+```{r mean-snails-per-quadrat-faceted-plus-Lacu_v-Nuce_l, fig.height = 4, fig.width = 9, fig.alt = "Bar plot of the mean number of snails per quadrat by year (2019-2023), tide height, and species, with the following trends: Lacuna vincta is only present at the low-tide level, starting at <1 per quadrat in 2022, and increasing to over 10 per quadrat in 2023. Littorina littorea is only present in 2019 and 2020 at high- and mid-tide levels (in all cases <5 per quadrat). Littorina obtusata is most abundant at the mid-tide level, increasing from about 8 per quadrat in 2019 to about 34 per quadrat in 2023, with a low point in 2021 of about 4 per quadrat. Littorina saxatilis is most abundant at the high-tide level, increasing from about 0 per quadrat in 2019 to about 15 per quadrat in 2022, dropping to about 10 per quadrat in 2023. Nucella lapillus is most abundant at the mid- and low-tide levels, increasing from about 0 per quadrat in 2019 to about 9 per quadrat at the mid-tide level and 19 per quadrat at the low-tide level in 2022, dropping to <3 per quadrat at both levels in 2023."}
 
 # use this one for presentation
+# include caption that says error bars represent +/- 1 standard error
+# how to explain error bars in alt text?
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
 expanded_inverts_mdr %>%
@@ -141,6 +143,7 @@ expanded_inverts_mdr %>%
                                tide_ht == "L" ~ "Low Tide")) %>%
   group_by(year, tide_ht_2, invert_species) %>%
   summarise(mean_count = mean(count), se_count = se(count)) %>%
+  mutate(tide_ht_2 = as.factor(tide_ht_2)) %>%
   mutate(tide_ht_2 = fct_relevel(tide_ht_2, c("High Tide",
                                               "Mid Tide",
                                               "Low Tide"))) %>%
@@ -164,8 +167,6 @@ expanded_inverts_mdr %>%
   theme(legend.text = element_text(face="italic")) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 8, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0)))
-
-# ggsave("snail_graph.png")
 
 ```
 
@@ -217,9 +218,15 @@ expanded_seaweeds_mdr %>%
 ```
 
 ```{r L-mean-seaweed-cover-graph-faceted}
+
+# add all Fucuses together
+
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = gsub("CC", "", seaweed_species)) %>%
-  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple)) %>%
+  mutate(seaweed_simple = case_when(grepl("Fucu", seaweed_species) ~ "Fucus_spp",
+                                    TRUE ~ seaweed_species
+                                 ))
   # mutate(seaweed_simple = gsub("Fucu_d", "Fucu_spp", seaweed_simple)) %>%
   # mutate(seaweed_simple = gsub("Fucu_s", "Fucu_spp", seaweed_simple)) %>%
   # mutate(seaweed_simple = gsub("Fucu_v", "Fucu_spp", seaweed_simple))
@@ -238,7 +245,7 @@ names(seaweed_labs) <- c("Cera_r",
                          "Cora_o",
                          "Fucu_d",
                          "Fucu_s",
-                         "Fucu_spp",
+                         "Fucus_spp",
                          "Fucu_v",
                          "Mast_s",
                          "Ulva_l")
@@ -247,15 +254,12 @@ expanded_seaweeds_mdr %>%
   filter(seaweed_simple %in% c("Cera_r",
                                "Chon_c",
                                "Cora_o",
-                               "Fucu_d",
-                               "Fucu_s",
-                               "Fucu_spp",
-                               "Fucu_v",
+                               "Fucus_spp",
                                "Mast_s",
-                               "Ulva_l"),
-         tide_ht == "L") %>%
-  group_by(year, tide_ht, seaweed_simple) %>%
-  summarise(mean_proportion = mean(proportion), sd = sd(proportion), n = n()) %>%
+                               "Ulva_l")) %>%
+         #tide_ht == "L") %>%
+  group_by(year, tide_ht, quadrat_m, seaweed_simple) %>%
+  summarise(sum_proportion = sum(proportion), sd = sd(proportion), n = n()) %>%
   mutate(se = sd/sqrt(n)) %>%
   mutate(ymin_seaweeds = mean_proportion - se) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
@@ -278,10 +282,9 @@ expanded_seaweeds_mdr %>%
     coord_cartesian(ylim = c(0, NA)) +
   facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs))
 
-# sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
-# why so little Fucus? I know it was there
 # a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
 ```
+
 ```{r L-total-seaweed-cover-graph}
 expanded_seaweeds_mdr %>%
   filter(seaweed_simple %in% c("Fucu_spp",
