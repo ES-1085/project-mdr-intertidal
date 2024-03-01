@@ -217,7 +217,11 @@ expanded_seaweeds_mdr %>%
 # a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
 ```
 
-```{r L-mean-seaweed-cover-graph-faceted}
+```{r L-mean-seaweed-cover-graph-faceted, fig.height = 4, fig.width = 7}
+
+# how to make spp. un-italicized?
+# remove U. lactuca in high quadrats
+# use this one for presentation
 
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = case_when(grepl("Fucu", seaweed_species) ~ "Fucu_spp",
@@ -230,24 +234,25 @@ seaweed_labs <- c("Ascophyllum nodosum",
                   "Chondrus crispus",
                   "Corallina officinalis",
                   "Fucus spp.",
-                  "Mastocarpus stellatus",
-                  "Ulva lactuca")
+                  "Mastocarpus stellatus")
+                  # "Ulva lactuca")
 
 names(seaweed_labs) <- c("Asco_n",
                          "Cera_r",
                          "Chon_c",
                          "Cora_o",
                          "Fucu_spp",
-                         "Mast_s",
-                         "Ulva_l")
+                         "Mast_s")
+                         # "Ulva_l")
 
 expanded_seaweeds_mdr %>%
-  filter(seaweed_simple %in% c("Cera_r",
+  filter(seaweed_simple %in% c("Asco_n",
+                               "Cera_r",
                                "Chon_c",
                                "Cora_o",
                                "Fucu_spp",
-                               "Mast_s",
-                               "Ulva_l")) %>%
+                               "Mast_s")) %>%
+                               # "Ulva_l")) %>%
   group_by(year, tide_ht, quadrat_m, seaweed_simple) %>%
   summarise(sum_proportion = sum(proportion), sd = sd(proportion), n = n()) %>%
   filter(!is.na(quadrat_m)) %>%
@@ -261,19 +266,27 @@ expanded_seaweeds_mdr %>%
   ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
     labs(fill = "seaweed species", y = "mean proportion") +
-    scale_fill_viridis_d(labels = c("Cera_r" = "Ceramium rubrum",
+    scale_fill_viridis_d(labels = c("Asco_n" = "Ascophyllum nodosum",
+                                    "Cera_r" = "Ceramium rubrum",
                                     "Chon_c" = "Chondrus crispus",
                                     "Cora_o" = "Corallina officinalis",
                                     "Fucu_spp" = "Fucus spp.",
-                                    "Mast_s" = "Mastocarpus stellatus",
-                                    "Ulva_l" = "Ulva lactuca")) +
+                                    "Mast_s" = "Mastocarpus stellatus")) +
+                                    # "Ulva_l" = "Ulva lactuca")) +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
                   width=.3, position = position_dodge(.9)) +
     coord_cartesian(ylim = c(0, NA)) +
   facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs)) +
-  theme(axis.text.x = element_text(size = 8)) +
-  theme(legend.text = element_text(face="italic"))
+  theme(axis.text.x = element_text(size = 7)) +
+  theme(legend.position = "none") +
+  theme(strip.text = element_text(face = "italic")) +
+  labs(x = "Year",
+       y = "Mean Proportion of Seaweed per Quadrat",
+       title = "Seaweed Cover in the Mount Desert Rock Intertidal",
+       subtitle = "by Year and Species") +
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 8, b = 0, l = 0))) +
+  theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0)))
 
 ```
 
