@@ -122,7 +122,6 @@ expanded_inverts_mdr %>%
 
 ```{r mean-snails-per-quadrat-faceted-plus-L_vincta}
 
-# reorder this so colors of Littorina are the same and L. vincta is last (is there a way to do this without making it an ordered factor?)
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
 expanded_inverts_mdr %>%
@@ -336,7 +335,9 @@ mdr_temp_allyears %>%
   ggplot(mapping = aes(date, temp_C)) +
   geom_point(alpha = .1) +
   # geom_smooth() +
-  labs(y = "temperature (C)") +
+  labs(title = "Mid tide temperature at Mount Desert Rock ",
+       subtitle = "From 2017 to 2022",
+       y = "temperature (C)") +
   geom_abline(slope = 0, intercept = 0, color = "blue") +
   scale_x_date(breaks = breaks_width("1 year"))
 
