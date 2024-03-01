@@ -389,8 +389,6 @@ test <- all_inverts_mdr %>%
   filter(year != 2017) %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
-  
-  ###between these two###
   filter(count == max_count) %>%
   select(year, tide_ht, quadrat_number, invert_species, max_count) 
 

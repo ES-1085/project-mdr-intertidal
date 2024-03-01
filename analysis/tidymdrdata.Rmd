@@ -456,8 +456,7 @@ inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
          Nuce_l = Nuci_l) %>%
    pivot_longer(cols = Urti_f:Semi_bA2,
                 names_to = "invert_species",
-                values_to = "count"
-                ) %>%
+                values_to = "count") %>%
   relocate(year, .after = date) %>%
   mutate(quadrat_m = case_when(quadrat_number == 1 ~ 0,
                                quadrat_number == 2 ~ 3,
@@ -469,7 +468,9 @@ inverts_mdr_2021 <- horizontal_MDR_NeCSA_2021 %>%
                                quadrat_number == 8 ~ 21,
                                quadrat_number == 9 ~ 24,
                                quadrat_number == 10 ~ 27),
-         .after = quadrat_number)
+         .after = quadrat_number) %>%
+  mutate(count = case_when((is.na(count)) ~ 0,
+                           TRUE ~ count))
 
 # need to specify value/NA for quadrat_m if value in quadrat_number doesn't match list?
 
