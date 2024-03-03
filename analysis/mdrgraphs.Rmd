@@ -13,6 +13,7 @@ library(lubridate)
 library(ggplot2)
 library(waffle)
 library(dplyr)
+library(ggtext)
 
 se <- function(x) sd(x)/sqrt(length(x))
 ```
@@ -126,6 +127,7 @@ expanded_inverts_mdr %>%
 
 # use this one for presentation
 # include caption that says error bars represent +/- 1 standard error
+# explain why we dropped 2017 and 2018 (2017 included counts of Littorina spp., and 2018 was too messy)
 # how to explain error bars in alt text?
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
@@ -206,9 +208,7 @@ expanded_seaweeds_mdr %>%
                                     "Fucu_spp" = "Fucus spp.",
                                     "Fucu_v" = "Fucus vesiculosis",
                                     "Mast_s" = "Mastrocarpus stellatus",
-                                    "Ulva_l" = "Ulva lactuca"
-    )
-    ) +
+                                    "Ulva_l" = "Ulva lactuca")) +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9))
 
@@ -217,44 +217,39 @@ expanded_seaweeds_mdr %>%
 # a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
 ```
 
-```{r L-mean-seaweed-cover-graph-faceted, fig.height = 4, fig.width = 7}
+```{r L-mean-seaweed-cover-graph-faceted, fig.height = 4, fig.width = 7, fig.alt = "Bar plots of the mean proportion of seaweed cover per quadrat by year (2017-2023), faceted by species, with the following trends: Ascophyllum nodosum starts around 0.1 in 2017, increasing to 0.2 in 2019, and then decreasing to 0.1 by 2023. Chondrus crispus starts around 0.15 in 2017, decreasing to 0.05 in 2019 and remaining around that level until 2023. Corallina officinalis starts around 0.2 in 2017, decreasing to nearly 0 in 2019 with an increase to around 0.1 by 2023. Fucus spp. starts around 0.35 in 2017, decreasing to around 0.25 in 2019 and 2020, and dropping to 0.1 for 2021-2023. Mastocarpus stellatus starts around 0.1 in 2017, increasing to 0.25 by 2020 and decreasing back to around 0.1 by 2023. Ulva lactuca starts around 0.15 in 2017 and decreases to nearly 0 by 2023. For all species, 2018 was not included due to a lack of data."}
 
-# how to make spp. un-italicized?
-# remove U. lactuca in high quadrats
 # use this one for presentation
+# include caption that says error bars represent +/- 1 standard error
+# explain gap for 2018
+# color by brown/green/red? would be baddd for colorblind
 
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = case_when(grepl("Fucu", seaweed_species) ~ "Fucu_spp",
                                     TRUE ~ seaweed_species)) %>%
   mutate(seaweed_simple = gsub("CC", "", seaweed_simple)) %>%
-  mutate(seaweed_simple = gsub("SC", "", seaweed_simple))
+  mutate(seaweed_simple = gsub("SC", "", seaweed_simple)) %>%
+  mutate(proportion_new = case_when(seaweed_simple == "Ulva_l" & tide_ht == "H" ~ 0,
+                                    TRUE ~ proportion))
 
-seaweed_labs <- c("Ascophyllum nodosum",
-                  "Ceramium rubrum",
-                  "Chondrus crispus",
-                  "Corallina officinalis",
-                  "Fucus spp.",
-                  "Mastocarpus stellatus")
-                  # "Ulva lactuca")
+seaweed_labs <- c("<i>Ascophyllum nodosum</i>",
+                  "<i>Chondrus crispus</i>",
+                  "<i>Corallina officinalis</i>",
+                  "<i>Fucus</i> spp.",
+                  "<i>Mastocarpus stellatus</i>",
+                  "<i>Ulva lactuca</i>")
 
 names(seaweed_labs) <- c("Asco_n",
-                         "Cera_r",
                          "Chon_c",
                          "Cora_o",
                          "Fucu_spp",
-                         "Mast_s")
-                         # "Ulva_l")
+                         "Mast_s",
+                         "Ulva_l")
 
 expanded_seaweeds_mdr %>%
-  filter(seaweed_simple %in% c("Asco_n",
-                               "Cera_r",
-                               "Chon_c",
-                               "Cora_o",
-                               "Fucu_spp",
-                               "Mast_s")) %>%
-                               # "Ulva_l")) %>%
+  filter(seaweed_simple %in% names(seaweed_labs)) %>%
   group_by(year, tide_ht, quadrat_m, seaweed_simple) %>%
-  summarise(sum_proportion = sum(proportion), sd = sd(proportion), n = n()) %>%
+  summarise(sum_proportion = sum(proportion_new), sd = sd(proportion_new), n = n()) %>%
   filter(!is.na(quadrat_m)) %>%
   group_by(year, seaweed_simple) %>%
   summarise(mean_proportion = mean(sum_proportion),
@@ -265,14 +260,7 @@ expanded_seaweeds_mdr %>%
   mutate(ymax_seaweeds = mean_proportion + se_proportion) %>%
   ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
     geom_col(position = "dodge") +
-    labs(fill = "seaweed species", y = "mean proportion") +
-    scale_fill_viridis_d(labels = c("Asco_n" = "Ascophyllum nodosum",
-                                    "Cera_r" = "Ceramium rubrum",
-                                    "Chon_c" = "Chondrus crispus",
-                                    "Cora_o" = "Corallina officinalis",
-                                    "Fucu_spp" = "Fucus spp.",
-                                    "Mast_s" = "Mastocarpus stellatus")) +
-                                    # "Ulva_l" = "Ulva lactuca")) +
+    scale_fill_viridis_d() +
     scale_x_continuous(breaks = breaks_width(1)) +
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
                   width=.3, position = position_dodge(.9)) +
@@ -280,14 +268,13 @@ expanded_seaweeds_mdr %>%
   facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs)) +
   theme(axis.text.x = element_text(size = 7)) +
   theme(legend.position = "none") +
-  theme(strip.text = element_text(face = "italic")) +
   labs(x = "Year",
        y = "Mean Proportion of Seaweed per Quadrat",
        title = "Seaweed Cover in the Mount Desert Rock Intertidal",
        subtitle = "by Year and Species") +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 8, b = 0, l = 0))) +
-  theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0)))
-
+  theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0))) +
+  theme(strip.text = element_markdown())
 ```
 
 ```{r L-total-seaweed-cover-graph}
@@ -327,7 +314,7 @@ expanded_seaweeds_mdr %>%
   filter(seaweed_simple == "Ulva_l",
          !is.na(tide_ht)) %>%
   group_by(year, tide_ht, seaweed_simple) %>%
-  ggplot(mapping = aes(year, proportion, fill = tide_ht)) +
+  ggplot(mapping = aes(year, proportion_new, fill = tide_ht)) +
     geom_col() +
     labs(fill = "tide height") +
     scale_fill_viridis_d(labels = c("H" = "High",
@@ -337,10 +324,11 @@ expanded_seaweeds_mdr %>%
     coord_cartesian(ylim = c(0, NA))
 
 # I don't believe there was that much Ulva in the high quadrats
+# ^fixed by removing all observations of Ulva in high quadrats (see seaweed graph codeblock above)
 
 ```
 
-```{r temperature-graph-all-days, fig.alt = "Scatterplot of Mount Desert Rock mid tide temperatures in degrees celcius, shown across a date range from 2017 to 2022. The temperatures range from negative 10 to 30 degrees celcius and fluctute throughout the year. Colder temperatures occur in the Winter and warmer temperatures occur in the summer months.}
+```{r temperature-graph-all-days, fig.alt = "Scatterplot of Mount Desert Rock mid tide temperatures in degrees Celsius, shown across a date range from 2017 to 2022. The temperatures range from negative 10 to positive 30 degrees Celsius and fluctuate throughout the year. Colder temperatures occur in the winter and warmer temperatures occur in the summer months."}
 
 mdr_temp_allyears %>%
   group_by(date) %>%
@@ -363,7 +351,7 @@ mdr_temp_allyears %>%
 
 ```
 
-```{r temp-graphs-by-tide}
+```{r temp-graphs-by-tide, eval = FALSE}
 mdr_temp_alltides %>%
   ggplot(mapping = aes(x = date.x, y = temp_C, colour = tide_ht)) +
   geom_point(alpha = .1) +
@@ -388,7 +376,7 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r waffle-animation}
+```{r waffle-animation, eval = FALSE}
 
 test <- all_inverts_mdr %>%
   filter(year != 2017) %>%
