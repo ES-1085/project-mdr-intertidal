@@ -1,6 +1,6 @@
 ---
 title: "Project proposal"
-author: "MDR Intertidal"
+author: "Kalimari"
 output: github_document
 ---
 

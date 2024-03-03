@@ -1,6 +1,6 @@
 ---
-title: Project title
-author: by Team name
+title: MDR Intertidal
+author: by Kalimari
 output: github_document
 ---
 
@@ -25,7 +25,7 @@ Your results with proper output and graphics go in your presentation, this space
 
 ## Presentation
 
-Our presentation can be found [here](presentation/presentation.html).
+Our presentation can be found [here](https://docs.google.com/presentation/d/1hcCbeBnJPDstauCd-XchuDcr6iWFrnO3oZpX9izKzj0/edit?usp=sharing).
 
 ## Data 
 

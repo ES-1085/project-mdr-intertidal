@@ -1,6 +1,6 @@
 ---
 title: "MDR graphs"
-author: "MDR Intertidal"
+author: "Kalimari"
 output: github_document
 ---
 
@@ -26,8 +26,6 @@ all_tide_time <- read_csv("/cloud/project/analysis/all_tide_time.csv")
 ```
 
 ```{r total-snails-per-quadrat-unfaceted}
-
-# total number per quadrat, unfaceted
 
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",

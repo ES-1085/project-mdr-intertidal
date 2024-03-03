@@ -1,6 +1,6 @@
 ---
 title: "Project tidying"
-author: "MDR Intertidal"
+author: "Kalimari"
 output: github_document
 ---
 
