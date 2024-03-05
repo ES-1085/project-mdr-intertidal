@@ -117,7 +117,7 @@ inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
 
 ```
 
-```{r load-data-2018}
+```{r load-data-2018, eval = FALSE}
 
 # not sure if this spreadsheet is complete - omit?
 
