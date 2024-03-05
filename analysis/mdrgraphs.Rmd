@@ -211,11 +211,12 @@ expanded_seaweeds_mdr %>%
     geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds), width=.3, position = position_dodge(.9))
 
 # sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
-# why so little Fucus? I know it was there
 # a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
 ```
 
-```{r L-mean-seaweed-cover-graph-faceted, fig.height = 4, fig.width = 7, fig.alt = "Bar plots of the mean proportion of seaweed cover per quadrat by year (2017-2023), faceted by species, with the following trends: Ascophyllum nodosum starts around 0.1 in 2017, increasing to 0.2 in 2019, and then decreasing to 0.1 by 2023. Chondrus crispus starts around 0.15 in 2017, decreasing to 0.05 in 2019 and remaining around that level until 2023. Corallina officinalis starts around 0.2 in 2017, decreasing to nearly 0 in 2019 with an increase to around 0.1 by 2023. Fucus spp. starts around 0.35 in 2017, decreasing to around 0.25 in 2019 and 2020, and dropping to 0.1 for 2021-2023. Mastocarpus stellatus starts around 0.1 in 2017, increasing to 0.25 by 2020 and decreasing back to around 0.1 by 2023. Ulva lactuca starts around 0.15 in 2017 and decreases to nearly 0 by 2023. For all species, 2018 was not included due to a lack of data."}
+```{r L-mean-seaweed-cover-graph-faceted, fig.height = 4, fig.width = 9, fig.alt = "Bar plots of the mean proportion of seaweed cover per quadrat by year (2017-2023), faceted by species, with the following trends: Ascophyllum nodosum starts around 0.1 in 2017, increasing to 0.2 in 2019, and then decreasing to 0.1 by 2023. Chondrus crispus starts around 0.15 in 2017, decreasing to 0.05 in 2019 and remaining around that level until 2023. Corallina officinalis starts around 0.2 in 2017, decreasing to nearly 0 in 2019 with an increase to around 0.1 by 2023. Fucus spp. starts around 0.35 in 2017, decreasing to around 0.25 in 2019 and 2020, and dropping to 0.1 for 2021-2023. Mastocarpus stellatus starts around 0.1 in 2017, increasing to 0.25 by 2020 and decreasing back to around 0.1 by 2023. Ulva lactuca starts around 0.15 in 2017 and decreases to nearly 0 by 2023. For all species, 2018 was not included due to a lack of data."}
+
+# fix to make sure it's adding everything it should be
 
 # use this one for presentation
 # include caption that says error bars represent +/- 1 standard error
@@ -255,21 +256,39 @@ expanded_seaweeds_mdr %>%
   mutate(ymin_seaweeds = mean_proportion - se_proportion) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = mean_proportion + se_proportion) %>%
-  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
-    geom_col(position = "dodge") +
-    scale_fill_viridis_d() +
-    scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
+  mutate(ymax_seaweeds = mean_proportion + se_proportion) %>% 
+  mutate(seaweed_color = case_when(seaweed_simple %in% c("Asco_n",
+                                                         "Fucu_spp",
+                                                         "Lami_spp")
+                                                         ~ "Brown",
+                                   seaweed_simple %in% c("Cera_r",
+                                                         "Chon_c",
+                                                         "Cora_o",
+                                                         "Mast_s",
+                                                         "Porp_sp",
+                                                         "Vert_l")
+                                                         ~ "Red",
+                                   seaweed_simple %in% c("Ulva_i",
+                                                         "Ulva_l")
+                                                         ~ "Green",
+                                   TRUE ~ "Black")) %>%
+  mutate(seaweed_color = as.factor(seaweed_color)) %>%
+  mutate(seaweed_color = fct_relevel(seaweed_color, c("Brown", "Red", "Green"))) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_color)) +
+  geom_col(position = "dodge") +
+  scale_x_continuous(breaks = breaks_width(1)) +
+  geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
                   width=.3, position = position_dodge(.9)) +
-    coord_cartesian(ylim = c(0, NA)) +
+  scale_fill_manual(values = c("Brown" = "#614428",
+                               "Red" = "#CF594C",
+                               "Green" = "#ABDD8A")) +
   facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs)) +
   theme(axis.text.x = element_text(size = 7)) +
-  theme(legend.position = "none") +
   labs(x = "Year",
        y = "Mean Proportion of Seaweed per Quadrat",
        title = "Seaweed Cover in the Mount Desert Rock Intertidal",
-       subtitle = "by Year and Species") +
+       subtitle = "by Year and Species",
+       fill = "Seaweed Color") +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 8, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0))) +
   theme(strip.text = element_markdown())

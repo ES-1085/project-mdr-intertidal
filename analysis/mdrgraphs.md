@@ -1,6 +1,6 @@
 MDR graphs
 ================
-MDR Intertidal
+Kalimari
 
 ``` r
 library(tidyverse)
@@ -77,8 +77,6 @@ all_tide_time <- read_csv("/cloud/project/analysis/all_tide_time.csv")
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 ``` r
-# total number per quadrat, unfaceted
-
 expanded_inverts_mdr %>%
   filter(invert_species %in% c("Litt_l",
                                "Litt_o",
@@ -292,11 +290,12 @@ expanded_seaweeds_mdr %>%
 
 ``` r
 # sum ALL Fucus in each plot before calculating mean (I think I did this but not sure)
-# why so little Fucus? I know it was there
 # a thought: where do the snails go at high tide? does it make sense to focus only on low if they go higher when tide is high?
 ```
 
 ``` r
+# fix to make sure it's adding everything it should be
+
 # use this one for presentation
 # include caption that says error bars represent +/- 1 standard error
 # explain gap for 2018
@@ -335,21 +334,39 @@ expanded_seaweeds_mdr %>%
   mutate(ymin_seaweeds = mean_proportion - se_proportion) %>%
   mutate(ymin_seaweeds = case_when(ymin_seaweeds < 0 ~ 0,
                           TRUE ~ ymin_seaweeds)) %>%
-  mutate(ymax_seaweeds = mean_proportion + se_proportion) %>%
-  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_simple)) +
-    geom_col(position = "dodge") +
-    scale_fill_viridis_d() +
-    scale_x_continuous(breaks = breaks_width(1)) +
-    geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
+  mutate(ymax_seaweeds = mean_proportion + se_proportion) %>% 
+  mutate(seaweed_color = case_when(seaweed_simple %in% c("Asco_n",
+                                                         "Fucu_spp",
+                                                         "Lami_spp")
+                                                         ~ "Brown",
+                                   seaweed_simple %in% c("Cera_r",
+                                                         "Chon_c",
+                                                         "Cora_o",
+                                                         "Mast_s",
+                                                         "Porp_sp",
+                                                         "Vert_l")
+                                                         ~ "Red",
+                                   seaweed_simple %in% c("Ulva_i",
+                                                         "Ulva_l")
+                                                         ~ "Green",
+                                   TRUE ~ "Black")) %>%
+  mutate(seaweed_color = as.factor(seaweed_color)) %>%
+  mutate(seaweed_color = fct_relevel(seaweed_color, c("Brown", "Red", "Green"))) %>%
+  ggplot(mapping = aes(year, mean_proportion, fill = seaweed_color)) +
+  geom_col(position = "dodge") +
+  scale_x_continuous(breaks = breaks_width(1)) +
+  geom_errorbar(aes(ymin = ymin_seaweeds, ymax = ymax_seaweeds),
                   width=.3, position = position_dodge(.9)) +
-    coord_cartesian(ylim = c(0, NA)) +
+  scale_fill_manual(values = c("Brown" = "#614428",
+                               "Red" = "#CF594C",
+                               "Green" = "#ABDD8A")) +
   facet_wrap(. ~seaweed_simple, labeller = labeller(seaweed_simple = seaweed_labs)) +
   theme(axis.text.x = element_text(size = 7)) +
-  theme(legend.position = "none") +
   labs(x = "Year",
        y = "Mean Proportion of Seaweed per Quadrat",
        title = "Seaweed Cover in the Mount Desert Rock Intertidal",
-       subtitle = "by Year and Species") +
+       subtitle = "by Year and Species",
+       fill = "Seaweed Color") +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 8, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 8, r = 0, b = 0, l = 0))) +
   theme(strip.text = element_markdown())
