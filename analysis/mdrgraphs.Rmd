@@ -7,13 +7,11 @@ output: github_document
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
+library(ggplot2)
 library(readxl)
 library(scales)
 library(lubridate)
-library(ggplot2)
-library(waffle)
 library(dplyr)
-library(ggtext)
 
 se <- function(x) sd(x)/sqrt(length(x))
 ```
@@ -393,14 +391,14 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r waffle-animation, eval = FALSE}
+```{r invert-max-animation, eval = FALSE}
 
 test <- all_inverts_mdr %>%
   filter(year != 2017) %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count) 
+  select(year, tide_ht, quadrat_number, invert_species, max_count)
 
 test_1 <- test %>%
   filter(max_count == 0) %>%
@@ -410,16 +408,59 @@ test_2 <- test %>%
   filter(max_count != 0) %>%
   mutate(invert_species_max = invert_species)
 
-invert_waffle <- rbind(test_1, test_2) %>%
+invert_max_2019 <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
-  distinct(invert_species_max, .keep_all = TRUE) %>%
-  arrange(year, tide_ht)
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2019") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
 
-#where's 2021
+invert_max_2020 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2020") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
 
-%>%
-  filter(tide_ht == "H") %>%
-  ggplot(aes(x = quadrat_number, 
-             color = inverts_species_max))
+invert_max_2021 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2021") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
+
+invert_max_2022 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2022") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
+
+invert_max_2023 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2023") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
   
 ```
