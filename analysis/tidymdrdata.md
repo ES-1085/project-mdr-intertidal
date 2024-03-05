@@ -1,6 +1,6 @@
 Project tidying
 ================
-MDR Intertidal
+Kalimari
 
 ``` r
 library(tidyverse)
@@ -1186,8 +1186,6 @@ write_csv(all_tide_time, "/cloud/project/analysis/all_tide_time.csv")
 ```
 
 ``` r
-# this is NOT working (makes several columns NAs)
-
 all_tide_time <- all_tide_time %>%
   mutate(date_time = paste(date, time, sep = " ")) %>%
   mutate(date_time = as_datetime(date_time))
@@ -1199,8 +1197,6 @@ all_tide_time <- all_tide_time %>%
     ## ! All formats failed to parse. No formats found.
 
 ``` r
-  # mutate(date_time = ymd_hms(glue("{date} {time}")))
-
 glimpse(all_tide_time)
 ```
 
@@ -1213,11 +1209,13 @@ glimpse(all_tide_time)
     ## $ date_time   <dttm> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
 
 ``` r
-# date_time is all NAs...??
-
-by <- join_by(closest(date_time >= date_time))
-
 mdr_temp_high_tide <- all_tide_time %>%
   filter(tide_ht == "H") %>%
-  left_join(mdr_temp_allyears, by)
+  left_join(mdr_temp_allyears, by = join_by(closest(date_time >= date_time))) %>%
+  filter(date.y < "2019-09-05" | date.y > "2021-06-02" & date.y < "2022-08-06")
+
+mdr_temp_low_tide <- all_tide_time %>%
+  filter(tide_ht == "L") %>%
+  left_join(mdr_temp_allyears, by = join_by(closest(date_time >= date_time))) %>%
+  filter(date.y < "2019-09-05" | date.y > "2021-06-02" & date.y < "2022-08-06")
 ```

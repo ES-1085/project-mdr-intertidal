@@ -219,7 +219,6 @@ expanded_seaweeds_mdr %>%
 # use this one for presentation
 # include caption that says error bars represent +/- 1 standard error
 # explain gap for 2018
-# color by brown/green/red? would be baddd for colorblind
 
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = case_when(grepl("Fucu", seaweed_species) ~ "Fucu_spp",

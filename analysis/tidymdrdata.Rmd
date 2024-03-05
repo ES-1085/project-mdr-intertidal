@@ -964,24 +964,4 @@ mdr_temp_low_tide <- all_tide_time %>%
   left_join(mdr_temp_allyears, by = join_by(closest(date_time >= date_time))) %>%
   filter(date.y < "2019-09-05" | date.y > "2021-06-02" & date.y < "2022-08-06")
 
-mdr_temp_high_tide %>%
-  ggplot(mapping = aes(date.x, temp_C)) +
-  geom_point() +
-  labs(y = "temperature (C)") +
-  geom_abline(slope = 0, intercept = 0, color = "blue") +
-  scale_x_date(breaks = breaks_width("1 year"))
-
-mdr_temp_low_tide %>%
-  ggplot(mapping = aes(date.x, temp_C)) +
-  geom_point() +
-  labs(y = "temperature (C)") +
-  geom_abline(slope = 0, intercept = 0, color = "blue") +
-  scale_x_date(breaks = breaks_width("1 year"))
-
-all_tide_time
-
-# cut mid rising to mid falling
-
 ```
-
-
