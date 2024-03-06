@@ -13,7 +13,7 @@ library(readxl)
 
 ## 1. Introduction
 
-Our overall research question is "How has the ecology of the Mount Desert Rock intertidal zone changed over time?". Mount Desert Rock (MDR) is a 1.2-hectare island 40 km offshore in Maine, with a field station maintained by College of the Atlantic; the intertidal zone of MDR is rocky and high-energy. We will be using abundant species such as periwinkle snails to measure changes in the intertidal community, and we will also look at changes in seaweed cover over time. We have access to measurements of air and water temperature for the duration of the dataset, which may help explain trends in species abundance.
+Our overall research question is "How has the ecology of the Mount Desert Rock intertidal zone changed over time?" Mount Desert Rock (MDR) is a 1.2-hectare island 40 km offshore in Maine, with a field station maintained by College of the Atlantic; the intertidal zone of MDR is rocky and high-energy. We will be using abundant species such as periwinkle snails to measure changes in the intertidal community, and we will also look at changes in seaweed cover over time. We have access to measurements of air and water temperature for the duration of the dataset, which may help explain trends in species abundance.
 
 Periwinkles are of particular interest for two reasons: 1. They are abundant, and therefore counts are more statistically robust than for uncommon species, and 2. There are striking differences between MDR and MDI in the populations of three species: Littorina littorea (common periwinkle), L. obtusata (smooth periwinkle), and L. saxatilis (rough periwinkle). On MDI, L. littorea is dominant and L. saxatilis is rare, but on MDR, L. littorea is rare, and L. saxatilis and L. obtusata (both native species) are abundant. These findings may be due to differences in dispersal methods, as suggested by a similar study on a remote island near Scotland (Johannesson, 1988). Littorina obtusata and L. saxatilis have direct development, so most of their young will stay on MDR. Littorina littorea, however, produces planktonic larvae, which means most young will be carried by ocean currents to other shores. There is evidently enough recruitment to maintain a small population, but not enough for L. littorea to dominate the way it does on MDI. The dataset we are using will allow us to examine changes in the abundances of these three periwinkle species over the past 5-7 years.
 
@@ -58,7 +58,7 @@ MDR_temp_20180830_20180929 <- read_excel("/cloud/project/data/MDR_temperature_20
 
 MDR_temp_20180812_20190905 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20180812-20190905")
 
-# MDR_temp_2020
+# MDR_temp_2020 (missing)
 
 WC_MDR_temp_20210602_20211008 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20210602-20211008WC")
 ```
@@ -89,7 +89,7 @@ These sensors are placed around the mid-tide line, which means they measure wate
 
 
 ## 3. Ethics Review
-The surveys had data collected by different high school and undergraduate students from year-to-year which potentially disrupts the standardization of the collection methods across the data-set. Additionally, from 2017-2021, these students were trained a week prior to collecting the data, and no-one was double-checking their identifications; this implies a baseline level of human error across all years.
+The surveys had data collected by different high school and undergraduate students from year-to-year which potentially disrupts the standardization of the collection methods across the data-set. From 2017-2021, these students were trained a week prior to collecting the data, and no-one was double-checking their identifications; this implies a baseline level of human error across all years.
 
 This study did not have to undergo IACUC review as it exclusively pertains to invertebrate organisms.
 

@@ -1,10 +1,3 @@
-# data
-
-Place data file(s) in this folder.
-
-Then, include codebooks (variables, and their descriptions) for your data file(s)
-using the following format.
-
 ## Note: the following codebooks apply to the tidied data (see "tidymdrdata.Rmd" file in Cloud > project > extra)
 
 ## all_seaweeds_mdr
