@@ -407,7 +407,8 @@ test_2 <- test %>%
   filter(max_count != 0) %>%
   mutate(invert_species_max = invert_species)
 
-invert_max_2019 <- rbind(test_1, test_2) %>%
+
+(invert_max_2019 <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
   group_by(year, quadrat_number, tide_ht) %>%
   filter(max_count == max(max_count)) %>%
@@ -416,7 +417,11 @@ invert_max_2019 <- rbind(test_1, test_2) %>%
   ggplot() + 
   geom_col(mapping =  aes(x = quadrat_number, y = 1,
                           fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1)
+  facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
+  scale_x_continuous(breaks = seq(1, 10, by = 1)) +
+  theme(axis.title.y = element_blank(),
+        strip.text.y.left = element_text(angle=0)))
+  
 
 invert_max_2020 <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
@@ -427,7 +432,8 @@ invert_max_2020 <- rbind(test_1, test_2) %>%
   ggplot() + 
   geom_col(mapping =  aes(x = quadrat_number, y = 1,
                           fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1)
+  facet_wrap(~ tide_ht, ncol = 1) +
+  scale_x_continuous(breaks = seq(1, 10, by = 1))
 
 invert_max_2021 <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
@@ -461,5 +467,16 @@ invert_max_2023 <- rbind(test_1, test_2) %>%
   geom_col(mapping =  aes(x = quadrat_number, y = 1,
                           fill = invert_species_max)) +
   facet_wrap(~ tide_ht, ncol = 1)
-  
+
+## need to: 
+
+#keep all years within the dataframe
+
+#x-axis -> # in the middle of each bar, make quadrat_number variable a 'character'?
+#y-axis -> take away frequency tally marks and y-axis label
+#facet labels -> move to left-hand side
+#make sure that colors of each species are the same between graphs
+#decide of you want quadrats that were skipped over to be demonstrated this way
+#title of graph & year
+#stitch all animations together
 ```
