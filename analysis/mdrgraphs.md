@@ -5,11 +5,10 @@ Kalimari
 ``` r
 library(tidyverse)
 library(broom)
+library(ggplot2)
 library(readxl)
 library(scales)
 library(lubridate)
-library(ggplot2)
-library(waffle)
 library(dplyr)
 library(ggtext)
 
@@ -188,7 +187,6 @@ expanded_inverts_mdr %>%
 # use this one for presentation
 # include caption that says error bars represent +/- 1 standard error
 # explain why we dropped 2017 and 2018 (2017 included counts of Littorina spp., and 2018 was too messy)
-# how to explain error bars in alt text?
 # how many years has L. vincta been on the survey? would they have counted it? ask Tanya
 
 expanded_inverts_mdr %>%
@@ -210,12 +208,11 @@ expanded_inverts_mdr %>%
                                               "Mid Tide",
                                               "Low Tide"))) %>%
   ggplot(mapping = aes(year, mean_count, fill = invert_species)) +
-    geom_col(position = "dodge", width = 0.7, color = "black", size = .3) +
+    geom_col(position = "dodge", width = 0.7, size = .3) +
   labs(fill = "snail species") +
   geom_errorbar(aes(ymin = mean_count - se_count, ymax = mean_count + se_count),
-                width=.35, position = position_dodge(0.7)) +
-  scale_fill_manual(values = c("#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"),
-                    labels = c("Litt_l" = "Littorina littorea",
+                width=.3, position = position_dodge(0.7)) +
+  scale_fill_viridis_d(labels = c("Litt_l" = "Littorina littorea",
                                "Litt_o" = "Littorina obtusata",
                                "Litt_s" = "Littorina saxatilis",
                                "Lacu_v" = "Lacuna vincta",
@@ -240,7 +237,7 @@ expanded_inverts_mdr %>%
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
-<img src="mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-Lacu_v-Nuce_l-1.png" alt="Bar plot of the mean number of snails per quadrat by year (2019-2023), tide height, and species, with the following trends: Lacuna vincta is only present at the low-tide level, starting at &lt;1 per quadrat in 2022, and increasing to over 10 per quadrat in 2023. Littorina littorea is only present in 2019 and 2020 at high- and mid-tide levels (in all cases &lt;5 per quadrat). Littorina obtusata is most abundant at the mid-tide level, increasing from about 8 per quadrat in 2019 to about 34 per quadrat in 2023, with a low point in 2021 of about 4 per quadrat. Littorina saxatilis is most abundant at the high-tide level, increasing from about 0 per quadrat in 2019 to about 15 per quadrat in 2022, dropping to about 10 per quadrat in 2023. Nucella lapillus is most abundant at the mid- and low-tide levels, increasing from about 0 per quadrat in 2019 to about 9 per quadrat at the mid-tide level and 19 per quadrat at the low-tide level in 2022, dropping to &lt;3 per quadrat at both levels in 2023."  />
+<img src="mdrgraphs_files/figure-gfm/mean-snails-per-quadrat-faceted-plus-Lacu_v-Nuce_l-1.png" alt="Bar plot of the mean number of snails per quadrat by year (2019-2023), tide height, and species, with the following trends: Lacuna vincta is only present at the low-tide level, starting at &lt;1 per quadrat in 2022, and increasing to over 10 per quadrat in 2023. Littorina littorea is only present in 2019 and 2020 at high- and mid-tide levels (in all cases &lt;5 per quadrat). Littorina obtusata is most abundant at the mid-tide level, increasing from about 8 per quadrat in 2019 to about 34 per quadrat in 2023, with a low point in 2021 of about 4 per quadrat. Littorina saxatilis is most abundant at the high-tide level, increasing from about 0 per quadrat in 2019 to about 15 per quadrat in 2022, dropping to about 10 per quadrat in 2023. Nucella lapillus is most abundant at the mid- and low-tide levels, increasing from about 0 per quadrat in 2019 to about 9 per quadrat at the mid-tide level and 19 per quadrat at the low-tide level in 2022, dropping to &lt;3 per quadrat at both levels in 2023. Error bars represent +/- 1 standard error; there is minor overlap between some years for each species."  />
 
 ``` r
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
@@ -294,12 +291,9 @@ expanded_seaweeds_mdr %>%
 ```
 
 ``` r
-# fix to make sure it's adding everything it should be
-
 # use this one for presentation
-# include caption that says error bars represent +/- 1 standard error
 # explain gap for 2018
-# color by brown/green/red? would be baddd for colorblind
+# include caption that says error bars represent +/- 1 standard error
 
 expanded_seaweeds_mdr <- expanded_seaweeds_mdr %>%
   mutate(seaweed_simple = case_when(grepl("Fucu", seaweed_species) ~ "Fucu_spp",
@@ -326,7 +320,7 @@ names(seaweed_labs) <- c("Asco_n",
 expanded_seaweeds_mdr %>%
   filter(seaweed_simple %in% names(seaweed_labs)) %>%
   group_by(year, tide_ht, quadrat_m, seaweed_simple) %>%
-  summarise(sum_proportion = sum(proportion_new), sd = sd(proportion_new), n = n()) %>%
+  summarise(sum_proportion = sum(proportion_new)) %>%
   filter(!is.na(quadrat_m)) %>%
   group_by(year, seaweed_simple) %>%
   summarise(mean_proportion = mean(sum_proportion),
@@ -377,7 +371,7 @@ expanded_seaweeds_mdr %>%
     ## `summarise()` has grouped output by 'year'. You can override using the
     ## `.groups` argument.
 
-<img src="mdrgraphs_files/figure-gfm/L-mean-seaweed-cover-graph-faceted-1.png" alt="Bar plots of the mean proportion of seaweed cover per quadrat by year (2017-2023), faceted by species, with the following trends: Ascophyllum nodosum starts around 0.1 in 2017, increasing to 0.2 in 2019, and then decreasing to 0.1 by 2023. Chondrus crispus starts around 0.15 in 2017, decreasing to 0.05 in 2019 and remaining around that level until 2023. Corallina officinalis starts around 0.2 in 2017, decreasing to nearly 0 in 2019 with an increase to around 0.1 by 2023. Fucus spp. starts around 0.35 in 2017, decreasing to around 0.25 in 2019 and 2020, and dropping to 0.1 for 2021-2023. Mastocarpus stellatus starts around 0.1 in 2017, increasing to 0.25 by 2020 and decreasing back to around 0.1 by 2023. Ulva lactuca starts around 0.15 in 2017 and decreases to nearly 0 by 2023. For all species, 2018 was not included due to a lack of data."  />
+<img src="mdrgraphs_files/figure-gfm/L-mean-seaweed-cover-graph-faceted-1.png" alt="Bar plots of the mean proportion of seaweed cover per quadrat by year (2017-2023) and seaweed color (brown, red, or green), faceted by species, with the following trends: Ascophyllum nodosum (brown) starts around 0.1 in 2017, increasing to 0.2 in 2019, and then decreasing to 0.1 by 2023. Chondrus crispus (red) starts around 0.15 in 2017, decreasing to 0.05 in 2019 and remaining around that level until 2023. Corallina officinalis (red) starts around 0.2 in 2017, decreasing to nearly 0 in 2019 with an increase to around 0.1 by 2023. Fucus spp. (brown) starts around 0.35 in 2017, decreasing to around 0.25 in 2019 and 2020, and dropping to 0.1 for 2021-2023. Mastocarpus stellatus (red) starts around 0.1 in 2017, increasing to 0.25 by 2020 and decreasing back to around 0.1 by 2023. Ulva lactuca (green) starts around 0.15 in 2017 and decreases to nearly 0 by 2023. For all species, 2018 was not included due to a lack of data. Error bars represent +/- 1 standard error; there is minor overlap between some years for each species."  />
 
 ``` r
 expanded_seaweeds_mdr %>%
@@ -495,7 +489,7 @@ test <- all_inverts_mdr %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count) 
+  select(year, tide_ht, quadrat_number, invert_species, max_count)
 
 test_1 <- test %>%
   filter(max_count == 0) %>%
@@ -505,15 +499,76 @@ test_2 <- test %>%
   filter(max_count != 0) %>%
   mutate(invert_species_max = invert_species)
 
-invert_waffle <- rbind(test_1, test_2) %>%
+
+(invert_max_2019 <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
-  distinct(invert_species_max, .keep_all = TRUE) %>%
-  arrange(year, tide_ht)
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2019") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
+  scale_x_continuous(breaks = seq(1, 10, by = 1)) +
+  theme(axis.title.y = element_blank(),
+        strip.text.y.left = element_text(angle=0)))
+  
 
-#where's 2021
+invert_max_2020 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2020") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1) +
+  scale_x_continuous(breaks = seq(1, 10, by = 1))
 
-%>%
-  filter(tide_ht == "H") %>%
-  ggplot(aes(x = quadrat_number, 
-             color = inverts_species_max))
+invert_max_2021 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2021") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
+
+invert_max_2022 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2022") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
+
+invert_max_2023 <- rbind(test_1, test_2) %>%
+  select(-invert_species) %>%
+  group_by(year, quadrat_number, tide_ht) %>%
+  filter(max_count == max(max_count)) %>%
+  filter(year == "2023") %>%
+  distinct(max_count, .keep_all = TRUE) %>%
+  ggplot() + 
+  geom_col(mapping =  aes(x = quadrat_number, y = 1,
+                          fill = invert_species_max)) +
+  facet_wrap(~ tide_ht, ncol = 1)
+
+## need to: 
+
+#keep all years within the dataframe
+
+#x-axis -> # in the middle of each bar, make quadrat_number variable a 'character'?
+#y-axis -> take away frequency tally marks and y-axis label
+#facet labels -> move to left-hand side
+#make sure that colors of each species are the same between graphs
+#decide of you want quadrats that were skipped over to be demonstrated this way
+#title of graph & year
+#stitch all animations together
 ```
