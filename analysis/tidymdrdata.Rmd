@@ -1,6 +1,6 @@
 ---
 title: "Project tidying"
-author: "MDR Intertidal"
+author: "Kalimari"
 output: github_document
 ---
 
@@ -117,7 +117,7 @@ inverts_mdr_2017 <- horizontal_MDR_NeCSA_2017 %>%
 
 ```
 
-```{r load-data-2018}
+```{r load-data-2018, eval = FALSE}
 
 # not sure if this spreadsheet is complete - omit?
 
@@ -964,11 +964,4 @@ mdr_temp_low_tide <- all_tide_time %>%
   left_join(mdr_temp_allyears, by = join_by(closest(date_time >= date_time))) %>%
   filter(date.y < "2019-09-05" | date.y > "2021-06-02" & date.y < "2022-08-06")
 
-mdr_temp_alltides <- all_tide_time %>%
-  left_join(mdr_temp_allyears, by = join_by(closest(date_time >= date_time)))
-
-# cut mid rising to mid falling
-
 ```
-
-

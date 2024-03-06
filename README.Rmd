@@ -1,6 +1,6 @@
 ---
 title: MDR Intertidal
-author: KaLiMari
+author: by Kalimari
 output: github_document
 ---
 
@@ -33,8 +33,11 @@ Include a citation for your data here.
 See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
 If you got your data off the web, make sure to note the retrieval date.
 
+<<<<<<< HEAD
 National Oceanographic and Atmospheric Administration
 
+=======
+>>>>>>> f38a09d08b2cf4275dd4f273f16472b57f9a4fe6
 ## References
 
 List any references here. You should, at a minimum, list your data source.
