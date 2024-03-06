@@ -389,7 +389,7 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r invert-max-animation, eval = FALSE}
+```{r abundant-snails-animation, eval = FALSE}
 
 add_max_snail_count <- all_inverts_mdr %>%
   filter(year != 2017) %>%
@@ -397,19 +397,20 @@ add_max_snail_count <- all_inverts_mdr %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count)
+  select(year, tide_ht, quadrat_number, invert_species, max_count) %>%
+  rename(snail_species = invert_species)
 
 add_max_snail_species_1 <- add_max_snail_count %>%
   filter(max_count == 0) %>%
-  mutate(snail_species_max = invert_species == NA)
+  mutate(snail_species_max = snail_species == NA)
 
 add_max_snail_species_2 <- add_max_snail_count %>%
   filter(max_count != 0) %>%
-  mutate(invert_snail_max = invert_species)
+  mutate(snail_species_max = snail_species)
 
 
-max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2) %>%
-  select(-invert_species) %>%
+max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2)%>%
+  select(-snail_species) %>%
   group_by(year, quadrat_number, tide_ht) %>%
   filter(max_count == max(max_count)) %>%
   distinct(max_count, .keep_all = TRUE) %>%
@@ -424,8 +425,16 @@ max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_
         strip.text.y.left = element_text(angle=0),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) + 
-    labs(title = "Year {closest_state}") +
-  scale_fill_viridis_d() +
+    labs(title = "Year {closest_state}",
+         fill = "Snail Species") +
+  scale_fill_viridis_d(
+    labels = c(expression(italic("Lacu_v" = "Lacuna vincta")),
+               expression(italic("Litt_l" = "Littorina littorea")),
+               expression(italic("Litt_o" = "Littorina obtusata")),
+               expression(italic("Litt_s" = "Littorina saxatilis")),
+               expression(italic("Nuce_l" = "Nucella lapillus")),
+               "NA"),
+    na.value = "grey70") +
   transition_states(states = year,
                     transition_length = 0.5,
                     state_length = 0.5,
@@ -433,11 +442,6 @@ max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_
 
 animate(max_species_per_quadrat, duration = 30, renderer = gifski_renderer("max_species_per_quadrat.gif"))
 
-# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline
+# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working...too long; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline/how to condense code
 
-#filter by just snails
-#make NA color grey and not blank
-#legend - think about how to set it up so it makes sense -> split between snails & another group?
-#add labels & alt text
-#add gif to presentation slide
 ```
