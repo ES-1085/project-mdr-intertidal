@@ -409,7 +409,7 @@ add_max_snail_species_2 <- add_max_snail_count %>%
   mutate(snail_species_max = snail_species)
 
 
-max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2)%>%
+mostabundant_snail_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2)%>%
   select(-snail_species) %>%
   group_by(year, quadrat_number, tide_ht) %>%
   filter(max_count == max(max_count)) %>%
@@ -442,6 +442,6 @@ max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_
 
 animate(max_species_per_quadrat, duration = 30, renderer = gifski_renderer("max_species_per_quadrat.gif"))
 
-# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working...too long; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline/how to condense code
+# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working...too long; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline/how to condense code (combine everything above ggplot)
 
 ```
