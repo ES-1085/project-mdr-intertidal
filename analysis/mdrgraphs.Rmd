@@ -12,6 +12,7 @@ library(readxl)
 library(scales)
 library(lubridate)
 library(dplyr)
+library(gganimate)
 
 se <- function(x) sd(x)/sqrt(length(x))
 ```
@@ -393,91 +394,51 @@ mdr_temp_low_tide %>%
 
 ```{r invert-max-animation, eval = FALSE}
 
-test <- all_inverts_mdr %>%
+add_max_invert_count <- all_inverts_mdr %>%
   filter(year != 2017) %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
   select(year, tide_ht, quadrat_number, invert_species, max_count)
 
-test_1 <- test %>%
+add_max_invert_species_1 <- test %>%
   filter(max_count == 0) %>%
   mutate(invert_species_max = invert_species == NA)
 
-test_2 <- test %>%
+add_max_invert_species_2 <- test %>%
   filter(max_count != 0) %>%
   mutate(invert_species_max = invert_species)
 
 
-(invert_max_2019 <- rbind(test_1, test_2) %>%
+max_species_per_quadrat <- rbind(test_1, test_2) %>%
   select(-invert_species) %>%
   group_by(year, quadrat_number, tide_ht) %>%
   filter(max_count == max(max_count)) %>%
-  filter(year == "2019") %>%
   distinct(max_count, .keep_all = TRUE) %>%
-  ggplot() + 
-  geom_col(mapping =  aes(x = quadrat_number, y = 1,
-                          fill = invert_species_max)) +
+  ggplot(aes(x = quadrat_number, 
+             y = 1,
+             fill = invert_species_max,
+             groups = year)) + 
+  geom_col() +
   facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
   scale_x_continuous(breaks = seq(1, 10, by = 1)) +
   theme(axis.title.y = element_blank(),
-        strip.text.y.left = element_text(angle=0)))
-  
+        strip.text.y.left = element_text(angle=0),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) + 
+    labs(title = "Year {closest_state}") +
+  scale_fill_viridis_d() +
+  transition_states(states = year,
+                    transition_length = 0.5,
+                    state_length = 0.5,
+                    wrap = TRUE)
 
-invert_max_2020 <- rbind(test_1, test_2) %>%
-  select(-invert_species) %>%
-  group_by(year, quadrat_number, tide_ht) %>%
-  filter(max_count == max(max_count)) %>%
-  filter(year == "2020") %>%
-  distinct(max_count, .keep_all = TRUE) %>%
-  ggplot() + 
-  geom_col(mapping =  aes(x = quadrat_number, y = 1,
-                          fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1) +
-  scale_x_continuous(breaks = seq(1, 10, by = 1))
+animate(max_species_per_quadrat, duration = 30, renderer = gifski_renderer("max_species_per_quadrat.gif"))
 
-invert_max_2021 <- rbind(test_1, test_2) %>%
-  select(-invert_species) %>%
-  group_by(year, quadrat_number, tide_ht) %>%
-  filter(max_count == max(max_count)) %>%
-  filter(year == "2021") %>%
-  distinct(max_count, .keep_all = TRUE) %>%
-  ggplot() + 
-  geom_col(mapping =  aes(x = quadrat_number, y = 1,
-                          fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1)
+# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline
 
-invert_max_2022 <- rbind(test_1, test_2) %>%
-  select(-invert_species) %>%
-  group_by(year, quadrat_number, tide_ht) %>%
-  filter(max_count == max(max_count)) %>%
-  filter(year == "2022") %>%
-  distinct(max_count, .keep_all = TRUE) %>%
-  ggplot() + 
-  geom_col(mapping =  aes(x = quadrat_number, y = 1,
-                          fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1)
-
-invert_max_2023 <- rbind(test_1, test_2) %>%
-  select(-invert_species) %>%
-  group_by(year, quadrat_number, tide_ht) %>%
-  filter(max_count == max(max_count)) %>%
-  filter(year == "2023") %>%
-  distinct(max_count, .keep_all = TRUE) %>%
-  ggplot() + 
-  geom_col(mapping =  aes(x = quadrat_number, y = 1,
-                          fill = invert_species_max)) +
-  facet_wrap(~ tide_ht, ncol = 1)
-
-## need to: 
-
-#keep all years within the dataframe
-
-#x-axis -> # in the middle of each bar, make quadrat_number variable a 'character'?
-#y-axis -> take away frequency tally marks and y-axis label
-#facet labels -> move to left-hand side
-#make sure that colors of each species are the same between graphs
-#decide of you want quadrats that were skipped over to be demonstrated this way
-#title of graph & year
-#stitch all animations together
+#make NA color grey and not blank
+#legend - think about how to set it up so it makes sense -> split between snails & another group?
+#add labels & alt text
+#add gif to presentation slide
 ```
