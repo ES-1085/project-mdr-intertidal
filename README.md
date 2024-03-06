@@ -23,7 +23,7 @@ graphics go in your presentation, this space is for a brief summary of
 your project.
 
 Our overall research question is “How has the ecology of the Mount
-Desert Rock intertidal zone changed over time?”. Mount Desert Rock (MDR)
+Desert Rock intertidal zone changed over time?” Mount Desert Rock (MDR)
 is a 1.2-hectare island 40 km offshore in Maine, with a field station
 maintained by College of the Atlantic; the intertidal zone of MDR is
 rocky and high-energy. We used abundant species such as periwinkle
@@ -83,16 +83,16 @@ distribution of different species. Organisms found in the high
 intertidal need to be the most adapted to changes in temperature. Water
 temperatures stay relatively constant, but changes in air temperature
 can greatly impact the interidal. Some species, like crabs, will migrate
-into the lower intertidal and subtitle regions during the winter to
+into the lower intertidal and subtidal regions during the winter to
 avoid colder temperatures. And, on the west coast a few years ago, there
 was a heat dome that killed off many intertidal organisms who were
 exposed to heat for too long. However, we found that there was not a
 great enough variation of temperature over the years to change the
 species composition.
 
-Snail populations are increasing.
+We found that the mean number of snails per quadrat is generally increasing, but this does not seem to be a linear or consistent trend. One plausible explanation for the variation in populations is the high-disturbance habitat in which these organisms live, which may lead to large annual shifts in species composition. Trophic interactions may magnify this variation—for example, if the gulls of MDR were to shift their diet to consume more intertidal crabs than bait from fishing boats, populations of periwinkle snails (prey for some crab species) might increase.
 
-The seaweed cover for the species we looked are decreasing.
+We also found that the mean seaweed cover for the subset of 6 species we examined was decreasing. This does not necessarily mean that total seaweed cover on MDR is decreasing; other species may be increasing. Similar to the variation in snail abundance, this variation may be due to the high-energy conditions of MDR. There may also be a relationship between increased herbivorous snails and decreased seaweed cover, but a manipulative experiment would be necessary to confirm a causal relationship.
 
 In terms of limitations, there was a lack of standardization in data
 collection as it was collected by different people each year. There
@@ -108,7 +108,7 @@ without DNA identification due to factors like phenotypic plasticity.
 Another limitation was that there are missing years.Because of unclear
 data entry, we had to omit all the survey data from 2018. We omitted
 2017 in the snail plot, because periwinkle snails were not identified to
-species. We also weren’t able to get temperature data from 2023.
+species. We also weren’t able to get temperature data from 2020 or 2023.
 
 In the future, it is important to continue monitoring temperature
 changes to see if this impacts species composition in a changing
@@ -131,11 +131,34 @@ Include a citation for your data here. See
 on proper citation for datasets. If you got your data off the web, make
 sure to note the retrieval date.
 
-\<\<\<\<\<\<\< HEAD National Oceanographic and Atmospheric
-Administration
+Intertidal survey data was collected using the NeCSA protocol by Tanya Lubansky and students from the John Bapst Memorial High School (2017-2021); Marina Schnell, Tanya Lubansky, and the MDR crew (2022); and Marina Schnell and the MDR crew (2023). Tanya Lubansky provided written permission for this data to be used for this project.
 
-======= \>\>\>\>\>\>\> f38a09d08b2cf4275dd4f273f16472b57f9a4fe6 \##
-References
+Tide data was obtained from NOAA, retrieved _______:
 
-List any references here. You should, at a minimum, list your data
-source.
+NOAA, 2017, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20170101&edate=20171231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2018, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20180101&edate=20181231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2019, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20190101&edate=20191231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2020, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20200101&edate=20201231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2021, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20210101&edate=20211231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2022, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20220101&edate=20221231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2023, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20230101&edate=20231231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+## References
+
+Johannesson, K. (1988). The paradox of Rockall: why is a
+brooding gastropod (Littorina saxatilis) more widespread than one having
+a planktonic larval dispersal stage (L. littorea)? Marine Biology,
+99(4), 507–513.

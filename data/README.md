@@ -1,10 +1,3 @@
-# data
-
-Place data file(s) in this folder.
-
-Then, include codebooks (variables, and their descriptions) for your data file(s)
-using the following format.
-
 ## Note: the following codebooks apply to the tidied data (see "tidymdrdata.Rmd" file in Cloud > project > extra)
 
 ## all_seaweeds_mdr
@@ -15,8 +8,8 @@ using the following format.
       H: high
       M: medium
       L: low
-- `quadrat_number`: integer assigned to each 1-meter quadrat; indicates order
-- `quadrat_m`: distance of the left edge of each quadrat from the start of the horizontal transect, measured in meters (the left edge of each 1-meter quadrat was placed starting 3 meters from the left of the previous quadrat)
+- `quadrat_number`: integer assigned to each 0.5-meter quadrat; indicates order
+- `quadrat_m`: distance of the left edge of each quadrat from the start of the horizontal transect, measured in meters (the left edge of each 0.5-meter quadrat was placed starting 3 meters from the left of the previous quadrat)
 - `Asco_n_ht`: length of longest blade of Ascophyllum nodosum in the quadrat, measured in centimeters
 - `Asco_n_bladders`: number of air bladders on longest blade of Ascophyllum nodosum in the quadrat (one bladder represents one year of growth)
 - `seaweed_species`: species of seaweed (Latin name); suffix indicates canopy cover (CC) or subcanopy (SC); species codes are as follows:
@@ -44,8 +37,8 @@ using the following format.
       H: high
       M: medium
       L: low
-- `quadrat_number`: integer assigned to each 1-meter quadrat; indicates order
-- `quadrat_m`: distance of the left edge of each quadrat from the start of the horizontal transect, measured in meters (the left edge of each 1-meter quadrat was placed starting 3 meters from the left of the previous quadrat)
+- `quadrat_number`: integer assigned to each 0.5-meter quadrat; indicates order
+- `quadrat_m`: distance of the left edge of each quadrat from the start of the horizontal transect, measured in meters (the left edge of each 0.5-meter quadrat was placed starting 3 meters from the left of the previous quadrat)
 - `invert_species`: species of invertebrate (Latin name); species codes are as follows:
      Aste_f: Asterias forbesi (Forbes sea star)
      Aste_r: Asterias rubens (common sea star)

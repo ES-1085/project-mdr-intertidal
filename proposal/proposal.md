@@ -1,6 +1,6 @@
 Project proposal
 ================
-MDR Intertidal
+Kalimari
 
 ``` r
 library(tidyverse)
@@ -10,20 +10,58 @@ library(readxl)
 
 ## 1. Introduction
 
-Our general research question is “How has the Mount Desert Rock
-intertidal zone changed over time?”. We will be using indicator species
-such as periwinkles to measure changes in their population. We will also
-look at changes in seaweed cover throughout the years.
+Our overall research question is “How has the ecology of the Mount
+Desert Rock intertidal zone changed over time?”. Mount Desert Rock (MDR)
+is a 1.2-hectare island 40 km offshore in Maine, with a field station
+maintained by College of the Atlantic; the intertidal zone of MDR is
+rocky and high-energy. We will be using abundant species such as
+periwinkle snails to measure changes in the intertidal community, and we
+will also look at changes in seaweed cover over time. We have access to
+measurements of air and water temperature for the duration of the
+dataset, which may help explain trends in species abundance.
+
+Periwinkles are of particular interest for two reasons: 1. They are
+abundant, and therefore counts are more statistically robust than for
+uncommon species, and 2. There are striking differences between MDR and
+MDI in the populations of three species: Littorina littorea (common
+periwinkle), L. obtusata (smooth periwinkle), and L. saxatilis (rough
+periwinkle). On MDI, L. littorea is dominant and L. saxatilis is rare,
+but on MDR, L. littorea is rare, and L. saxatilis and L. obtusata (both
+native species) are abundant. These findings may be due to differences
+in dispersal methods, as suggested by a similar study on a remote island
+near Scotland (Johannesson, 1988). Littorina obtusata and L. saxatilis
+have direct development, so most of their young will stay on MDR.
+Littorina littorea, however, produces planktonic larvae, which means
+most young will be carried by ocean currents to other shores. There is
+evidently enough recruitment to maintain a small population, but not
+enough for L. littorea to dominate the way it does on MDI. The dataset
+we are using will allow us to examine changes in the abundances of these
+three periwinkle species over the past 5-7 years.
 
 We will be using intertidal data from the Northeastern Coastal Station
-Alliance, a collection of field stations in the Gulf of Maine. We will
-specifically be analysing data collected on Mount Desert Rock. It
-consists of vertical and horizontal transects collected through quadrats
-in the intertidal zone. For this project we will be using the horizontal
-transects. This data was collected annually from 2017 to 2023. In the
-early years, the data was collected by high school students who were
-trained on the rock. The project was continued by Marina in 2022 and
-2023.
+Alliance (NeCSA), a collaboration among several field stations in the
+Gulf of Maine that developed a standardized protocol for surveying
+intertidal invertebrates and algae. We will specifically be analysing
+data collected on Mount Desert Rock. The survey consists of vertical and
+horizontal transects collected through quadrats in the intertidal zone.
+The survey is conducted in the same location every year, with the
+transect grid marked by metal pegs drilled into the rock. The 3 vertical
+transects measure algae cover by species in a line perpendicular to the
+water line. For the horizontal transects, there are three lines of ten
+0.5-meter square quadrats, placed every 3 meters at high, medium, and
+low tide levels parallel to the water line. In each quadrat, macroscopic
+invertebrates are counted and algae canopy and subcanopy cover is
+recorded; only species on the standardized NeCSA list are recorded.
+
+For this project we will be using the horizontal transects. This data
+was collected annually from 2017 to 2023. In the early years, the data
+was collected by high school students who were trained on the rock. The
+project was continued by Marina in 2022 and 2023.
+
+Citation: Johannesson, K. (1988). The paradox of Rockall: why is a
+brooding gastropod (Littorina saxatilis) more widespread than one having
+a planktonic larval dispersal stage (L. littorea)? Marine Biology,
+99(4), 507–513.
 
 ## 2. Data
 
@@ -144,7 +182,20 @@ horizontal_MDR_NeCSA_2021  <- read_excel("/cloud/project/data/2021_horizontal_MD
 horizontal_MDR_NeCSA_2022  <- read_excel("/cloud/project/data/2022_horizontal_MDR_NeCSA.xlsx")
 
 horizontal_MDR_NeCSA_2023  <- read_excel("/cloud/project/data/2023_horizontal_MDR_NeCSA.xlsx")
+
+MDR_temp_2018 <- read_excel("/cloud/project/data/NeCSA-Mount_Desert_Rock_20180811copy.xlsx")
 ```
+
+    ## Warning: Expecting logical in H8752 / R8752C8: got 'Logged'
+
+    ## New names:
+    ## • `` -> `...2`
+    ## • `` -> `...3`
+    ## • `` -> `...4`
+    ## • `` -> `...5`
+    ## • `` -> `...6`
+    ## • `` -> `...7`
+    ## • `` -> `...8`
 
 ``` r
 MDR_temp_20170812_20180811 <- read_excel("/cloud/project/data/MDR_temperature_2017_2021.xlsx", sheet = "20170812-20180811")
@@ -733,7 +784,34 @@ the datasheet has a specification for which sensor location. We have
 requested clarification from the manager of the dataset. Additionally,
 we have requested access to the 2020 portion of the data.
 
-## 3. Data analysis plan
+These sensors are placed around the mid-tide line, which means they
+measure water temperature for half the time and air temperature half the
+time, mimicking the experience of intertidal organisms.
+
+## 3. Ethics Review
+
+The surveys had data collected by different high school and
+undergraduate students from year-to-year which potentially disrupts the
+standardization of the collection methods across the data-set.
+Additionally, from 2017-2021, these students were trained a week prior
+to collecting the data, and no-one was double-checking their
+identifications; this implies a baseline level of human error across all
+years.
+
+This study did not have to undergo IACUC review as it exclusively
+pertains to invertebrate organisms.
+
+This study will provide a baseline knowledge of the inter-tidal
+community on Mount Desert Rock for the future pursuits of undergraduate
+field researchers.
+
+The results from this project will be presented at the Northeast Natural
+History Conference in Albany, New York, in spring of 2024. The various
+undergraduate students who completed the survey, as well as the
+collaborators on this data analysis project, will be acknowledged in the
+presentation.
+
+## 4. Data analysis plan
 
 Before we begin the data analysis process, we are going to spend a lot
 of time tidying the data. Our plan is to create two dataframes for each
@@ -743,8 +821,9 @@ seaweed cover and change in invertebrate distribution over time.
 
 The variables that we will be using to explore our data are tide height,
 year, species, sea water temperature, proportion of quadrat cover, count
-and ascophyllum length. We do not anticipate needing to find any more
-data to help with this research question.
+and length of Ascophyllum blades (a common species of algae). We do not
+anticipate needing to find any more data to help with this research
+question.
 
 For the preliminary data analysis, we will look at the mean tide height
 for certain indicator species. We also plan on mutating the data to be
