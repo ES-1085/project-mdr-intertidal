@@ -22,6 +22,54 @@ make is about the code itself. Your results with proper output and
 graphics go in your presentation, this space is for a brief summary of
 your project.
 
+Our overall research question is “How has the ecology of the Mount
+Desert Rock intertidal zone changed over time?”. Mount Desert Rock (MDR)
+is a 1.2-hectare island 40 km offshore in Maine, with a field station
+maintained by College of the Atlantic; the intertidal zone of MDR is
+rocky and high-energy. We used abundant species such as periwinkle
+snails to measure changes in the intertidal community, and we looked at
+changes in seaweed cover over time. We also used air and water
+temperature for the duration of the dataset, which may help explain
+trends in species abundance.
+
+Periwinkles are of particular interest for two reasons: 1. They are
+abundant, and therefore counts are more statistically robust than for
+uncommon species, and 2. There are striking differences between MDR and
+MDI in the populations of three species: Littorina littorea (common
+periwinkle), L. obtusata (smooth periwinkle), and L. saxatilis (rough
+periwinkle). On MDI, L. littorea is dominant and L. saxatilis is rare,
+but on MDR, L. littorea is rare, and L. saxatilis and L. obtusata (both
+native species) are abundant. These findings may be due to differences
+in dispersal methods, as suggested by a similar study on a remote island
+near Scotland (Johannesson, 1988). Littorina obtusata and L. saxatilis
+have direct development, so most of their young will stay on MDR.
+Littorina littorea, however, produces planktonic larvae, which means
+most young will be carried by ocean currents to other shores. There is
+evidently enough recruitment to maintain a small population, but not
+enough for L. littorea to dominate the way it does on MDI. The dataset
+we are using will allow us to examine changes in the abundances of these
+three periwinkle species over the past 5-7 years.
+
+We used intertidal data from the Northeastern Coastal Station Alliance
+(NeCSA), a collaboration among several field stations in the Gulf of
+Maine that developed a standardized protocol for surveying intertidal
+invertebrates and algae. We specifically be analyzed data collected on
+Mount Desert Rock. The survey consists of vertical and horizontal
+transects collected through quadrats in the intertidal zone. The survey
+is conducted in the same location every year, with the transect grid
+marked by metal pegs drilled into the rock. The 3 vertical transects
+measure algae cover by species in a line perpendicular to the water
+line. For the horizontal transects, there are three lines of ten 1-meter
+square quadrats, placed every 3 meters at high, medium, and low tide
+levels parallel to the water line. In each quadrat, macroscopic
+invertebrates are counted and algae canopy and subcanopy cover is
+recorded; only species on the standardized NeCSA list are recorded.
+
+For this project we only used the horizontal transects. This data was
+collected annually from 2017 to 2023. In the early years, the data was
+collected by high school students who were trained on the rock. The
+project was continued by Marina in 2022 and 2023.
+
 All of our graphs were made in the mdrgraphs document
 (/project/analysis/mdrgraphs.md).
 
