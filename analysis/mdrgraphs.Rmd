@@ -394,30 +394,31 @@ mdr_temp_low_tide %>%
 
 ```{r invert-max-animation, eval = FALSE}
 
-add_max_invert_count <- all_inverts_mdr %>%
+add_max_snail_count <- all_inverts_mdr %>%
   filter(year != 2017) %>%
+  filter(invert_species %in% c("Lacu_v", "Litt_l", "Litt_o", "Litt_s", "Nuce_l")) %>%
   group_by(year, tide_ht, quadrat_number) %>%
   mutate(max_count = max(count)) %>%
   filter(count == max_count) %>%
   select(year, tide_ht, quadrat_number, invert_species, max_count)
 
-add_max_invert_species_1 <- test %>%
+add_max_snail_species_1 <- add_max_snail_count %>%
   filter(max_count == 0) %>%
-  mutate(invert_species_max = invert_species == NA)
+  mutate(snail_species_max = invert_species == NA)
 
-add_max_invert_species_2 <- test %>%
+add_max_snail_species_2 <- add_max_snail_count %>%
   filter(max_count != 0) %>%
-  mutate(invert_species_max = invert_species)
+  mutate(invert_snail_max = invert_species)
 
 
-max_species_per_quadrat <- rbind(test_1, test_2) %>%
+max_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2) %>%
   select(-invert_species) %>%
   group_by(year, quadrat_number, tide_ht) %>%
   filter(max_count == max(max_count)) %>%
   distinct(max_count, .keep_all = TRUE) %>%
   ggplot(aes(x = quadrat_number, 
              y = 1,
-             fill = invert_species_max,
+             fill = snail_species_max,
              groups = year)) + 
   geom_col() +
   facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
