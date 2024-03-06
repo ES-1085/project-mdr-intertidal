@@ -332,7 +332,7 @@ expanded_seaweeds_mdr %>%
 
 ```
 
-```{r temperature-graph-all-days, fig.alt = "Scatterplot of Mount Desert Rock mid tide temperatures in degrees celcius, shown across a date range from 2017 to 2022. The temperatures range from negative 10 to 30 degrees celcius and fluctute throughout the year. Colder temperatures occur in the Winter and warmer temperatures occur in the summer months.}
+```{r temperature-graph-all-days, fig.alt = "Scatterplot of Mount Desert Rock mid tide temperatures in degrees celcius, shown across a date range from 2017 to 2022. The temperatures range from negative 10 to 30 degrees celcius and fluctute throughout the year. Colder temperatures occur in the Winter and warmer temperatures occur in the summer months."}
 
 mdr_temp_allyears %>%
   group_by(date) %>%

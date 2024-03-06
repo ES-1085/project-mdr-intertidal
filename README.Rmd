@@ -1,6 +1,6 @@
 ---
-title: Project title
-author: by Team name
+title: MDR Intertidal
+author: KaLiMari
 output: github_document
 ---
 
@@ -25,13 +25,15 @@ Your results with proper output and graphics go in your presentation, this space
 
 ## Presentation
 
-Our presentation can be found [here](presentation/presentation.html).
+Our presentation can be found [here](https://docs.google.com/presentation/d/1hcCbeBnJPDstauCd-XchuDcr6iWFrnO3oZpX9izKzj0/edit?usp=sharing).
 
 ## Data 
 
 Include a citation for your data here. 
 See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
 If you got your data off the web, make sure to note the retrieval date.
+
+National Oceanographic and Atmospheric Administration
 
 ## References
 
