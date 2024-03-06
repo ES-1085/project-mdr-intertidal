@@ -393,21 +393,13 @@ mdr_temp_low_tide %>%
 
 add_max_snail_count <- all_inverts_mdr %>%
   filter(year != 2017) %>%
-  filter(invert_species %in% c("Lacu_v", "Litt_l", "Litt_o", "Litt_s", "Nuce_l")) %>%
-  group_by(year, tide_ht, quadrat_number) %>%
-  mutate(max_count = max(count)) %>%
-  filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count) %>%
-  rename(snail_species = invert_species)
+    group_by(year, tide_ht, quadrat_number) %>%
+  slice_max(count, n = 1) %>%
+  mutate(snail_species_max = ifelse(count == 0, NA, invert_species)) %>%
+  summarize(common_species = str_c(snail_species_max, collapse = ", ")) %>%
 
-add_max_snail_species_1 <- add_max_snail_count %>%
-  filter(max_count == 0) %>%
-  mutate(snail_species_max = snail_species == NA)
-
-add_max_snail_species_2 <- add_max_snail_count %>%
-  filter(max_count != 0) %>%
-  mutate(snail_species_max = snail_species)
-
+#error: invert_species doesn't exist
+filter(invert_species %in% c("Lacu_v", "Litt_l", "Litt_o", "Litt_s", "Nuce_l"))
 
 mostabundant_snail_species_per_quadrat <- rbind(add_max_snail_species_1, add_max_snail_species_2)%>%
   select(-snail_species) %>%
@@ -436,12 +428,16 @@ mostabundant_snail_species_per_quadrat <- rbind(add_max_snail_species_1, add_max
                "NA"),
     na.value = "grey70") +
   transition_states(states = year,
-                    transition_length = 0.5,
-                    state_length = 0.5,
+                    transition_length = 1,
+                    state_length = 3,
                     wrap = TRUE)
 
-animate(max_species_per_quadrat, duration = 30, renderer = gifski_renderer("max_species_per_quadrat.gif"))
+animate(max_species_per_quadrat, duration = 10, renderer = gifski_renderer("max_species_per_quadrat.gif"))
 
-# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working...too long; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline/how to condense code (combine everything above ggplot)
+# laurie ? -> (1) how to squash y-axis to make quadrats 'square' (scale in theme?); (2) when multiple species are the most abundant within a quadrat (common_species), make a new color of that combination
+
+#add in 2017
+#fix lag -> change duration within animation
+#condense code into one pipeline and one ggplot
 
 ```
