@@ -131,11 +131,32 @@ Include a citation for your data here. See
 on proper citation for datasets. If you got your data off the web, make
 sure to note the retrieval date.
 
-\<\<\<\<\<\<\< HEAD National Oceanographic and Atmospheric
-Administration
+NOAA, 2017, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20170101&edate=20171231&timezone=GMT&datum=MLLW&interval=hl&action=data>
 
-======= \>\>\>\>\>\>\> f38a09d08b2cf4275dd4f273f16472b57f9a4fe6 \##
-References
+NOAA, 2018, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20180101&edate=20181231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2019, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20190101&edate=20191231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2020, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20200101&edate=20201231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2021, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20210101&edate=20211231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2022, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20220101&edate=20221231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+
+NOAA, 2023, National Oceanographic and Atmospheric Administration,
+<https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20230101&edate=20231231&timezone=GMT&datum=MLLW&interval=hl&action=data>
+\## References
 
 List any references here. You should, at a minimum, list your data
 source.
+
+Citation: Johannesson, K. (1988). The paradox of Rockall: why is a
+brooding gastropod (Littorina saxatilis) more widespread than one having
+a planktonic larval dispersal stage (L. littorea)? Marine Biology,
+99(4), 507–513.
