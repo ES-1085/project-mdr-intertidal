@@ -133,7 +133,7 @@ sure to note the retrieval date.
 
 Intertidal survey data was collected using the NeCSA protocol by Tanya Lubansky and students from the John Bapst Memorial High School (2017-2021); Marina Schnell, Tanya Lubansky, and the MDR crew (2022); and Marina Schnell and the MDR crew (2023). Tanya Lubansky provided written permission for this data to be used for this project.
 
-Tide data was obtained from NOAA, retrieved _______:
+Tide data was obtained from NOAA, retrieved 23 February 2024:
 
 NOAA, 2017, National Oceanographic and Atmospheric Administration,
 <https://tidesandcurrents.noaa.gov/waterlevels.html?id=8413320&units=standard&bdate=20170101&edate=20171231&timezone=GMT&datum=MLLW&interval=hl&action=data>
