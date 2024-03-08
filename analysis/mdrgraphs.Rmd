@@ -389,53 +389,69 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r invert-max-animation, eval = FALSE}
-
-add_max_invert_count <- all_inverts_mdr %>%
-  filter(year != 2017) %>%
-  group_by(year, tide_ht, quadrat_number) %>%
-  mutate(max_count = max(count)) %>%
-  filter(count == max_count) %>%
-  select(year, tide_ht, quadrat_number, invert_species, max_count)
-
-add_max_invert_species_1 <- test %>%
-  filter(max_count == 0) %>%
-  mutate(invert_species_max = invert_species == NA)
-
-add_max_invert_species_2 <- test %>%
-  filter(max_count != 0) %>%
-  mutate(invert_species_max = invert_species)
-
-
-max_species_per_quadrat <- rbind(test_1, test_2) %>%
-  select(-invert_species) %>%
+```{r abundant-snails-animation, fig.height=3, fig.width=10}
+max_snail_species <- all_inverts_mdr %>%
+  filter(invert_species %in% c("Lacu_v", 
+                               "Litt_l", 
+                               "Litt_o", 
+                               "Litt_s", 
+                               "Nuce_l"),
+         !is.na(tide_ht),
+         year != 2017) %>%
   group_by(year, quadrat_number, tide_ht) %>%
-  filter(max_count == max(max_count)) %>%
-  distinct(max_count, .keep_all = TRUE) %>%
+  slice_max(count, n = 1) %>%
+  mutate(snail_species_max = ifelse(count == 0, NA, invert_species)) %>%
+  distinct(snail_species_max, .keep_all = TRUE) %>%
+  summarise(common_species = str_flatten(snail_species_max, collapse = ", "))
+
+max_snail_per_quadrat <- max_snail_species %>%
   ggplot(aes(x = quadrat_number, 
-             y = 1,
-             fill = invert_species_max,
+             y = .25,
+             fill = common_species,
              groups = year)) + 
-  geom_col() +
+  geom_tile(color = "white") +
   facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
-  scale_x_continuous(breaks = seq(1, 10, by = 1)) +
+ # scale_x_continuous(breaks = seq(1, 10, by = 1)) +
   theme(axis.title.y = element_blank(),
         strip.text.y.left = element_text(angle=0),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) + 
-    labs(title = "Year {closest_state}") +
-  scale_fill_viridis_d() +
+    labs(title = "Year {closest_state}",
+         fill = "Snail Species") +
+  scale_fill_viridis_d(na.value = "grey70") +
   transition_states(states = year,
-                    transition_length = 0.5,
-                    state_length = 0.5,
+                    transition_length = 3,
+                    state_length = 3,
                     wrap = TRUE)
 
-animate(max_species_per_quadrat, duration = 30, renderer = gifski_renderer("max_species_per_quadrat.gif"))
+animate(max_snail_per_quadrat, duration = 10, height = 250, width = 800)
+```
 
-# laurie ? -> (1) how to fix lag in animation between title & graph change; (2) transition_length & state_ don't seem to be working; (3) how to squash y-axis to make quadrats 'square' (scale in theme?); how to make set up to animation a single pipeline
 
-#make NA color grey and not blank
-#legend - think about how to set it up so it makes sense -> split between snails & another group?
-#add labels & alt text
-#add gif to presentation slide
+```{r abundant-snails-animation, fig.height=3, fig.width=10}
+#fix lag -> change duration within animation
+#squash just the graph and not the labels
+#make multiple species into another column within the legend? 
+#write out full latin name in the legend
+
+max_snail_species %>%
+  ggplot(aes(x = quadrat_number, 
+             y = .25,
+             fill = common_species,
+             groups = year)) + 
+  geom_tile(color = "white") +
+  facet_wrap(~ tide_ht, strip.position = "left", ncol = 1) +
+ # scale_x_continuous(breaks = seq(1, 10, by = 1)) +
+  theme(axis.title.y = element_blank(),
+        strip.text.y.left = element_text(angle=0),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) + 
+    labs(title = "Year {closest_state}",
+         fill = "Snail Species") +
+  scale_fill_viridis_d(na.value = "grey70") +
+    transition_states(states = year,
+                    transition_length = 3,
+                    state_length = 3,
+                    wrap = TRUE)
+  
 ```
