@@ -73,9 +73,9 @@ exposed to heat for too long. However, we found that there was not a
 great enough variation of temperature over the years to change the
 species composition.
 
-Snail populations are increasing.
+We found that the mean number of snails per quadrat is generally increasing, but this does not seem to be a linear or consistent trend. One plausible explanation for the variation in populations is the high-disturbance habitat in which these organisms live, which may lead to large annual shifts in species composition. Trophic interactions may magnify this variation—for example, if the gulls of MDR were to shift their diet to consume more intertidal crabs than bait from fishing boats, populations of periwinkle snails (prey for some crab species) might increase.
 
-The seaweed cover for the species we looked are decreasing.
+We also found that the mean seaweed cover for the subset of 6 species we examined was decreasing. This does not necessarily mean that total seaweed cover on MDR is decreasing; other species may be increasing. Similar to the variation in snail abundance, this variation may be due to the high-energy conditions of MDR. There may also be a relationship between increased herbivorous snails and decreased seaweed cover, but a manipulative experiment would be necessary to confirm a causal relationship.
 
 In terms of limitations, there was a lack of standardization in data
 collection as it was collected by different people each year. There
