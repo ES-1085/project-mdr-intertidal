@@ -14,6 +14,7 @@ library(lubridate)
 library(dplyr)
 library(ggtext)
 library(gganimate)
+library(ggpattern)
 
 se <- function(x) sd(x)/sqrt(length(x))
 ```
@@ -389,7 +390,8 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r abundant-snails-animation, fig.height=3, fig.width=10}
+```{r dominant-snails-species-animation, fig.alt = "Animation of the predominant snail species in each quadrat, divided by tide height. The animation is depicting a change in time from 2019 to 2023. 'Results'.")
+
 max_snail_species <- all_inverts_mdr %>%
   filter(invert_species %in% c("Lacu_v", 
                                "Litt_l", 
@@ -415,23 +417,85 @@ max_snail_per_quadrat <- max_snail_species %>%
   theme(strip.text.y.left = element_text(angle=0),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) + 
-  labs(title = "Most Abundant Snail Species per Quadrat in the Mount Desert Rock Intertidal",
+  labs(title = "The Predominant Snail Species of Each Quadrat in the Mount Desert Rock Intertidal",
        subtitle = "Year {closest_state}",
        fill = "Snail Species") +
   xlab("Quadrat Number") +
   ylab("Tide Height") +
-  scale_fill_viridis_d(na.value = "grey70") +
-  theme(legend.text = element_text(face="italic")) +
+  scale_fill_manual(values = c("#440154FF",
+                               "#414487FF",
+                               "#2A788EFF",
+                               "#7AD151FF",
+                               "#FDE725FF",
+                               "white",
+                               "white",
+                               "white",
+                               "grey70"), 
+                    breaks = c("Lacu_v",
+                               "Litt_l",
+                               "Litt_o",
+                               "Litt_s",
+                               "Nuce_l",
+                               "Litt_l, Litt_o",
+                               "Litt_o, Litt_s",
+                               "Nuce_l, Litt_o, Lacu_v",
+                               NA),
+                    labels = c(expression(italic("Lacuna vincta")),
+                               expression(italic("Littorina littorea")),
+                               expression(italic("Littorina obtusata")),
+                               expression(italic("Littorina saxatilis")),
+                               expression(italic("Nucella lapillus")),
+                               expression(italic("Littorina littorea, Littorina obtusata")),
+                               expression(italic("Littorina obtusata, Littorina saxtilis")),
+                               expression(italic("Lacuna vincta, Littorina obtusata, Nucella lapillus")),
+                               "NA")) +
   transition_states(states = year,
                     transition_length = 3,
                     state_length = 3,
                     wrap = TRUE)
 
-animate(max_snail_per_quadrat, duration = 10, height = 250, width = 800)
+animate(max_snail_per_quadrat, duration = 10, height = 250, width = 775,  renderer=gifski_renderer(loop = TRUE))
+anim_save()
 
 #make multiple species into another column within the legend? -> so the colors of species match up between the graphs
-#add title, make changing year subtitle bigger
-              
 
 ```
+
+```{r attempt-at-patterns} 
+
+m <- max_snail_species %>%
+  ggplot(aes(x = quadrat_number,
+             y = 1, 
+             group = year,
+             fill = common_species,
+             pattern = common_species)) +
+  geom_tile_pattern(stat = "identity") +
+  scale_fill_manual(name = "fill", 
+                    values = c("Lacu_v" = "#440154FF",
+                               "Litt_l" = "#414487FF",
+                               "Litt_o" = "#2A788EFF",
+                               "Litt_s" = "#7AD151FF",
+                               "Nuce_l" = "#FDE725FF",
+                               "Litt_l, Litt_o" = "white",
+                               "Litt_s, Litt_o" = "white",
+                               "Nuce_l, Litt_o, Lacu_v" = "white",
+                               na.value = "grey70")) +
+  scale_pattern_manual(name = "pattern", 
+                       values = c("Lacu_v" = "none",
+                                  "Litt_l" = "none",
+                                  "Litt_o" = "none",
+                                  "Litt_s" = "none",
+                                  "Nuce_l" = "none",
+                                  "Litt_l, Litt_o" = "circle",
+                                  "Litt_o, Litt_s" = "circle",
+                                  "Nuce_l, Litt_o, Lacu_v" = "circle",
+                                  na.value = "none")) + 
+  facet_wrap(~ tide_ht, strip.position = "left", ncol = 1)
+
+# ERROR: Caused by error in `if (pat == "regular_polygon" && is.numeric(params$pattern_shape)) 
+
+scale_pattern_discrete()
+scale_tile_pattern()
+
 ```
+
