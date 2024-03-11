@@ -390,7 +390,7 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r dominant-snails-species-animation, fig.alt = "Animation of the predominant snail species within each quadrat, categorized by tide height and depicting a change across the years 2019 to 2023. Starting in 2019, Littorina obtusata was the most abundant in the majority of quadrats at all tide heights. Then, it gradually declined over a two year period with Nucella lapillus taking the lead. In 2022, both species exhibited a balanced number of quadrats, and in 2023, Littorina obtusata held a significant majority of quadrats, all of which resided at the mid tide height while Nucella Lapillus held only 2 quadrats, both at the low tide height.Littorina littorea maintained a low number of quadrats (2-5) in which it was most abundant at the mid and high tide height. Starting in 2021, it did not hold any quadrats. Littorina saxatillis consistently had at least one quadrat in which it was the most abundant (with the exception of 2020) and stayed relatively consistent through the years with a range of 4-6 quadrats, all of which were at high tide height. Some quadrats had multiple species as the most abundant species, both these instances follow the trends described above. Quadrats in which no snail species were found held a range of 2-11, with the majority of quadrats falling into the high tide height. At mid tide height, only one quadrat was observed with no snail species."}
+```{r dominant-snails-species-animation, fig.alt = "An animated representation illustrates the dominant snail species within each quadrat, organized by tide height, portraying changes from 2019 to 2023. Littorina obtusata and Nucella lapillus consistently dominated the majority of quadrats across varying tide heights, exhibiting an annual fluctuation between the two. Littorina littorea and Littorina saxatillis maintained consistent representation across years, and Lacuna vincta did not hold dominance in any quadrats until 2023 held the majority of low tide height quadrats."}
 
 max_snail_species <- all_inverts_mdr %>%
   filter(invert_species %in% c("Lacu_v", 
@@ -427,9 +427,9 @@ max_snail_per_quadrat <- max_snail_species %>%
                                "#2A788EFF",
                                "#7AD151FF",
                                "#FDE725FF",
-                               "#7A52A9",
                                "#20A3879F",
                                "#D7BFDC",
+                               "#9370DC",
                                "grey70"), 
                     breaks = c("Lacu_v",
                                "Litt_l",
@@ -454,47 +454,8 @@ max_snail_per_quadrat <- max_snail_species %>%
                     state_length = 3,
                     wrap = TRUE)
 
-animate(max_snail_per_quadrat, duration = 10, height = 250, width = 775,  renderer=gifski_renderer(loop = TRUE))
-anim_save()
+snail_abundance_animation <- animate(max_snail_per_quadrat, duration = 10, height = 250, width = 775)
 
-```
-
-
-```{r attempt-at-patterns} 
-
-m <- max_snail_species %>%
-  ggplot(aes(x = quadrat_number,
-             y = 1, 
-             group = year,
-             fill = common_species,
-             pattern = common_species)) +
-  geom_tile_pattern(stat = "identity") +
-  scale_fill_manual(name = "fill", 
-                    values = c("Lacu_v" = "#440154FF",
-                               "Litt_l" = "#414487FF",
-                               "Litt_o" = "#2A788EFF",
-                               "Litt_s" = "#7AD151FF",
-                               "Nuce_l" = "#FDE725FF",
-                               "Litt_l, Litt_o" = "white",
-                               "Litt_s, Litt_o" = "white",
-                               "Nuce_l, Litt_o, Lacu_v" = "white",
-                               na.value = "grey70")) +
-  scale_pattern_manual(name = "pattern", 
-                       values = c("Lacu_v" = "none",
-                                  "Litt_l" = "none",
-                                  "Litt_o" = "none",
-                                  "Litt_s" = "none",
-                                  "Nuce_l" = "none",
-                                  "Litt_l, Litt_o" = "circle",
-                                  "Litt_o, Litt_s" = "circle",
-                                  "Nuce_l, Litt_o, Lacu_v" = "circle",
-                                  na.value = "none")) + 
-  facet_wrap(~ tide_ht, strip.position = "left", ncol = 1)
-
-# ERROR: Caused by error in `if (pat == "regular_polygon" && is.numeric(params$pattern_shape)) 
-
-scale_pattern_discrete()
-scale_tile_pattern()
-
+anim_save(snail_abundance_animation, filename = "animation.gif")
 ```
 
