@@ -390,7 +390,7 @@ mdr_temp_low_tide %>%
 ```
 
 
-```{r dominant-snails-species-animation, fig.alt = "Animation of the predominant snail species in each quadrat, divided by tide height. The animation is depicting a change in time from 2019 to 2023. 'Results'.")
+```{r dominant-snails-species-animation, fig.alt = "Animation of the predominant snail species within each quadrat, categorized by tide height and depicting a change across the years 2019 to 2023. Starting in 2019, Littorina obtusata was the most abundant in the majority of quadrats at all tide heights. Then, it gradually declined over a two year period with Nucella lapillus taking the lead. In 2022, both species exhibited a balanced number of quadrats, and in 2023, Littorina obtusata held a significant majority of quadrats, all of which resided at the mid tide height while Nucella Lapillus held only 2 quadrats, both at the low tide height.Littorina littorea maintained a low number of quadrats (2-5) in which it was most abundant at the mid and high tide height. Starting in 2021, it did not hold any quadrats. Littorina saxatillis consistently had at least one quadrat in which it was the most abundant (with the exception of 2020) and stayed relatively consistent through the years with a range of 4-6 quadrats, all of which were at high tide height. Some quadrats had multiple species as the most abundant species, both these instances follow the trends described above. Quadrats in which no snail species were found held a range of 2-11, with the majority of quadrats falling into the high tide height. At mid tide height, only one quadrat was observed with no snail species."}
 
 max_snail_species <- all_inverts_mdr %>%
   filter(invert_species %in% c("Lacu_v", 
@@ -417,8 +417,8 @@ max_snail_per_quadrat <- max_snail_species %>%
   theme(strip.text.y.left = element_text(angle=0),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank()) + 
-  labs(title = "The Predominant Snail Species of Each Quadrat in the Mount Desert Rock Intertidal",
-       subtitle = "Year {closest_state}",
+  labs(title = "The Predominant Snail Species within each Quadrat by Tide Height",
+       subtitle = "Year - {closest_state}",
        fill = "Snail Species") +
   xlab("Quadrat Number") +
   ylab("Tide Height") +
@@ -427,9 +427,9 @@ max_snail_per_quadrat <- max_snail_species %>%
                                "#2A788EFF",
                                "#7AD151FF",
                                "#FDE725FF",
-                               "white",
-                               "white",
-                               "white",
+                               "#7A52A9",
+                               "#20A3879F",
+                               "#D7BFDC",
                                "grey70"), 
                     breaks = c("Lacu_v",
                                "Litt_l",
@@ -457,9 +457,8 @@ max_snail_per_quadrat <- max_snail_species %>%
 animate(max_snail_per_quadrat, duration = 10, height = 250, width = 775,  renderer=gifski_renderer(loop = TRUE))
 anim_save()
 
-#make multiple species into another column within the legend? -> so the colors of species match up between the graphs
-
 ```
+
 
 ```{r attempt-at-patterns} 
 
